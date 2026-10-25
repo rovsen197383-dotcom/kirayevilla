@@ -1,539 +1,274 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kirayevilla.com — Həyət evləri və bağ evləri</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #f6f7f9;
-      color: #222;
-    }
-
-    /* Шапка сайта */
-    header {
-      background-color: #26292e;
-      color: #fff;
-      padding: 14px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: #fff;
-    }
-
-    .logo-icon {
-      background-color: #d97736;
-       width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-    }
-
-    .logo-text h1 {
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 1.1;
-    }
-
-    .logo-text h1 span {
-      color: #f39c12;
-    }
-
-    .logo-text p {
-      font-size: 12px;
-      color: #aaa;
-    }
-
-    .header- buttons {
-      display: flex;
-      gap: 12px;
-    }
-
-    .btn-new {
-      background-color: #2ecc71;
-      color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .btn-login {
-      background-color: transparent;
-      color: #fff;
-      border: 1px solid #555;
-      padding: 10px 18px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    /* Панель фильтров (без верхних надписей) */
-    .filter-bar {
-      background-color: #fff;
-      padding: 20px 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .filter- control {
-      flex: 1;
-      min-width: 170px;
-    }
-
-    .filter-control select,
-    .price-inputs input {
-      width: 100%;
-      height: 42px;
-      padding: 0 12px;
-      border: 1px solid #dcdcdc;
-      border-radius: 6px;
-      font-size: 14px;
-      color: #333;
-      background-color: #fff;
-      outline: none;
-    }
-
-    .price-inputs {
-      display: flex;
-      gap: 8px;
-      flex: 1;
-      min-width: 180px;
-    }
-
-    .btn-search {
-      background-color: #9b6b6b;
-      color: #fff;
-      border: none;
-      height: 42px;
-      padding: 0 28px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    /* Основной контент */
-    .container {
-      max-width: 1280px;
-      margin: 28px auto;
-      padding: 0 40px;
-    }
-
-    . feed-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .feed-header h2 {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .feed-count {
-      font-size: 13px;
-      color: #777;
-    }
-
-    /* Карточки */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 22px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-      border: 1px solid #eee;
-      transition: transform 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-    }
-
-    .card-img-wrap {
-      position: relative;
-      height: 200px;
-      background: #ddd;
-    }
-
-    .card-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .price-badge {
-      position: absolute;
-      bottom: 12px;
-      left: 12px;
-      background: rgba(25, 25, 25, 0.82);
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 15px;
-    }
-
-    .card-body {
-      padding: 16px;
-    }
-
-    .card-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .card-meta {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 12px;
-    }
-
-    .card-btn {
-      width: 100%;
-      background-color: #b58d8d;
-      color: #fff;
-      border: none;
-      padding: 10px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* Модальные окна */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 16px;
-    }
-
-    .modal {
-      background: #fff;
-      width: 100%;
-      max-width: 480px;
-      border-radius: 12px;
-      padding: 24px;
-      position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 14px;
-      right: 16px;
-      background: none;
-      border: none;
-      font-size: 22px;
-      cursor: pointer;
-      color: #666;
-    }
-
-    .modal h3 {
-      margin-bottom: 16px;
-      font-size: 19px;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>kirayevilla.com — Həyət evləri və bağ evləri kirayə</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f5;
+            color: #2b2b2b;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .header-bg {
+            background-color: #262523;
+        }
+        .btn-accent {
+            background-color: #a486b0;
+            transition: background-color 0.2s;
+        }
+        .btn-accent:hover {
+            background-color: #8f709c;
+        }
+        .toast-enter {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        @keyframes slideDown {
+            from { transform: translate(-50%, -100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-  <!-- Шапка -->
-  <header>
-    <a href="#" class="logo-wrap">
-      <div class="logo-icon">🏠</div>
-      <div class="logo-text">
-        <h1>kirayevilla<span>.com</span></h1>
-        <p>Həyət evləri və bağ evləri</p>
-      </div>
-    </a>
-    <div class="header-buttons">
-      <button class="btn-new" onclick="openModal('elanModal')">+ YENİ ELAN</button>
-      <button class="btn-login" onclick="openModal('loginModal')">👤 GİRİŞ</button>
-    </div>
-  </header>
-
-  <!-- Панель фильтров: без верхних заголовков, строго как вы указали -->
-  <section class="filter-bar">
-    <!-- 1. Bütün məkanlar -->
-    <div class="filter-control">
-      <select id="filterMekan">
-        <option value="">Bütün məkanlar</option>
-        <option value="Novxanı">Novxanı</option>
-        <option value="Mərdəkan">Mərdəkan</option>
-        <option value="Şüvəlan">Şüvəlan</option>
-        <option value="Bilgəh">Bilgəh</option>
-        <option value="Zaqulba">Zaqulba</option>
-        <option value="Qəbələ">Qəbələ</option>
-        <option value="Şamaxı">Şamaxı</option>
-        <option value="Quba">Quba</option>
-      </select>
-    </div>
-
-    <!-- 2. Günlük / Aylıq -->
-    <div class="filter-control">
-      <select id="filterMuddet">
-        <option value="">Günlük / Aylıq</option>
-        <option value="gün">Günlük</option>
-        <option value="ay">Aylıq</option>
-      </select>
-    </div>
-
-    <!-- 3. Otaq sayı (вместо слова İstənilən) -->
-    <div class="filter-control">
-      <select id="filterOtaq">
-        <option value="">Otaq sayı</option>
-        <option value="1">1 otaqlı</option>
-        <option value="2">2 otaqlı</option>
-        <option value="3">3 otaqlı</option>
-        <option value="4">4 otaqlı</option>
-        <option value="5">5+ otaqlı</option>
-      </select>
-    </div>
-
-    <!-- 4. Только поля min. и maks. (без надписи Qiymət, AZN сверху) -->
-    <div class="price-inputs">
-      <input type="number" id="filterMin" placeholder="min.">
-      <input type="number" id="filterMaks" placeholder="maks.">
-    </div>
-
-    <button class="btn-search" onclick="applyFilters()">🔍 AXTAR</button>
-  </section>
-
-  <!-- Список объявлений -->
-  <main class="container">
-    <div class="feed-header">
-      <h2>Həyət evləri / Bağ evləri kirayə</h2>
-      <span class="feed-count" id="elanCount">1 elan tapıldı</span>
-    </div>
-
-    <div class="cards-grid" id="cardsGrid"></div>
-  </main>
-
-  <!-- Модальное окно входа -->
-  <div class="modal-overlay" id="loginModal">
-    <div class="modal">
-      <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
-      <h3>Kabinetə giriş</h3>
-      <div class="form-group">
-        <input type="tel" id="loginPhone" placeholder="+994 (__) ___-__-__">
-      </div>
-      <button class="btn-new" style="width:100%;" onclick="sendCode()">Kod göndər</button>
-      <div id="codeBox" style="display:none; margin-top:14px;">
-        <div class="form-group">
-          <input type="text" id=" smsCode" placeholder="4 rəqəmli kod">
+    <!-- ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ С КОДОМ -->
+    <div id="toastNotification" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] hidden bg-stone-900 text-white px-6 py-4 rounded-xl shadow-2xl border border-purple-400 flex items-center gap-4 min-w-[300px]">
+        <div class="bg-purple-600/30 p-2.5 rounded-lg text-purple-300">
+            <i class="fa-solid fa-bell text-xl"></i>
         </div>
-        <button class="btn-search" style="width:100%;" onclick="confirmLogin()">Təsdiqlə</button>
-      </div>
+        <div>
+            <div id="toastTitle" class="text-xs text-stone-400">Bildiriş</div>
+            <div id="toastMessage" class="text-sm font-semibold mt-0.5">Kod göndərildi</div>
+        </div>
     </div>
-  </div>
 
-  <!-- Модальное окно нового объявления -->
-  <div class="modal-overlay" id="elanModal">
-    <div class="modal">
-      <button class="modal-close" onclick="closeModal('elanModal')">&times;</button>
-      <h3>Yeni elan yerləşdir</h3>
-      <div class="form-group">
-        <select id="newMekan">
-          <option value="Novxanı">Novxanı</option>
-          <option value="Mərdəkan">Mərdəkan</option>
-          <option value="Şüvəlan">Şüvəlan</option>
-          <option value="Bilgəh">Bilgəh</option>
-          <option value="Qəbələ">Qəbələ</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <select id="newMuddet">
-          <option value="gün">Günlük</option>
-          <option value="ay">Aylıq</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <select id="newOtaq">
-          <option value="2">2 otaqlı</option>
-          <option value="3" selected>3 otaqlı</option>
-          <option value="4">4 otaqlı</option>
-          <option value="5">5+ otaqlı</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <input type="number" id="newPrice" placeholder="Qiymət (AZN)">
-      </div>
-      <div class="form-group">
-        <input type="number" id="newGuests" placeholder="Qonaq sayı (nəfər)" value="4">
-      </div>
-      <div class="form-group">
-        <input type="tel" id="newPhone" placeholder="Əlaqə nömrəsi (+994...)">
-      </div>
-      <div class="form-group">
-        <input type="file" id="newPhoto" accept="image/*">
-      </div>
-      <button class="btn-new" style="width:100%;" onclick="addElan()">Elanı dərc et</button>
+    <!-- ШАПКА САЙТА (HEADER) -->
+    <header class="header-bg text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-[#e07a5f] flex items-center justify-center font-bold text-lg shadow-inner">
+                    K
+                </div>
+                <div>
+                    <div class="font-bold text-lg leading-tight tracking-tight">kirayevilla<span class="text-[#e07a5f]">.com</span></div>
+                    <div class="text-[11px] text-stone-400">Həyət evləri və bağ evləri</div>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-2.5">
+                <button onclick="handleNewListingClick()" class="bg-[#e07a5f] hover:bg-[#d0694e] text-white text-xs sm:text-sm font-medium px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Elan yerləşdir</span>
+                </button>
+
+                <button id="authHeaderBtn" onclick="handleAuthButtonClick()" class="bg-stone-700 hover:bg-stone-600 text-stone-200 text-xs sm:text-sm font-medium px-3.5 py-2 rounded-lg transition flex items-center gap-1.5">
+                    <i class="fa-regular fa-user"></i>
+                    <span id="authHeaderText">Giriş</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ПАНЕЛЬ ФИЛЬТРОВ -->
+    <section class="bg-white border-b border-stone-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <select id="filterLocation" onchange="applyFilters()" class="border border-stone-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-white text-stone-700 focus:outline-none focus:border-purple-500">
+                    <option value="">Bütün məkanlar</option>
+                    <option value="Novxanı">Novxanı</option>
+                    <option value="Mərdəkan">Mərdəkan</option>
+                    <option value="Şüvəlan">Şüvəlan</option>
+                    <option value="Bilgəh">Bilgəh</option>
+                    <option value="Zaqulba">Zaqulba</option>
+                    <option value="Qəbələ">Qəbələ</option>
+                    <option value="Şamaxı">Şamaxı</option>
+                    <option value="Quba">Quba</option>
+                </select>
+
+                <select id="filterType" onchange="applyFilters()" class="border border-stone-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-white text-stone-700 focus:outline-none focus:border-purple-500">
+                    <option value="">Günlük / Aylıq</option>
+                    <option value="gün">Günlük</option>
+                    <option value="ay">Aylıq</option>
+                </select>
+
+                <select id="filterRooms" onchange="applyFilters()" class="border border-stone-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-white text-stone-700 focus:outline-none focus:border-purple-500">
+                    <option value="">Otaq sayı</option>
+                    <option value="1">1 otaqlı</option>
+                    <option value="2">2 otaqlı</option>
+                    <option value="3">3 otaqlı</option>
+                    <option value="4">4 otaqlı</option>
+                    <option value="5">5+ otaqlı</option>
+                </select>
+
+                <div class="flex items-center gap-1.5">
+                    <input id="filterMinPrice" oninput="applyFilters()" type="number" placeholder="min. ₼" class="w-20 sm:w-24 border border-stone-300 rounded-lg px-2.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-purple-500">
+                    <span class="text-stone-400">—</span>
+                    <input id="filterMaxPrice" oninput="applyFilters()" type="number" placeholder="maks. ₼" class="w-20 sm:w-24 border border-stone-300 rounded-lg px-2.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-purple-500">
+                </div>
+
+                <button onclick="resetFilters()" class="text-xs text-stone-500 hover:text-stone-800 underline ml-auto">
+                    Sıfırla
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ (СПИСОК ВИЛЛ) -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+        <div class="mb-5">
+            <h1 class="text-lg sm:text-xl font-bold text-stone-800">Həyət evləri / Bağ evləri kirayə</h1>
+            <p id="listingsCount" class="text-xs text-stone-500 mt-0.5">1 elan tapıldı</p>
+        </div>
+
+        <div id="listingsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Карточки генерируются через JS -->
+        </div>
+    </main>
+
+    <!-- МОДАЛЬНОЕ ОКНО ВХОДА (GİRİŞ: TELEFON & EMAIL) -->
+    <div id="loginModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h2 class="text-lg font-bold text-stone-800 mb-1">Kabinetə giriş</h2>
+            <p class="text-xs text-stone-500 mb-4">Elanları idarə etmək üçün daxil olun</p>
+
+            <!-- Переключатель: Телефон или Email -->
+            <div class="grid grid-cols-2 gap-1 bg-stone-100 p-1 rounded-xl mb-5">
+                <button id="tabPhoneBtn" onclick="switchAuthMethod('phone')" class="py-2 text-xs font-semibold rounded-lg bg-white text-stone-800 shadow-xs transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-phone text-purple-600"></i>
+                    <span>Telefon</span>
+                </button>
+                <button id="tabEmailBtn" onclick="switchAuthMethod('email')" class="py-2 text-xs font-semibold rounded-lg text-stone-500 hover:text-stone-800 transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-envelope text-purple-600"></i>
+                    <span>Email</span>
+                </button>
+            </div>
+
+            <!-- ШАГ 1: Ввод телефона или Email -->
+            <div id="authStep1">
+                <!-- Поле для Телефона -->
+                <div id="phoneInputGroup" class="mb-4">
+                    <label class="block text-xs font-medium text-stone-600 mb-1.5">Mobil nömrə</label>
+                    <div class="flex">
+                        <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-stone-300 bg-stone-50 text-stone-600 text-sm font-medium">
+                            +994
+                        </span>
+                        <input id="loginPhoneInput" type="tel" placeholder="50 123 45 67" maxlength="12" class="w-full border border-stone-300 rounded-r-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+
+                <!-- Поле для Email -->
+                <div id="emailInputGroup" class="mb-4 hidden">
+                    <label class="block text-xs font-medium text-stone-600 mb-1.5">E-poçt ünvanı</label>
+                    <input id="loginEmailInput" type="email" placeholder="nümunə@mail.com" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-500">
+                </div>
+
+                <div id="authErrorMsg" class="text-xs text-red-600 mb-3 hidden"></div>
+
+                <button id="sendCodeBtn" onclick="sendVerificationCode()" class="w-full btn-accent text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm flex items-center justify-center gap-2">
+                    <span>Kod göndər</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+
+            <!-- ШАГ 2: Ввод полученного кода -->
+            <div id="authStep2" class="hidden">
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-3 mb-4 text-xs text-purple-900">
+                    <span id="sentTargetText" class="font-semibold"></span> ünvanına 4 rəqəmli təsdiq kodu göndərildi.
+                    <div class="mt-1 text-[11px] text-purple-700">
+                        (Test rejimi kodu: <strong id="demoCodeHint" class="underline text-sm"></strong>)
+                    </div>
+                </div>
+
+                <label class="block text-xs font-medium text-stone-600 mb-1.5">Təsdiq kodu</label>
+                <input id="verificationCodeInput" type="text" maxlength="6" placeholder="• • • •" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-center text-lg font-bold tracking-widest focus:outline-none focus:border-purple-500 mb-3">
+
+                <div id="codeErrorMsg" class="text-xs text-red-600 mb-3 hidden"></div>
+
+                <button onclick="verifyCodeAndLogin()" class="w-full btn-accent text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm mb-2">
+                    Təsdiqlə və Daxil ol
+                </button>
+
+                <button onclick="backToStep1()" class="w-full text-xs text-stone-500 hover:text-stone-800 py-1.5">
+                    ← Geriyə qayıt
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const defaultListings = [
-      {
-        id: 1,
-        mekan: 'Novxanı',
-        otaq: '3',
-        nefer: '3',
-        price: 150,
-        muddet: 'gün',
-        phone: '+994500000000',
-        img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80'
-      }
-    ];
+    <!-- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ОБЪЯВЛЕНИЯ -->
+    <div id="elanModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative my-8">
+            <button onclick="closeModal('elanModal')" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
 
-    let listings = JSON.parse(localStorage.getItem('kiraye_listings')) || defaultListings;
+            <h2 class="text-lg font-bold text-stone-800 mb-4">Yeni elan yerləşdir</h2>
 
-    function renderListings(data) {
-      const grid = document.getElementById('cardsGrid');
-      const countEl = document.getElementById('elanCount');
-      grid.innerHTML = '';
-      countEl.textContent = `${data.length} elan tapıldı`;
+            <div class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-medium text-stone-600 mb-1">Məkan</label>
+                    <select id="newMekan" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white">
+                        <option value="Novxanı">Novxanı</option>
+                        <option value="Mərdəkan">Mərdəkan</option>
+                        <option value="Şüvəlan">Şüvəlan</option>
+                        <option value="Bilgəh">Bilgəh</option>
+                        <option value="Zaqulba">Zaqulba</option>
+                        <option value="Qəbələ">Qəbələ</option>
+                        <option value="Şamaxı">Şamaxı</option>
+                        <option value="Quba">Quba</option>
+                    </select>
+                </div>
 
-      data.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-img-wrap">
-            <img src="${item.img}" alt="${item.mekan}">
-            <div class="price-badge">${item.price} ₼ / ${item.muddet}</div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">${item.mekan}</div>
-            <div class="card-meta">${item.otaq} otaqlı • ${item.nefer} nəfər</div>
-            <button class="card-btn" onclick="alert('Əlaqə: ${item.phone}')">Bron et / Əlaqə</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-stone-600 mb-1">Otaq sayı</label>
+                        <input id="newOtaq" type="number" value="3" min="1" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-stone-600 mb-1">Qonaq tutumu (nəfər)</label>
+                        <input id="newNefer" type="number" value="6" min="1" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
+                </div>
 
-    function applyFilters() {
-      const mekan = document.getElementById('filterMekan').value;
-      const muddet = document.getElementById('filterMuddet').value;
-      const otaq = document.getElementById('filterOtaq').value;
-      const min = parseFloat(document.getElementById('filterMin').value) || 0;
-      const maks = parseFloat(document.getElementById('filterMaks').value) || Infinity;
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-stone-600 mb-1">Qiymət (₼)</label>
+                        <input id="newPrice" type="number" placeholder="150" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-stone-600 mb-1">Müddət</label>
+                        <select id="newPeriod" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white">
+                            <option value="gün">Günlük</option>
+                            <option value="ay">Aylıq</option>
+                        </select>
+                    </div>
+                </div>
 
-      const filtered = listings.filter(item => {
-        return (!mekan || item.mekan === mekan) &&
-               (!muddet || item.muddet === muddet) &&
-               (!otaq || item.otaq === otaq) &&
-               (item.price >= min && item.price <= maks);
-      });
+                <div>
+                    <label class="block text-xs font-medium text-stone-600 mb-1">Əlaqə nömrəsi</label>
+                    <input id="newPhone" type="tel" placeholder="+994 50 123 45 67" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm">
+                </div>
 
-      renderListings(filtered);
-    }
+                <div>
+                    <label class="block text-xs font-medium text-stone-600 mb-1">Şəkil seçin</label>
+                    <input id="newPhoto" type="file" accept="image/*" class="w-full text-xs text-stone-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                </div>
 
-    function openModal(id) {
-      document.getElementById(id).style.display = 'flex';
-    }
+                <button onclick="saveNewListing()" class="w-full bg-[#e07a5f] hover:bg-[#d0694e] text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm mt-2">
+                    Elanı dərc et
+                </button>
+            </div>
+        </div>
+    </div>
 
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function sendCode() {
-      document.getElementById('codeBox').style.display = 'block';
-      document.getElementById('smsCode').value = '4829';
-    }
-
-    function confirmLogin() {
-      alert('Uğurla daxil oldunuz!');
-      closeModal('loginModal');
-    }
-
-    function addElan() {
-      const mekan = document.getElementById('newMekan').value;
-      const muddet = document.getElementById('newMuddet').value;
-      const otaq = document.getElementById('newOtaq').value;
-      const price = parseFloat(document.getElementById('newPrice').value) || 100;
-      const nefer = document.getElementById('newGuests').value || '4';
-      const phone = document.getElementById('newPhone').value || '+994500000000';
-      const fileInput = document.getElementById('newPhoto');
-
-      const saveItem = (imgUrl) => {
-        const newItem = {
-          id: Date.now(),
-          mekan,
-          otaq,
-          nefer,
-          price,
-          muddet,
-          phone,
-          img: imgUrl
-        };
-        listings.unshift(newItem);
-        localStorage.setItem('kiraye_listings', JSON.stringify(listings));
-        renderListings(listings);
-        closeModal('elanModal');
-      };
-
-      if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          saveItem(e.target.result);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        saveItem('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80');
-      }
-    }
-
-    renderListings(listings);
-  </script>
-</body>
-</html>
+    <script>
+        // --- 1. НАСТРОЙ
