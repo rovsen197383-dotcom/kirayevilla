@@ -271,4 +271,288 @@
     </div>
 
     <script>
-        // --- 1. НАСТРОЙ
+        // --- 1. НАСТРОЙКИ И ДАННЫЕ ПО УМОЛЧАНИЮ ---
+        const defaultListings = [
+            {
+                id: 1,
+                mekan: "Novxanı",
+                otaq: 3,
+                nefer: 6,
+                price: 150,
+                period: "gün",
+                phone: "+994501234567",
+                img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        let listings = JSON.parse(localStorage.getItem('kiraye_listings')) || defaultListings;
+        let currentUser = JSON.parse(localStorage.getItem('kiraye_user')) || null;
+        let currentAuthMethod = 'phone'; // 'phone' или 'email'
+        let generatedCode = null;
+        let pendingAuthTarget = '';
+
+        // --- 2. УВЕДОМЛЕНИЯ (TOAST) ---
+        function showToast(title, message) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.remove('hidden');
+            toast.classList.add('toast-enter');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 6000);
+        }
+
+        // --- 3. АВТОРИЗАЦИЯ (ТЕЛЕФОН И EMAIL) ---
+        function updateAuthUI() {
+            const btnText = document.getElementById('authHeaderText');
+            const btn = document.getElementById('authHeaderBtn');
+            if (currentUser) {
+                btnText.textContent = `Kabinet (${currentUser.value})`;
+                btn.classList.remove('bg-stone-700');
+                btn.classList.add('bg-purple-700');
+            } else {
+                btnText.textContent = 'Giriş';
+                btn.classList.remove('bg-purple-700');
+                btn.classList.add('bg-stone-700');
+            }
+        }
+
+        function handleAuthButtonClick() {
+            if (currentUser) {
+                if (confirm(`Hesabdan çıxmaq istəyirsiniz? (${currentUser.value})`)) {
+                    currentUser = null;
+                    localStorage.removeItem('kiraye_user');
+                    updateAuthUI();
+                    showToast('Çıxış edildi', 'Hesabınızdan uğurla çıxdınız.');
+                }
+            } else {
+                openModal('loginModal');
+            }
+        }
+
+        function handleNewListingClick() {
+            if (!currentUser) {
+                showToast('Giriş tələb olunur', 'Elan yerləşdirmək üçün əvvəlcə kabinetə daxil olun.');
+                openModal('loginModal');
+            } else {
+                openModal('elanModal');
+            }
+        }
+
+        function switchAuthMethod(method) {
+            currentAuthMethod = method;
+            const tabPhoneBtn = document.getElementById('tabPhoneBtn');
+            const tabEmailBtn = document.getElementById('tabEmailBtn');
+            const phoneGroup = document.getElementById('phoneInputGroup');
+            const emailGroup = document.getElementById('emailInputGroup');
+            const errorMsg = document.getElementById('authErrorMsg');
+
+            errorMsg.classList.add('hidden');
+
+            if (method === 'phone') {
+                tabPhoneBtn.className = "py-2 text-xs font-semibold rounded-lg bg-white text-stone-800 shadow-xs transition flex items-center justify-center gap-1.5";
+                tabEmailBtn.className = "py-2 text-xs font-semibold rounded-lg text-stone-500 hover:text-stone-800 transition flex items-center justify-center gap-1.5";
+                phoneGroup.classList.remove('hidden');
+                emailGroup.classList.add('hidden');
+            } else {
+                tabEmailBtn.className = "py-2 text-xs font-semibold rounded-lg bg-white text-stone-800 shadow-xs transition flex items-center justify-center gap-1.5";
+                tabPhoneBtn.className = "py-2 text-xs font-semibold rounded-lg text-stone-500 hover:text-stone-800 transition flex items-center justify-center gap-1.5";
+                emailGroup.classList.remove('hidden');
+                phoneGroup.classList.add('hidden');
+            }
+        }
+
+        function sendVerificationCode() {
+            const errorMsg = document.getElementById('authErrorMsg');
+            errorMsg.classList.add('hidden');
+
+            if (currentAuthMethod === 'phone') {
+                const rawPhone = document.getElementById('loginPhoneInput').value.replace(/\D/g, '');
+                if (rawPhone.length < 9) {
+                    errorMsg.textContent = 'Zəhmət olmasa düzgün nömrə daxil edin (məs: 50 123 45 67).';
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+                pendingAuthTarget = '+994' + rawPhone.slice(-9);
+            } else {
+                const email = document.getElementById('loginEmailInput').value.trim();
+                if (!email || !email.includes('@') || !email.includes('.')) {
+                    errorMsg.textContent = 'Zəhmət olmasa düzgün Email ünvanı daxil edin.';
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+                pendingAuthTarget = email;
+            }
+
+            // Генерируем 4-значный код
+            generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+            // Показываем шаг 2
+            document.getElementById('sentTargetText').textContent = pendingAuthTarget;
+            document.getElementById('demoCodeHint').textContent = generatedCode;
+            document.getElementById('verificationCodeInput').value = '';
+            document.getElementById('codeErrorMsg').classList.add('hidden');
+
+            document.getElementById('authStep1').classList.add('hidden');
+            document.getElementById('authStep2').classList.remove('hidden');
+
+            // Показываем красивое уведомление сверху с кодом
+            showToast(
+                currentAuthMethod === 'phone' ? 'SMS Təsdiq Kodu' : 'Email Təsdiq Kodu',
+                `Sizin təsdiq kodunuz: ${generatedCode}`
+            );
+        }
+
+        function verifyCodeAndLogin() {
+            const entered = document.getElementById('verificationCodeInput').value.trim();
+            const errorMsg = document.getElementById('codeErrorMsg');
+
+            if (entered !== generatedCode) {
+                errorMsg.textContent = 'Yanlış kod! Yuxarıda göstərilən 4 rəqəmli kodu daxil edin.';
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            // Успешный вход
+            currentUser = {
+                type: currentAuthMethod,
+                value: pendingAuthTarget
+            };
+            localStorage.setItem('kiraye_user', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeModal('loginModal');
+            backToStep1();
+            showToast('Xoş gəldiniz!', `Kabinetə daxil oldunuz: ${pendingAuthTarget}`);
+        }
+
+        function backToStep1() {
+            document.getElementById('authStep2').classList.add('hidden');
+            document.getElementById('authStep1').classList.remove('hidden');
+            document.getElementById('codeErrorMsg').classList.add('hidden');
+        }
+
+        // --- 4. ОТРИСОВКА И ФИЛЬТРАЦИЯ ВИЛЛ ---
+        function renderListings(data) {
+            const container = document.getElementById('listingsContainer');
+            const countEl = document.getElementById('listingsCount');
+            container.innerHTML = '';
+            countEl.textContent = `${data.length} elan tapıldı`;
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-white rounded-2xl p-8 text-center border border-stone-200">
+                        <p class="text-stone-500 text-sm">Seçilmiş filtrlərə uyğun elan tapılmadı.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl overflow-hidden shadow-xs border border-stone-200/80 flex flex-col hover:shadow-md transition";
+                card.innerHTML = `
+                    <div class="relative h-52 bg-stone-200">
+                        <img src="${item.img}" alt="${item.mekan}" class="w-full h-full object-cover">
+                        <div class="absolute bottom-3 left-3 bg-stone-900/85 backdrop-blur-xs text-white text-sm font-bold px-3 py-1 rounded-lg">
+                            ${item.price} ₼ <span class="font-normal text-xs text-stone-300">/ ${item.period}</span>
+                        </div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="font-bold text-base text-stone-800">${item.mekan}</h3>
+                        <p class="text-xs text-stone-500 mt-1 mb-4">${item.otaq} otaqlı • ${item.nefer} nəfər</p>
+                        <a href="tel:${item.phone}" class="mt-auto w-full btn-accent text-white text-xs font-semibold py-2.5 rounded-xl text-center block">
+                            Bron et / Əlaqə
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function applyFilters() {
+            const loc = document.getElementById('filterLocation').value;
+            const type = document.getElementById('filterType').value;
+            const rooms = document.getElementById('filterRooms').value;
+            const minP = parseFloat(document.getElementById('filterMinPrice').value) || 0;
+            const maxP = parseFloat(document.getElementById('filterMaxPrice').value) || Infinity;
+
+            const filtered = listings.filter(item => {
+                const matchLoc = !loc || item.mekan === loc;
+                const matchType = !type || item.period === type;
+                const matchRooms = !rooms || (rooms === '5' ? item.otaq >= 5 : item.otaq == rooms);
+                const matchPrice = item.price >= minP && item.price <= maxP;
+                return matchLoc && matchType && matchRooms && matchPrice;
+            });
+
+            renderListings(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('filterLocation').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterRooms').value = '';
+            document.getElementById('filterMinPrice').value = '';
+            document.getElementById('filterMaxPrice').value = '';
+            renderListings(listings);
+        }
+
+        // --- 5. ДОБАВЛЕНИЕ НОВОГО ОБЪЯВЛЕНИЯ ---
+        function saveNewListing() {
+            const mekan = document.getElementById('newMekan').value;
+            const otaq = parseInt(document.getElementById('newOtaq').value) || 1;
+            const nefer = parseInt(document.getElementById('newNefer').value) || 2;
+            const price = parseFloat(document.getElementById('newPrice').value) || 100;
+            const period = document.getElementById('newPeriod').value;
+            const phone = document.getElementById('newPhone').value || (currentUser ? currentUser.value : '+994500000000');
+            const fileInput = document.getElementById('newPhoto');
+
+            const addListingItem = (imgSrc) => {
+                const newItem = {
+                    id: Date.now(),
+                    mekan,
+                    otaq,
+                    nefer,
+                    price,
+                    period,
+                    phone,
+                    img: imgSrc
+                };
+                listings.unshift(newItem);
+                localStorage.setItem('kiraye_listings', JSON.stringify(listings));
+                renderListings(listings);
+                closeModal('elanModal');
+                showToast('Uğurlu!', 'Yeni elanınız siyahıya əlavə edildi.');
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    addListingItem(e.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                addListingItem("https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80");
+            }
+        }
+
+        // --- 6. УПРАВЛЕНИЕ МОДАЛЬНЫМИ ОКНАМИ ---
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Инициализация при загрузке
+        updateAuthUI();
+        renderListings(listings);
+    </script>
+</body>
+</html>
