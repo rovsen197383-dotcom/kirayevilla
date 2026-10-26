@@ -1,518 +1,601 @@
--- Lumris: database schema for plain PostgreSQL 13+.
--- Run as the app's database owner:  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f lumris-db-1-setup.sql
-
-BEGIN;
-
--- ===== 0000_extensions =====
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-
--- ===== 0001_initial_schema =====
-CREATE TYPE "public"."account_status" AS ENUM('active', 'restricted', 'suspended');
-
-CREATE TYPE "public"."address_visibility" AS ENUM('exact', 'approximate', 'hidden');
-
-CREATE TYPE "public"."agency_member_role" AS ENUM('owner', 'agent');
-
-CREATE TYPE "public"."category_kind" AS ENUM('residential', 'land', 'commercial');
-
-CREATE TYPE "public"."construction_type" AS ENUM('brick', 'monolith', 'panel', 'stone', 'other');
-
-CREATE TYPE "public"."contact_method" AS ENUM('phone', 'whatsapp', 'inquiry');
-
-CREATE TYPE "public"."currency" AS ENUM('AZN', 'USD', 'EUR');
-
-CREATE TYPE "public"."inquiry_status" AS ENUM('new', 'read', 'replied', 'archived', 'spam');
-
-CREATE TYPE "public"."listing_status" AS ENUM('draft', 'pending', 'active', 'rejected', 'paused', 'sold', 'rented', 'expired', 'archived', 'removed');
-
-CREATE TYPE "public"."moderation_action" AS ENUM('approve', 'reject', 'remove', 'restore');
-
-CREATE TYPE "public"."renovation" AS ENUM('none', 'needs_repair', 'standard', 'euro', 'designer');
-
-CREATE TYPE "public"."report_reason" AS ENUM('fraud', 'wrong_info', 'duplicate', 'unavailable', 'offensive', 'other');
-
-CREATE TYPE "public"."report_status" AS ENUM('open', 'resolved', 'dismissed');
-
-CREATE TYPE "public"."seller_type" AS ENUM('owner', 'agent', 'agency');
-
-CREATE TYPE "public"."transaction_type" AS ENUM('sale', 'rent', 'daily_rent');
-
-CREATE TYPE "public"."user_role" AS ENUM('user', 'owner', 'agent', 'agency', 'admin');
-
-CREATE TABLE "account" (
-	"id" text PRIMARY KEY NOT NULL,
-	"account_id" text NOT NULL,
-	"provider_id" text NOT NULL,
-	"user_id" text NOT NULL,
-	"access_token" text,
-	"refresh_token" text,
-	"id_token" text,
-	"access_token_expires_at" timestamp with time zone,
-	"refresh_token_expires_at" timestamp with time zone,
-	"scope" text,
-	"password" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE "agencies" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"slug" text NOT NULL,
-	"name" text NOT NULL,
-	"description" text,
-	"logo_url" text,
-	"phone" text,
-	"email" text,
-	"website" text,
-	"city_id" integer,
-	"owner_id" text NOT NULL,
-	"is_verified" boolean DEFAULT false NOT NULL,
-	"is_demo" boolean DEFAULT false NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "agencies_slug_unique" UNIQUE("slug")
-);
-
-CREATE TABLE "agency_members" (
-	"agency_id" uuid NOT NULL,
-	"user_id" text NOT NULL,
-	"role" "agency_member_role" DEFAULT 'agent' NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "agency_members_agency_id_user_id_pk" PRIMARY KEY("agency_id","user_id")
-);
-
-CREATE TABLE "amenities" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"slug" text NOT NULL,
-	"name_az" text NOT NULL,
-	"name_en" text NOT NULL,
-	"name_ru" text NOT NULL,
-	"sort_order" integer DEFAULT 0 NOT NULL,
-	CONSTRAINT "amenities_slug_unique" UNIQUE("slug")
-);
-
-CREATE TABLE "audit_events" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"actor_id" text,
-	"action" text NOT NULL,
-	"entity_type" text NOT NULL,
-	"entity_id" text,
-	"metadata" jsonb,
-	"ip_hash" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE "auth_rate_limit" (
-	"id" text PRIMARY KEY NOT NULL,
-	"key" text NOT NULL,
-	"count" integer NOT NULL,
-	"last_request" bigint NOT NULL,
-	CONSTRAINT "auth_rate_limit_key_unique" UNIQUE("key")
-);
-
-CREATE TABLE "cities" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"slug" text NOT NULL,
-	"name_az" text NOT NULL,
-	"name_en" text NOT NULL,
-	"name_ru" text NOT NULL,
-	"is_popular" boolean DEFAULT false NOT NULL,
-	"is_active" boolean DEFAULT true NOT NULL,
-	"sort_order" integer DEFAULT 0 NOT NULL,
-	"lat" double precision,
-	"lng" double precision,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "cities_slug_unique" UNIQUE("slug")
-);
-
-CREATE TABLE "districts" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"city_id" integer NOT NULL,
-	"slug" text NOT NULL,
-	"name_az" text NOT NULL,
-	"name_en" text NOT NULL,
-	"name_ru" text NOT NULL,
-	"is_active" boolean DEFAULT true NOT NULL,
-	"sort_order" integer DEFAULT 0 NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE "email_outbox" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"to" text NOT NULL,
-	"subject" text NOT NULL,
-	"html" text NOT NULL,
-	"text" text NOT NULL,
-	"delivered" boolean DEFAULT false NOT NULL,
-	"error" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE "favorites" (
-	"user_id" text NOT NULL,
-	"property_id" uuid NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "favorites_user_id_property_id_pk" PRIMARY KEY("user_id","property_id")
-);
-
-CREATE TABLE "inquiries" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"property_id" uuid NOT NULL,
-	"recipient_id" text NOT NULL,
-	"sender_id" text,
-	"name" text NOT NULL,
-	"email" text NOT NULL,
-	"phone" text,
-	"message" text NOT NULL,
-	"status" "inquiry_status" DEFAULT 'new' NOT NULL,
-	"ip_hash" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "inquiries_message_len" CHECK (length("inquiries"."message") BETWEEN 10 AND 2000)
-);
-
-CREATE TABLE "listing_status_history" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"property_id" uuid NOT NULL,
-	"from_status" "listing_status",
-	"to_status" "listing_status" NOT NULL,
-	"actor_id" text,
-	"note" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE "moderation_actions" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"property_id" uuid NOT NULL,
-	"moderator_id" text,
-	"action" "moderation_action" NOT NULL,
-	"reason" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE "properties" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"slug" text NOT NULL,
-	"short_id" integer GENERATED ALWAYS AS IDENTITY (sequence name "properties_short_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 100001 CACHE 1),
-	"owner_id" text NOT NULL,
-	"agency_id" uuid,
-	"category_id" integer,
-	"transaction_type" "transaction_type" DEFAULT 'sale' NOT NULL,
-	"status" "listing_status" DEFAULT 'draft' NOT NULL,
-	"title" text DEFAULT '' NOT NULL,
-	"description" text DEFAULT '' NOT NULL,
-	"price" numeric(14, 2),
-	"currency" "currency" DEFAULT 'AZN' NOT NULL,
-	"price_azn" numeric(14, 2),
-	"city_id" integer,
-	"district_id" integer,
-	"address" text,
-	"address_visibility" "address_visibility" DEFAULT 'approximate' NOT NULL,
-	"lat" double precision,
-	"lng" double precision,
-	"rooms" smallint,
-	"area_m2" numeric(10, 2),
-	"land_area_sot" numeric(10, 2),
-	"floor" smallint,
-	"total_floors" smallint,
-	"build_year" smallint,
-	"construction_type" "construction_type",
-	"renovation" "renovation",
-	"has_title_deed" boolean,
-	"mortgage_available" boolean,
-	"seller_type" "seller_type" DEFAULT 'owner' NOT NULL,
-	"contact_name" text,
-	"contact_phone" text,
-	"contact_method" "contact_method" DEFAULT 'phone' NOT NULL,
-	"show_phone" boolean DEFAULT true NOT NULL,
-	"is_demo" boolean DEFAULT false NOT NULL,
-	"is_featured" boolean DEFAULT false NOT NULL,
-	"view_count" integer DEFAULT 0 NOT NULL,
-	"phone_reveal_count" integer DEFAULT 0 NOT NULL,
-	"rejection_reason" text,
-	"submitted_at" timestamp with time zone,
-	"published_at" timestamp with time zone,
-	"expires_at" timestamp with time zone,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"search_text" text GENERATED ALWAYS AS (lower(coalesce("title", '') || ' ' || coalesce("description", ''))) STORED,
-	CONSTRAINT "properties_short_id_unique" UNIQUE("short_id"),
-	CONSTRAINT "properties_price_positive" CHECK ("properties"."price" IS NULL OR "properties"."price" > 0),
-	CONSTRAINT "properties_price_max" CHECK ("properties"."price" IS NULL OR "properties"."price" < 1000000000),
-	CONSTRAINT "properties_area_positive" CHECK ("properties"."area_m2" IS NULL OR ("properties"."area_m2" > 0 AND "properties"."area_m2" < 1000000)),
-	CONSTRAINT "properties_land_positive" CHECK ("properties"."land_area_sot" IS NULL OR "properties"."land_area_sot" > 0),
-	CONSTRAINT "properties_rooms_range" CHECK ("properties"."rooms" IS NULL OR ("properties"."rooms" >= 0 AND "properties"."rooms" <= 50)),
-	CONSTRAINT "properties_floors_range" CHECK ("properties"."total_floors" IS NULL OR ("properties"."total_floors" >= 1 AND "properties"."total_floors" <= 200)),
-	CONSTRAINT "properties_floor_le_total" CHECK ("properties"."floor" IS NULL OR "properties"."total_floors" IS NULL OR "properties"."floor" <= "properties"."total_floors"),
-	CONSTRAINT "properties_build_year_range" CHECK ("properties"."build_year" IS NULL OR ("properties"."build_year" BETWEEN 1800 AND 2100)),
-	CONSTRAINT "properties_published_requires_fields" CHECK ("properties"."status" IN ('draft') OR ("properties"."price" IS NOT NULL AND "properties"."city_id" IS NOT NULL AND "properties"."category_id" IS NOT NULL AND length("properties"."title") >= 10))
-);
-
-CREATE TABLE "property_amenities" (
-	"property_id" uuid NOT NULL,
-	"amenity_id" integer NOT NULL,
-	CONSTRAINT "property_amenities_property_id_amenity_id_pk" PRIMARY KEY("property_id","amenity_id")
-);
-
-CREATE TABLE "property_categories" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"slug" text NOT NULL,
-	"kind" "category_kind" NOT NULL,
-	"name_az" text NOT NULL,
-	"name_en" text NOT NULL,
-	"name_ru" text NOT NULL,
-	"icon" text DEFAULT 'home' NOT NULL,
-	"is_active" boolean DEFAULT true NOT NULL,
-	"sort_order" integer DEFAULT 0 NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "property_categories_slug_unique" UNIQUE("slug")
-);
-
-CREATE TABLE "property_images" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"property_id" uuid NOT NULL,
-	"storage_key" text NOT NULL,
-	"url" text NOT NULL,
-	"thumb_url" text NOT NULL,
-	"width" integer NOT NULL,
-	"height" integer NOT NULL,
-	"size_bytes" integer NOT NULL,
-	"mime_type" text NOT NULL,
-	"position" integer DEFAULT 0 NOT NULL,
-	"is_cover" boolean DEFAULT false NOT NULL,
-	"alt" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "property_images_storage_key_unique" UNIQUE("storage_key"),
-	CONSTRAINT "property_images_size_positive" CHECK ("property_images"."size_bytes" > 0)
-);
-
-CREATE TABLE "rate_limits" (
-	"key" text PRIMARY KEY NOT NULL,
-	"count" integer DEFAULT 0 NOT NULL,
-	"window_start" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE "reports" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"property_id" uuid NOT NULL,
-	"reporter_id" text,
-	"reason" "report_reason" NOT NULL,
-	"details" text,
-	"status" "report_status" DEFAULT 'open' NOT NULL,
-	"resolved_by_id" text,
-	"resolved_at" timestamp with time zone,
-	"resolution_note" text,
-	"ip_hash" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-CREATE TABLE "session" (
-	"id" text PRIMARY KEY NOT NULL,
-	"expires_at" timestamp with time zone NOT NULL,
-	"token" text NOT NULL,
-	"ip_address" text,
-	"user_agent" text,
-	"user_id" text NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "session_token_unique" UNIQUE("token")
-);
-
-CREATE TABLE "user" (
-	"id" text PRIMARY KEY NOT NULL,
-	"name" text NOT NULL,
-	"email" text NOT NULL,
-	"email_verified" boolean DEFAULT false NOT NULL,
-	"image" text,
-	"role" "user_role" DEFAULT 'user' NOT NULL,
-	"status" "account_status" DEFAULT 'active' NOT NULL,
-	"status_reason" text,
-	"phone" text,
-	"phone_verified" boolean DEFAULT false NOT NULL,
-	"seller_type" "seller_type" DEFAULT 'owner' NOT NULL,
-	"locale" text DEFAULT 'az' NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "user_email_unique" UNIQUE("email")
-);
-
-CREATE TABLE "verification" (
-	"id" text PRIMARY KEY NOT NULL,
-	"identifier" text NOT NULL,
-	"value" text NOT NULL,
-	"expires_at" timestamp with time zone NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
-);
-
-ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "agencies" ADD CONSTRAINT "agencies_city_id_cities_id_fk" FOREIGN KEY ("city_id") REFERENCES "public"."cities"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "agencies" ADD CONSTRAINT "agencies_owner_id_user_id_fk" FOREIGN KEY ("owner_id") REFERENCES "public"."user"("id") ON DELETE restrict ON UPDATE no action;
-
-ALTER TABLE "agency_members" ADD CONSTRAINT "agency_members_agency_id_agencies_id_fk" FOREIGN KEY ("agency_id") REFERENCES "public"."agencies"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "agency_members" ADD CONSTRAINT "agency_members_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "audit_events" ADD CONSTRAINT "audit_events_actor_id_user_id_fk" FOREIGN KEY ("actor_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "districts" ADD CONSTRAINT "districts_city_id_cities_id_fk" FOREIGN KEY ("city_id") REFERENCES "public"."cities"("id") ON DELETE restrict ON UPDATE no action;
-
-ALTER TABLE "favorites" ADD CONSTRAINT "favorites_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "favorites" ADD CONSTRAINT "favorites_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "inquiries" ADD CONSTRAINT "inquiries_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "inquiries" ADD CONSTRAINT "inquiries_recipient_id_user_id_fk" FOREIGN KEY ("recipient_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "inquiries" ADD CONSTRAINT "inquiries_sender_id_user_id_fk" FOREIGN KEY ("sender_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "listing_status_history" ADD CONSTRAINT "listing_status_history_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "listing_status_history" ADD CONSTRAINT "listing_status_history_actor_id_user_id_fk" FOREIGN KEY ("actor_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "moderation_actions" ADD CONSTRAINT "moderation_actions_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "moderation_actions" ADD CONSTRAINT "moderation_actions_moderator_id_user_id_fk" FOREIGN KEY ("moderator_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "properties" ADD CONSTRAINT "properties_owner_id_user_id_fk" FOREIGN KEY ("owner_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "properties" ADD CONSTRAINT "properties_agency_id_agencies_id_fk" FOREIGN KEY ("agency_id") REFERENCES "public"."agencies"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "properties" ADD CONSTRAINT "properties_category_id_property_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."property_categories"("id") ON DELETE restrict ON UPDATE no action;
-
-ALTER TABLE "properties" ADD CONSTRAINT "properties_city_id_cities_id_fk" FOREIGN KEY ("city_id") REFERENCES "public"."cities"("id") ON DELETE restrict ON UPDATE no action;
-
-ALTER TABLE "properties" ADD CONSTRAINT "properties_district_id_districts_id_fk" FOREIGN KEY ("district_id") REFERENCES "public"."districts"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "property_amenities" ADD CONSTRAINT "property_amenities_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "property_amenities" ADD CONSTRAINT "property_amenities_amenity_id_amenities_id_fk" FOREIGN KEY ("amenity_id") REFERENCES "public"."amenities"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "property_images" ADD CONSTRAINT "property_images_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "reports" ADD CONSTRAINT "reports_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;
-
-ALTER TABLE "reports" ADD CONSTRAINT "reports_reporter_id_user_id_fk" FOREIGN KEY ("reporter_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "reports" ADD CONSTRAINT "reports_resolved_by_id_user_id_fk" FOREIGN KEY ("resolved_by_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;
-
-ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
-
-CREATE INDEX "account_user_idx" ON "account" USING btree ("user_id");
-
-CREATE INDEX "agencies_owner_idx" ON "agencies" USING btree ("owner_id");
-
-CREATE UNIQUE INDEX "agency_members_user_uq" ON "agency_members" USING btree ("user_id");
-
-CREATE INDEX "audit_events_created_idx" ON "audit_events" USING btree ("created_at");
-
-CREATE INDEX "audit_events_entity_idx" ON "audit_events" USING btree ("entity_type","entity_id");
-
-CREATE UNIQUE INDEX "districts_city_slug_uq" ON "districts" USING btree ("city_id","slug");
-
-CREATE INDEX "districts_city_idx" ON "districts" USING btree ("city_id");
-
-CREATE INDEX "email_outbox_to_idx" ON "email_outbox" USING btree ("to","created_at");
-
-CREATE INDEX "favorites_property_idx" ON "favorites" USING btree ("property_id");
-
-CREATE INDEX "inquiries_recipient_idx" ON "inquiries" USING btree ("recipient_id","status","created_at");
-
-CREATE INDEX "inquiries_property_idx" ON "inquiries" USING btree ("property_id");
-
-CREATE INDEX "listing_status_history_property_idx" ON "listing_status_history" USING btree ("property_id","created_at");
-
-CREATE INDEX "moderation_actions_property_idx" ON "moderation_actions" USING btree ("property_id","created_at");
-
-CREATE INDEX "properties_public_search_idx" ON "properties" USING btree ("status","transaction_type","category_id","city_id","price_azn");
-
-CREATE INDEX "properties_status_published_idx" ON "properties" USING btree ("status","published_at");
-
-CREATE INDEX "properties_owner_idx" ON "properties" USING btree ("owner_id","status");
-
-CREATE INDEX "properties_district_idx" ON "properties" USING btree ("district_id");
-
-CREATE INDEX "properties_expires_idx" ON "properties" USING btree ("expires_at");
-
-CREATE INDEX "properties_search_text_trgm_idx" ON "properties" USING gin ("search_text" gin_trgm_ops);
-
-CREATE INDEX "property_images_property_idx" ON "property_images" USING btree ("property_id","position");
-
-CREATE UNIQUE INDEX "property_images_one_cover_uq" ON "property_images" USING btree ("property_id") WHERE "property_images"."is_cover";
-
-CREATE INDEX "reports_status_idx" ON "reports" USING btree ("status","created_at");
-
-CREATE INDEX "reports_property_idx" ON "reports" USING btree ("property_id");
-
-CREATE INDEX "session_user_idx" ON "session" USING btree ("user_id");
-
-CREATE INDEX "user_role_idx" ON "user" USING btree ("role");
-
-CREATE INDEX "user_status_idx" ON "user" USING btree ("status");
-
-CREATE INDEX "verification_identifier_idx" ON "verification" USING btree ("identifier");
-
--- ===== 0002_row_level_security =====
--- Row Level Security: defence in depth.
---
--- The application talks to PostgreSQL only from the server (Drizzle, using the
--- table-owner role), and every authorization rule is enforced in the server
--- code. On Supabase, however, the same tables are also reachable through the
--- auto-generated REST API with the public "anon" key. Enabling RLS with no
--- permissive policies for "anon"/"authenticated" denies all access through that
--- path. The table owner (used by the app) bypasses RLS because FORCE is not set.
---
--- The only rows that are safe to read publicly are approved listings and their
--- images plus reference data; explicit read-only policies are created for those
--- when the Supabase roles exist. Nothing is writable through the REST API.
-
-DO $$
-DECLARE
-  t text;
-BEGIN
-  FOREACH t IN ARRAY ARRAY[
-    'user','session','account','verification','auth_rate_limit',
-    'cities','districts','property_categories','amenities',
-    'agencies','agency_members',
-    'properties','property_images','property_amenities',
-    'favorites','inquiries','reports','moderation_actions',
-    'listing_status_history','audit_events','rate_limits','email_outbox'
-  ] LOOP
-    EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', t);
-  END LOOP;
-END $$;
-
-DO $$
-BEGIN
-  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
-    EXECUTE 'CREATE POLICY public_read_cities ON cities FOR SELECT TO anon, authenticated USING (is_active)';
-    EXECUTE 'CREATE POLICY public_read_districts ON districts FOR SELECT TO anon, authenticated USING (is_active)';
-    EXECUTE 'CREATE POLICY public_read_categories ON property_categories FOR SELECT TO anon, authenticated USING (is_active)';
-    EXECUTE 'CREATE POLICY public_read_amenities ON amenities FOR SELECT TO anon, authenticated USING (true)';
-    EXECUTE 'CREATE POLICY public_read_active_properties ON properties FOR SELECT TO anon, authenticated USING (status = ''active'')';
-    EXECUTE 'CREATE POLICY public_read_active_images ON property_images FOR SELECT TO anon, authenticated
-             USING (EXISTS (SELECT 1 FROM properties p WHERE p.id = property_id AND p.status = ''active''))';
-    -- Column-level protection: contact phone and exact address are never exposed via the REST API.
-    EXECUTE 'REVOKE SELECT ON properties FROM anon, authenticated';
-    EXECUTE 'GRANT SELECT (id, slug, short_id, category_id, transaction_type, status, title, description, price, currency,
-             price_azn, city_id, district_id, rooms, area_m2, land_area_sot, floor, total_floors, build_year,
-             construction_type, renovation, seller_type, is_demo, published_at, created_at, updated_at)
-             ON properties TO anon, authenticated';
-  END IF;
-END $$;
-
--- ===== migration bookkeeping (so future "npm run db:migrate" knows these are done) =====
-CREATE SCHEMA IF NOT EXISTS "drizzle";
-CREATE TABLE IF NOT EXISTS "drizzle"."__drizzle_migrations" (id SERIAL PRIMARY KEY, hash text NOT NULL, created_at bigint);
-INSERT INTO "drizzle"."__drizzle_migrations" ("hash","created_at") VALUES
-  ('fc27e97b9a61877f7f59d59a69c8c0bd2cd3271bc44b9f208800ed458d18a10b', 1792176300388),
-  ('a88cd78ba20c645ed5924e7fc22ebb26aec7150346544b132917861d1b445611', 1792176304006),
-  ('c4c09cfc8f7315fe244a8a4bff870e0f7a221dc3a2b7563e6732d9fdfa9dddda', 1792176311607);
-
-COMMIT;
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>kirayevilla.com — Həyət evləri və bağ evləri kirayə</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Подключение EmailJS для реальной отправки писем -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f5;
+            color: #2b2b2b;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .header-bg { background-color: #262523; }
+        .btn-accent { background-color: #a486b0; transition: background-color 0.2s; }
+        .btn-accent:hover { background-color: #8f709c; }
+        .toast-enter { animation: slideDown 0.3s ease-out forwards; }
+        @keyframes slideDown {
+            from { transform: translate(-50%, -100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ -->
+    <div id="toastNotification" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] hidden bg-stone-900 text-white px-6 py-4 rounded-xl shadow-2xl border border-purple-400 flex items-center gap-4 min-w-[300px]">
+        <div class="bg-purple-600/30 p-2.5 rounded-lg text-purple-300">
+            <i class="fa-solid fa-bell text-xl"></i>
+        </div>
+        <div>
+            <div id="toastTitle" class="text-xs text-stone-400">Bildiriş</div>
+            <div id="toastMessage" class="text-sm font-semibold mt-0.5">Kod göndərildi</div>
+        </div>
+    </div>
+
+    <!-- ШАПКА САЙТА -->
+    <header class="header-bg text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" onclick="closeDetailModal()" class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-[#e07a5f] flex items-center justify-center font-bold text-lg shadow-inner">K</div>
+                <div>
+                    <div class="font-bold text-lg leading-tight tracking-tight">kirayevilla<span class="text-[#e07a5f]">.com</span></div>
+                    <div class="text-[11px] text-stone-400">Həyət evləri və bağ evləri</div>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-2.5">
+                <button onclick="handleNewListingClick()" class="bg-[#e07a5f] hover:bg-[#d0694e] text-white text-xs sm:text-sm font-medium px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Elan yerləşdir</span>
+                </button>
+
+                <button id="authHeaderBtn" onclick="handleAuthButtonClick()" class="bg-stone-700 hover:bg-stone-600 text-stone-200 text-xs sm:text-sm font-medium px-3.5 py-2 rounded-lg transition flex items-center gap-1.5">
+                    <i class="fa-regular fa-user"></i>
+                    <span id="authHeaderText">Giriş</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ПАНЕЛЬ ФИЛЬТРОВ -->
+    <section class="bg-white border-b border-stone-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <select id="filterLocation" onchange="applyFilters()" class="border border-stone-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-white text-stone-700 focus:outline-none focus:border-purple-500">
+                    <option value="">Bütün məkanlar</option>
+                    <option value="Novxanı">Novxanı</option>
+                    <option value="Mərdəkan">Mərdəkan</option>
+                    <option value="Şüvəlan">Şüvəlan</option>
+                    <option value="Bilgəh">Bilgəh</option>
+                    <option value="Zaqulba">Zaqulba</option>
+                    <option value="Qəbələ">Qəbələ</option>
+                    <option value="Şamaxı">Şamaxı</option>
+                    <option value="Quba">Quba</option>
+                </select>
+
+                <select id="filterType" onchange="applyFilters()" class="border border-stone-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-white text-stone-700 focus:outline-none focus:border-purple-500">
+                    <option value="">Günlük / Aylıq</option>
+                    <option value="gün">Günlük</option>
+                    <option value="ay">Aylıq</option>
+                </select>
+
+                <select id="filterRooms" onchange="applyFilters()" class="border border-stone-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-white text-stone-700 focus:outline-none focus:border-purple-500">
+                    <option value="">Otaq sayı</option>
+                    <option value="1">1 otaqlı</option>
+                    <option value="2">2 otaqlı</option>
+                    <option value="3">3 otaqlı</option>
+                    <option value="4">4 otaqlı</option>
+                    <option value="5">5+ otaqlı</option>
+                </select>
+
+                <div class="flex items-center gap-1.5">
+                    <input id="filterMinPrice" oninput="applyFilters()" type="number" placeholder="min. ₼" class="w-20 sm:w-24 border border-stone-300 rounded-lg px-2.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-purple-500">
+                    <span class="text-stone-400">—</span>
+                    <input id="filterMaxPrice" oninput="applyFilters()" type="number" placeholder="maks. ₼" class="w-20 sm:w-24 border border-stone-300 rounded-lg px-2.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-purple-500">
+                </div>
+
+                <button onclick="resetFilters()" class="text-xs text-stone-500 hover:text-stone-800 underline ml-auto">Sıfırla</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- СПИСОК ОБЪЯВЛЕНИЙ -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+        <div class="mb-5">
+            <h1 class="text-lg sm:text-xl font-bold text-stone-800">Həyət evləri / Bağ evləri kirayə</h1>
+            <p id="listingsCount" class="text-xs text-stone-500 mt-0.5">1 elan tapıldı</p>
+        </div>
+
+        <div id="listingsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </main>
+
+    <!-- ДЕТАЛЬНАЯ СТРАНИЦА ВИЛЛЫ (ОТКРЫВАЕТСЯ ПРИ КЛИКЕ НА КАРТОЧКУ) -->
+    <div id="detailModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl relative my-8">
+            <button onclick="closeModal('detailModal')" class="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white w-9 h-9 flex items-center justify-center rounded-full z-10 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="h-64 sm:h-80 bg-stone-200 relative">
+                <img id="detailImg" src="" alt="Villa" class="w-full h-full object-cover">
+                <div id="detailPrice" class="absolute bottom-4 left-4 bg-stone-900/90 text-white text-lg font-bold px-4 py-1.5 rounded-xl"></div>
+            </div>
+
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <h2 id="detailTitle" class="text-xl font-bold text-stone-800"></h2>
+                        <p id="detailSpecs" class="text-sm text-stone-500 mt-0.5"></p>
+                    </div>
+                    <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Aktiv elan</span>
+                </div>
+
+                <p id="detailDesc" class="text-sm text-stone-600 leading-relaxed mb-6 border-t border-stone-100 pt-4">
+                    Tam təmirli, hovuzlu, manqal zonası və geniş həyəti olan bağ evi. Ailəvi istirahət üçün bütün şərait yaradılıb (Wi-Fi, kondisioner, mətbəx avadanlığı).
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a id="detailCallBtn" href="#" class="btn-accent text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-phone"></i>
+                        <span id="detailPhoneText">Zəng et</span>
+                    </a>
+                    <a id="detailWaBtn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm transition">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>WhatsApp ilə yaz</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ВХОДА (EMAIL + ТЕЛЕФОН) -->
+    <div id="loginModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h2 class="text-lg font-bold text-stone-800 mb-1">Kabinetə giriş</h2>
+            <p class="text-xs text-stone-500 mb-4">Elanları idarə etmək üçün daxil olun</p>
+
+            <!-- Переключатель: Email (по умолчанию) или Телефон -->
+            <div class="grid grid-cols-2 gap-1 bg-stone-100 p-1 rounded-xl mb-5">
+                <button id="tabEmailBtn" onclick="switchAuthMethod('email')" class="py-2 text-xs font-semibold rounded-lg bg-white text-stone-800 shadow-xs transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-envelope text-purple-600"></i>
+                    <span>Email</span>
+                </button>
+                <button id="tabPhoneBtn" onclick="switchAuthMethod('phone')" class="py-2 text-xs font-semibold rounded-lg text-stone-500 hover:text-stone-800 transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-phone text-purple-600"></i>
+                    <span>Telefon</span>
+                </button>
+            </div>
+
+            <!-- ШАГ 1 -->
+            <div id="authStep1">
+                <div id="emailInputGroup" class="mb-4">
+                    <label class="block text-xs font-medium text-stone-600 mb-1.5">E-poçt ünvanı</label>
+                    <input id="loginEmailInput" type="email" placeholder="nümunə@gmail.com" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-500">
+                </div>
+
+                <div id="phoneInputGroup" class="mb-4 hidden">
+                    <label class="block text-xs font-medium text-stone-600 mb-1.5">Mobil nömrə</label>
+                    <div class="flex">
+                        <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-stone-300 bg-stone-50 text-stone-600 text-sm font-medium">+994</span>
+                        <input id="loginPhoneInput" type="tel" placeholder="50 123 45 67" maxlength="12" class="w-full border border-stone-300 rounded-r-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+
+                <div id="authErrorMsg" class="text-xs text-red-600 mb-3 hidden"></div>
+
+                <button id="sendCodeBtn" onclick="sendVerificationCode()" class="w-full btn-accent text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm flex items-center justify-center gap-2">
+                    <span id="sendCodeBtnText">Kod göndər</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+
+            <!-- ШАГ 2 -->
+            <div id="authStep2" class="hidden">
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-3 mb-4 text-xs text-purple-900">
+                    <span id="sentTargetText" class="font-semibold"></span> ünvanına 4 rəqəmli təsdiq kodu göndərildi.
+                    <div id="demoHintBox" class="mt-1 text-[11px] text-purple-700 hidden">
+                        (Ehtiyat kod: <strong id="demoCodeHint" class="underline text-sm"></strong>)
+                    </div>
+                </div>
+
+                <label class="block text-xs font-medium text-stone-600 mb-1.5">Təsdiq kodu</label>
+                <input id="verificationCodeInput" type="text" maxlength="4" placeholder="• • • •" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 text-center text-lg font-bold tracking-widest focus:outline-none focus:border-purple-500 mb-3">
+
+                <div id="codeErrorMsg" class="text-xs text-red-600 mb-3 hidden"></div>
+
+                <button onclick="verifyCodeAndLogin()" class="w-full btn-accent text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm mb-2">
+                    Təsdiqlə və Daxil ol
+                </button>
+
+                <button onclick="backToStep1()" class="w-full text-xs text-stone-500 hover:text-stone-800 py-1.5">
+                    ← Geriyə qayıt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ОБЪЯВЛЕНИЯ -->
+    <div id="elanModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative my-8">
+            <button onclick="closeModal('elanModal')" class="absolute top-4 right-4 text-stone-400 hover:text-stone-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h2 class="text-lg font-bold text-stone-800 mb-4">Yeni elan yerləşdir</h2>
+
+            <div class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-medium text-stone-600 mb-1">Məkan</label>
+                    <select id="newMekan" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white">
+                        <option value="Novxanı">Novxanı</option>
+                        <option value="Mərdəkan">Mərdəkan</option>
+                        <option value="Şüvəlan">Şüvəlan</option>
+                        <option value="Bilgəh">Bilgəh</option>
+                        <option value="Zaqulba">Zaqulba</option>
+                        <option value="Qəbələ">Qəbələ</option>
+                        <option value="Şamaxı">Şamaxı</option>
+                        <option value="Quba">Quba</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-stone-600 mb-1">Otaq sayı</label>
+                        <input id="newOtaq" type="number" value="3" min="1" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-stone-600 mb-1">Qonaq tutumu (nəfər)</label>
+                        <input id="newNefer" type="number" value="6" min="1" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-stone-600 mb-1">Qiymət (₼)</label>
+                        <input id="newPrice" type="number" placeholder="150" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-stone-600 mb-1">Müddət</label>
+                        <select id="newPeriod" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm bg-white">
+                            <option value="gün">Günlük</option>
+                            <option value="ay">Aylıq</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-stone-600 mb-1">Əlaqə nömrəsi</label>
+                    <input id="newPhone" type="tel" placeholder="+994 50 123 45 67" class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-stone-600 mb-1">Ətraflı məlumat (təsvir)</label>
+                    <textarea id="newDesc" rows="2" placeholder="Hovuzlu, manqal, Wi-Fi..." class="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-stone-600 mb-1">Şəkil seçin</label>
+                    <input id="newPhoto" type="file" accept="image/*" class="w-full text-xs text-stone-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                </div>
+
+                <button onclick="saveNewListing()" class="w-full bg-[#e07a5f] hover:bg-[#d0694e] text-white font-semibold py-2.5 rounded-xl text-sm shadow-sm mt-2">
+                    Elanı dərc et
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // НАСТРОЙКИ EMAILJS (ВСТАВЬТЕ СЮДА ВАШИ 3 КЛЮЧА С САЙТА EMAILJS.COM)
+        // =========================================================================
+        const EMAILJS_PUBLIC_KEY = "ВАШ_PUBLIC_KEY";   // Например: "xYz123AbC..."
+        const EMAILJS_SERVICE_ID = "ВАШ_SERVICE_ID";   // Например: "service_xxxx"
+        const EMAILJS_TEMPLATE_ID = "ВАШ_TEMPLATE_ID"; // Например: "template_xxxx"
+
+        if (EMAILJS_PUBLIC_KEY !== "ВАШ_PUBLIC_KEY") {
+            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        }
+
+        const defaultListings = [
+            {
+                id: 1,
+                mekan: "Novxanı",
+                otaq: 3,
+                nefer: 6,
+                price: 150,
+                period: "gün",
+                phone: "+994502707373",
+                desc: "Novxanıda dənizə yaxın, 2 mərtəbəli, isti hovuzlu və geniş besedkalı müasir bağ evi. Bütün şərait var.",
+                img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        let listings = JSON.parse(localStorage.getItem('kiraye_listings')) || defaultListings;
+        let currentUser = JSON.parse(localStorage.getItem('kiraye_user')) || null;
+        let currentAuthMethod = 'email';
+        let generatedCode = null;
+        let pendingAuthTarget = '';
+
+        function showToast(title, message) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.remove('hidden');
+            toast.classList.add('toast-enter');
+            setTimeout(() => { toast.classList.add('hidden'); }, 6000);
+        }
+
+        function updateAuthUI() {
+            const btnText = document.getElementById('authHeaderText');
+            const btn = document.getElementById('authHeaderBtn');
+            if (currentUser) {
+                btnText.textContent = `Kabinet (${currentUser.value})`;
+                btn.classList.remove('bg-stone-700');
+                btn.classList.add('bg-purple-700');
+            } else {
+                btnText.textContent = 'Giriş';
+                btn.classList.remove('bg-purple-700');
+                btn.classList.add('bg-stone-700');
+            }
+        }
+
+        function handleAuthButtonClick() {
+            if (currentUser) {
+                if (confirm(`Hesabdan çıxmaq istəyirsiniz? (${currentUser.value})`)) {
+                    currentUser = null;
+                    localStorage.removeItem('kiraye_user');
+                    updateAuthUI();
+                    showToast('Çıxış edildi', 'Hesabınızdan uğurla çıxdınız.');
+                }
+            } else {
+                openModal('loginModal');
+            }
+        }
+
+        function handleNewListingClick() {
+            if (!currentUser) {
+                showToast('Giriş tələb olunur', 'Elan yerləşdirmək üçün əvvəlcə kabinetə daxil olun.');
+                openModal('loginModal');
+            } else {
+                openModal('elanModal');
+            }
+        }
+
+        function switchAuthMethod(method) {
+            currentAuthMethod = method;
+            const tabPhoneBtn = document.getElementById('tabPhoneBtn');
+            const tabEmailBtn = document.getElementById('tabEmailBtn');
+            const phoneGroup = document.getElementById('phoneInputGroup');
+            const emailGroup = document.getElementById('emailInputGroup');
+            document.getElementById('authErrorMsg').classList.add('hidden');
+
+            if (method === 'email') {
+                tabEmailBtn.className = "py-2 text-xs font-semibold rounded-lg bg-white text-stone-800 shadow-xs transition flex items-center justify-center gap-1.5";
+                tabPhoneBtn.className = "py-2 text-xs font-semibold rounded-lg text-stone-500 hover:text-stone-800 transition flex items-center justify-center gap-1.5";
+                emailGroup.classList.remove('hidden');
+                phoneGroup.classList.add('hidden');
+            } else {
+                tabPhoneBtn.className = "py-2 text-xs font-semibold rounded-lg bg-white text-stone-800 shadow-xs transition flex items-center justify-center gap-1.5";
+                tabEmailBtn.className = "py-2 text-xs font-semibold rounded-lg text-stone-500 hover:text-stone-800 transition flex items-center justify-center gap-1.5";
+                phoneGroup.classList.remove('hidden');
+                emailGroup.classList.add('hidden');
+            }
+        }
+
+        async function sendVerificationCode() {
+            const errorMsg = document.getElementById('authErrorMsg');
+            const sendBtnText = document.getElementById('sendCodeBtnText');
+            errorMsg.classList.add('hidden');
+
+            if (currentAuthMethod === 'email') {
+                const email = document.getElementById('loginEmailInput').value.trim();
+                if (!email || !email.includes('@') || !email.includes('.')) {
+                    errorMsg.textContent = 'Zəhmət olmasa düzgün Email ünvanı daxil edin.';
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+                pendingAuthTarget = email;
+            } else {
+                const rawPhone = document.getElementById('loginPhoneInput').value.replace(/\D/g, '');
+                if (rawPhone.length < 9) {
+                    errorMsg.textContent = 'Zəhmət olmasa düzgün nömrə daxil edin (məs: 50 123 45 67).';
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+                pendingAuthTarget = '+994' + rawPhone.slice(-9);
+            }
+
+            generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+            sendBtnText.textContent = 'Göndərilir...';
+
+            // Если выбран Email и ключи EmailJS настроены — отправляем реальное письмо
+            if (currentAuthMethod === 'email' && EMAILJS_PUBLIC_KEY !== "ВАШ_PUBLIC_KEY") {
+                try {
+                    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                        to_email: pendingAuthTarget,
+                        code: generatedCode
+                    });
+                    document.getElementById('demoHintBox').classList.add('hidden');
+                    showToast('Email göndərildi!', `Kod ${pendingAuthTarget} ünvanına göndərildi.`);
+                } catch (err) {
+                    console.error("EmailJS xətası:", err);
+                    document.getElementById('demoCodeHint').textContent = generatedCode;
+                    document.getElementById('demoHintBox').classList.remove('hidden');
+                    showToast('Ehtiyat rejim', `Sizin təsdiq kodunuz: ${generatedCode}`);
+                }
+            } else {
+                // Если ключи ещё не вставлены или выбран телефон
+                document.getElementById('demoCodeHint').textContent = generatedCode;
+                document.getElementById('demoHintBox').classList.remove('hidden');
+                showToast('Təsdiq Kodu', `Sizin təsdiq kodunuz: ${generatedCode}`);
+            }
+
+            sendBtnText.textContent = 'Kod göndər';
+            document.getElementById('sentTargetText').textContent = pendingAuthTarget;
+            document.getElementById('verificationCodeInput').value = '';
+            document.getElementById('codeErrorMsg').classList.add('hidden');
+            document.getElementById('authStep1').classList.add('hidden');
+            document.getElementById('authStep2').classList.remove('hidden');
+        }
+
+        function verifyCodeAndLogin() {
+            const entered = document.getElementById('verificationCodeInput').value.trim();
+            const errorMsg = document.getElementById('codeErrorMsg');
+
+            if (entered !== generatedCode) {
+                errorMsg.textContent = 'Yanlış kod! Zəhmət olmasa 4 rəqəmli kodu düzgün daxil edin.';
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            currentUser = { type: currentAuthMethod, value: pendingAuthTarget };
+            localStorage.setItem('kiraye_user', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeModal('loginModal');
+            backToStep1();
+            showToast('Xoş gəldiniz!', `Kabinetə daxil oldunuz: ${pendingAuthTarget}`);
+        }
+
+        function backToStep1() {
+            document.getElementById('authStep2').classList.add('hidden');
+            document.getElementById('authStep1').classList.remove('hidden');
+            document.getElementById('codeErrorMsg').classList.add('hidden');
+        }
+
+        // Открытие детальной страницы при клике на объявление
+        function openListingDetail(id) {
+            const item = listings.find(x => x.id === id);
+            if (!item) return;
+
+            document.getElementById('detailImg').src = item.img;
+            document.getElementById('detailPrice').innerHTML = `${item.price} ₼ <span class="font-normal text-xs text-stone-300">/ ${item.period}</span>`;
+            document.getElementById('detailTitle').textContent = `${item.mekan} — Bağ evi / Villa`;
+            document.getElementById('detailSpecs').textContent = `${item.otaq} otaqlı • Maksimum ${item.nefer} nəfər qonaq`;
+            document.getElementById('detailDesc').textContent = item.desc || "Tam təmirli, hovuzlu, manqal zonası və geniş həyəti olan bağ evi. Ailəvi istirahət üçün bütün şərait yaradılıb.";
+            document.getElementById('detailCallBtn').href = `tel:${item.phone}`;
+            document.getElementById('detailPhoneText').textContent = `Zəng et (${item.phone})`;
+
+            const cleanPhone = item.phone.replace(/\D/g, '');
+            document.getElementById('detailWaBtn').href = `https://wa.me/${cleanPhone}?text=${encodeURIComponent('Salam, kirayevilla.com saytındakı ' + item.mekan + ' elanı ilə maraqlanıram.')}`;
+
+            openModal('detailModal');
+        }
+
+        function renderListings(data) {
+            const container = document.getElementById('listingsContainer');
+            const countEl = document.getElementById('listingsCount');
+            container.innerHTML = '';
+            countEl.textContent = `${data.length} elan tapıldı`;
+
+            if (data.length === 0) {
+                container.innerHTML = `<div class="col-span-full bg-white rounded-2xl p-8 text-center border border-stone-200"><p class="text-stone-500 text-sm">Seçilmiş filtrlərə uyğun elan tapılmadı.</p></div>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.onclick = () => openListingDetail(item.id);
+                card.className = "cursor-pointer bg-white rounded-2xl overflow-hidden shadow-xs border border-stone-200/80 flex flex-col hover:shadow-lg transition group";
+                card.innerHTML = `
+                    <div class="relative h-52 bg-stone-200 overflow-hidden">
+                        <img src="${item.img}" alt="${item.mekan}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <div class="absolute bottom-3 left-3 bg-stone-900/85 backdrop-blur-xs text-white text-sm font-bold px-3 py-1 rounded-lg">
+                            ${item.price} ₼ <span class="font-normal text-xs text-stone-300">/ ${item.period}</span>
+                        </div>
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow">
+                        <h3 class="font-bold text-base text-stone-800 group-hover:text-purple-700 transition">${item.mekan}</h3>
+                        <p class="text-xs text-stone-500 mt-1 mb-4">${item.otaq} otaqlı • ${item.nefer} nəfər</p>
+                        <button class="mt-auto w-full btn-accent text-white text-xs font-semibold py-2.5 rounded-xl text-center block">
+                            Ətraflı bax / Bron et
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function applyFilters() {
+            const loc = document.getElementById('filterLocation').value;
+            const type = document.getElementById('filterType').value;
+            const rooms = document.getElementById('filterRooms').value;
+            const minP = parseFloat(document.getElementById('filterMinPrice').value) || 0;
+            const maxP = parseFloat(document.getElementById('filterMaxPrice').value) || Infinity;
+
+            const filtered = listings.filter(item => {
+                const matchLoc = !loc || item.mekan === loc;
+                const matchType = !type || item.period === type;
+                const matchRooms = !rooms || (rooms === '5' ? item.otaq >= 5 : item.otaq == rooms);
+                const matchPrice = item.price >= minP && item.price <= maxP;
+                return matchLoc && matchType && matchRooms && matchPrice;
+            });
+
+            renderListings(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('filterLocation').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterRooms').value = '';
+            document.getElementById('filterMinPrice').value = '';
+            document.getElementById('filterMaxPrice').value = '';
+            renderListings(listings);
+        }
+
+        function saveNewListing() {
+            const mekan = document.getElementById('newMekan').value;
+            const otaq = parseInt(document.getElementById('newOtaq').value) || 1;
+            const nefer = parseInt(document.getElementById('newNefer').value) || 2;
+            const price = parseFloat(document.getElementById('newPrice').value) || 100;
+            const period = document.getElementById('newPeriod').value;
+            const phone = document.getElementById('newPhone').value || '+994502707373';
+            const desc = document.getElementById('newDesc').value.trim();
+            const fileInput = document.getElementById('newPhoto');
+
+            const addListingItem = (imgSrc) => {
+                const newItem = { id: Date.now(), mekan, otaq, nefer, price, period, phone, desc, img: imgSrc };
+                listings.unshift(newItem);
+                localStorage.setItem('kiraye_listings', JSON.stringify(listings));
+                renderListings(listings);
+                closeModal('elanModal');
+                showToast('Uğurlu!', 'Yeni elanınız siyahıya əlavə edildi.');
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { addListingItem(e.target.result); };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                addListingItem("https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80");
+            }
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        updateAuthUI();
+        renderListings(listings);
+    </script>
+</body>
+</html>
