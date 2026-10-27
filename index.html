@@ -22,16 +22,16 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#f8fafc] text-slate-800">
+<body class="min-h-screen flex flex-col bg-[#f8fafc] text-slate-800" onclick="window.closeAllDropdowns()">
 
     <!-- ========================================================================= -->
-    <!-- ВЕРХНЯЯ ТЁМНАЯ ШАПКА KIRAYEVILLA.COM (КАК НА ВАШЕМ ВИДЕО)                 -->
+    <!-- ВЕРХНЯЯ ТЁМНАЯ ШАПКА KIRAYEVILLA.COM                                      -->
     <!-- ========================================================================= -->
     <header class="bg-[#1e2430] text-white sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-4 lg:px-8 h-16 flex justify-between items-center">
             
             <!-- Логотип K kirayevilla.com -->
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('guest')">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.switchTab('guest')">
                 <div class="w-9 h-9 rounded-lg bg-[#e0533c] flex items-center justify-center font-extrabold text-white text-lg shadow">
                     K
                 </div>
@@ -43,24 +43,24 @@
                 </div>
             </div>
 
-            <!-- Правая часть: Языки, + Elan yerləşdir и Giriş (с выпадающим меню кабинета) -->
+            <!-- Правая часть: Языки, + Elan yerləşdir и Giriş -->
             <div class="flex items-center space-x-3">
                 
                 <!-- Переключатель языков -->
                 <div class="hidden sm:flex bg-slate-800 rounded-lg p-0.5 border border-slate-700 text-xs font-bold">
-                    <button type="button" onclick="setLanguage('az')" id="lang-az" class="px-2.5 py-1 rounded-md bg-[#e0533c] text-white transition">AZ</button>
-                    <button type="button" onclick="setLanguage('ru')" id="lang-ru" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition">RU</button>
+                    <button type="button" onclick="window.setLanguage('az')" id="lang-az" class="px-2.5 py-1 rounded-md bg-[#e0533c] text-white transition cursor-pointer">AZ</button>
+                    <button type="button" onclick="window.setLanguage('ru')" id="lang-ru" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition cursor-pointer">RU</button>
                 </div>
 
                 <!-- Красная кнопка + Elan yerləşdir -->
-                <button type="button" onclick="switchTab('add-villa')" class="bg-[#e0533c] hover:bg-[#c9452f] text-white font-bold px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow transition">
+                <button type="button" onclick="window.switchTab('add-villa')" class="bg-[#e0533c] hover:bg-[#c9452f] text-white font-bold px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 shadow transition cursor-pointer">
                     <i class="fa-solid fa-plus text-xs"></i>
                     <span id="t-btn-new-ad">Elan yerləşdir</span>
                 </button>
 
                 <!-- Кнопка Giriş / Профиль с выпадающим списком -->
-                <div class="relative" id="giris-dropdown-container">
-                    <button type="button" onclick="toggleProfileDropdown()" class="bg-[#2d3545] hover:bg-[#394357] border border-slate-600/80 text-white font-semibold px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-2 transition">
+                <div class="relative" id="giris-dropdown-container" onclick="event.stopPropagation()">
+                    <button type="button" onclick="window.toggleProfileDropdown(event)" id="giris-btn" class="bg-[#2d3545] hover:bg-[#394357] border border-slate-600/80 text-white font-semibold px-3.5 py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-2 transition cursor-pointer">
                         <i class="fa-regular fa-user"></i>
                         <span id="t-btn-login">Giriş</span>
                         <i id="profile-chevron" class="fa-solid fa-chevron-down text-[10px] text-slate-300 transition-transform duration-200"></i>
@@ -78,36 +78,36 @@
                             </div>
                         </div>
                         <div class="space-y-1 text-sm font-medium text-slate-700">
-                            <button type="button" onclick="openCabinetSubtab('main'); closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between">
+                            <button type="button" onclick="window.openCabinetSubtab('main'); window.closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between cursor-pointer">
                                 <span>Şəxsi kabinet</span>
                                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                             </button>
-                            <button type="button" onclick="openCabinetSubtab('ads'); closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between">
+                            <button type="button" onclick="window.openCabinetSubtab('ads'); window.closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between cursor-pointer">
                                 <span>Elanlarım (1)</span>
                                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                             </button>
-                            <button type="button" onclick="openCabinetSubtab('payments'); closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between">
+                            <button type="button" onclick="window.openCabinetSubtab('payments'); window.closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between cursor-pointer">
                                 <span>Ödəniş üsulu (Kartlarım)</span>
                                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                             </button>
-                            <button type="button" onclick="openCabinetSubtab('history'); closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between">
+                            <button type="button" onclick="window.openCabinetSubtab('history'); window.closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between cursor-pointer">
                                 <span>Əməliyyat tarixçəsi</span>
                                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                             </button>
-                            <button type="button" onclick="openCabinetSubtab('profile'); closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between">
+                            <button type="button" onclick="window.openCabinetSubtab('profile'); window.closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition flex items-center justify-between cursor-pointer">
                                 <span>Profil</span>
                                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                             </button>
                             <div class="border-t border-slate-100 my-1 pt-1">
-                                <button type="button" onclick="switchTab('admin'); closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-amber-50 text-amber-700 font-bold transition flex items-center justify-between">
+                                <button type="button" onclick="window.switchTab('admin'); window.closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-amber-50 text-amber-700 font-bold transition flex items-center justify-between cursor-pointer">
                                     <span>👑 Admin Panel (PIN: 7887)</span>
                                     <span id="pending-count-badge" class="hidden bg-red-500 text-white text-[10px] px-1.5 py-0.2 rounded-full">0</span>
                                 </button>
-                                <button type="button" onclick="switchTab('owner'); closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-cyan-50 text-cyan-700 font-bold transition block">
+                                <button type="button" onclick="window.switchTab('owner'); window.closeAllDropdowns();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-cyan-50 text-cyan-700 font-bold transition block cursor-pointer">
                                     💧 OXY POOL Hovuz Xloru
                                 </button>
                             </div>
-                            <button type="button" onclick="closeAllDropdowns(); switchTab('guest');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-red-50 text-red-600 transition block">
+                            <button type="button" onclick="window.closeAllDropdowns(); window.switchTab('guest');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-red-50 text-red-600 transition block cursor-pointer">
                                 Çıxış
                             </button>
                         </div>
@@ -119,15 +119,15 @@
     </header>
 
     <!-- ========================================================================= -->
-    <!-- ПАНЕЛЬ ПОИСКА С ВЫПАДАЮЩИМ "QİYMƏT, ₼" (КАК НА BINA.AZ И ВАШЕМ ВИДЕО)     -->
+    <!-- ПАНЕЛЬ ПОИСКА С ВЫПАДАЮЩИМ "QİYMƏT, ₼" (КАК НА BINA.AZ)                   -->
     <!-- ========================================================================= -->
-    <div id="search-bar-section" class="bg-white border-b border-slate-200 shadow-sm">
+    <div id="search-bar-section" class="bg-white border-b border-slate-200 shadow-sm relative z-40">
         <div class="max-w-7xl mx-auto px-4 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
             
             <div class="flex flex-wrap items-center gap-2.5">
                 
                 <!-- 1. Bütün məkanlar -->
-                <select id="filter-district" onchange="applySearchFilters()" class="bg-white border border-slate-300 hover:border-slate-400 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
+                <select id="filter-district" onchange="window.applySearchFilters()" class="bg-white border border-slate-300 hover:border-slate-400 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
                     <option value="all">Bütün məkanlar</option>
                     <option value="Novxanı">Novxanı</option>
                     <option value="Mərdəkan">Mərdəkan</option>
@@ -139,14 +139,14 @@
                 </select>
 
                 <!-- 2. Günlük / Aylıq -->
-                <select id="filter-period" onchange="applySearchFilters()" class="bg-white border border-slate-300 hover:border-slate-400 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
+                <select id="filter-period" onchange="window.applySearchFilters()" class="bg-white border border-slate-300 hover:border-slate-400 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
                     <option value="all">Günlük / Aylıq</option>
                     <option value="daily">Günlük</option>
                     <option value="monthly">Aylıq</option>
                 </select>
 
                 <!-- 3. Otaq sayı -->
-                <select id="filter-rooms" onchange="applySearchFilters()" class="bg-white border border-slate-300 hover:border-slate-400 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
+                <select id="filter-rooms" onchange="window.applySearchFilters()" class="bg-white border border-slate-300 hover:border-slate-400 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
                     <option value="all">Otaq sayı</option>
                     <option value="2">2 otaqlı</option>
                     <option value="3">3 otaqlı</option>
@@ -155,21 +155,21 @@
                     <option value="6">6+ otaqlı</option>
                 </select>
 
-                <!-- 4. КНОПКА "Qiymət, ₼" С ВЫПАДАЮЩИМ ОКНОМ "min." и "maks." (ТОЧНО КАК НА ВИДЕО BINA.AZ) -->
-                <div class="relative" id="price-dropdown-container">
-                    <button type="button" onclick="togglePriceDropdown()" id="price-dropdown-btn" class="bg-white border border-slate-300 hover:border-slate-400 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 flex items-center space-x-3 focus:outline-none focus:border-blue-500 transition min-w-[145px] justify-between">
+                <!-- 4. КНОПКА "Qiymət, ₼" С ВЫПАДАЮЩИМ ОКНОМ "min." и "maks." -->
+                <div class="relative" id="price-dropdown-container" onclick="event.stopPropagation()">
+                    <button type="button" onclick="window.togglePriceDropdown(event)" id="price-dropdown-btn" class="bg-white border border-slate-300 hover:border-blue-500 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-700 flex items-center space-x-3 focus:outline-none transition min-w-[150px] justify-between cursor-pointer">
                         <span id="price-btn-label">Qiymət, ₼</span>
                         <i id="price-chevron" class="fa-solid fa-chevron-down text-xs text-slate-500 transition-transform duration-200"></i>
                     </button>
 
                     <!-- Выпадающая панель с полями min. и maks. -->
-                    <div id="price-dropdown-panel" class="hidden absolute left-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-200 p-3.5 z-50">
+                    <div id="price-dropdown-panel" class="hidden absolute left-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 p-3.5 z-50">
                         <div class="grid grid-cols-2 gap-2.5">
-                            <div class="relative">
-                                <input type="number" id="filter-price-min" oninput="onPriceInput()" placeholder="min." class="w-full bg-white border border-slate-300 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none">
+                            <div>
+                                <input type="number" id="filter-price-min" oninput="window.onPriceInput()" placeholder="min." class="w-full bg-white border border-slate-300 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none">
                             </div>
-                            <div class="relative">
-                                <input type="number" id="filter-price-max" oninput="onPriceInput()" placeholder="maks." class="w-full bg-white border border-slate-300 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none">
+                            <div>
+                                <input type="number" id="filter-price-max" oninput="window.onPriceInput()" placeholder="maks." class="w-full bg-white border border-slate-300 focus:border-blue-500 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none">
                             </div>
                         </div>
                     </div>
@@ -179,7 +179,7 @@
 
             <!-- Кнопка Sıfırla справа -->
             <div>
-                <button type="button" onclick="resetSearchFilters()" id="t-btn-reset" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline px-2 py-1 transition">
+                <button type="button" onclick="window.resetSearchFilters()" id="t-btn-reset" class="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline px-2 py-1 transition cursor-pointer">
                     Sıfırla
                 </button>
             </div>
@@ -188,7 +188,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- ВКЛАДКА 1: ГЛАВНЫЙ КАТАЛОГ ВИЛЛ (КАК В ОРИГИНАЛЬНОЙ ВЕРСИИ)               -->
+    <!-- ВКЛАДКА 1: ГЛАВНЫЙ КАТАЛОГ ВИЛЛ                                           -->
     <!-- ========================================================================= -->
     <main id="section-guest" class="max-w-7xl w-full mx-auto px-4 lg:px-8 py-7 flex-1">
         
@@ -203,7 +203,7 @@
     </main>
 
     <!-- ========================================================================= -->
-    <!-- РАЗДЕЛ 2: ŞƏXSİ KABİNET (ВСЕ 5 ВКЛАДОК С ВАШИХ ФОТО)                      -->
+    <!-- РАЗДЕЛ 2: ŞƏXSİ KABİNET (ВСЕ 5 ВКЛАДОК)                                   -->
     <!-- ========================================================================= -->
     <main id="section-cabinet" class="hidden max-w-7xl w-full mx-auto px-4 lg:px-8 py-8 flex-1">
         
@@ -225,33 +225,33 @@
                 <div class="space-y-1">
                     <div class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Əsas</div>
                     
-                    <button type="button" onclick="openCabinetSubtab('main')" id="cab-btn-main" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl bg-blue-100/80 text-blue-600 font-bold text-sm flex items-center space-x-3 transition">
+                    <button type="button" onclick="window.openCabinetSubtab('main')" id="cab-btn-main" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl bg-blue-100/80 text-blue-600 font-bold text-sm flex items-center space-x-3 transition cursor-pointer">
                         <i class="fa-solid fa-chart-simple text-base w-5 text-center"></i>
                         <span>Şəxsi kabinet</span>
                     </button>
 
-                    <button type="button" onclick="openCabinetSubtab('ads')" id="cab-btn-ads" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition">
+                    <button type="button" onclick="window.openCabinetSubtab('ads')" id="cab-btn-ads" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition cursor-pointer">
                         <i class="fa-regular fa-square-plus text-base w-5 text-center"></i>
                         <span>Elanlarım</span>
                     </button>
 
-                    <button type="button" onclick="openCabinetSubtab('payments')" id="cab-btn-payments" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition">
+                    <button type="button" onclick="window.openCabinetSubtab('payments')" id="cab-btn-payments" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition cursor-pointer">
                         <i class="fa-solid fa-wallet text-base w-5 text-center"></i>
                         <span>Ödəniş üsulu</span>
                     </button>
 
-                    <button type="button" onclick="openCabinetSubtab('history')" id="cab-btn-history" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition">
+                    <button type="button" onclick="window.openCabinetSubtab('history')" id="cab-btn-history" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition cursor-pointer">
                         <i class="fa-solid fa-receipt text-base w-5 text-center"></i>
                         <span>Əməliyyat tarixçəsi</span>
                     </button>
 
-                    <button type="button" onclick="openCabinetSubtab('profile')" id="cab-btn-profile" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition">
+                    <button type="button" onclick="window.openCabinetSubtab('profile')" id="cab-btn-profile" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition cursor-pointer">
                         <i class="fa-regular fa-user text-base w-5 text-center"></i>
                         <span>Profil</span>
                     </button>
 
                     <div class="pt-4">
-                        <button type="button" onclick="switchTab('guest')" class="w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm flex items-center space-x-3 transition">
+                        <button type="button" onclick="window.switchTab('guest')" class="w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm flex items-center space-x-3 transition cursor-pointer">
                             <i class="fa-solid fa-arrow-right-from-bracket text-base w-5 text-center"></i>
                             <span>Çıxış</span>
                         </button>
@@ -272,7 +272,7 @@
                             <div class="bg-[#f4f6f9] rounded-2xl p-5 space-y-4">
                                 <div class="text-xs text-slate-500 font-medium">Şəxsi hesab</div>
                                 <div class="text-2xl font-extrabold text-slate-900"><span id="user-wallet-balance">0</span> ₼</div>
-                                <button type="button" onclick="topUpBalance()" class="w-full bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-sm">
+                                <button type="button" onclick="window.topUpBalance()" class="w-full bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-sm cursor-pointer">
                                     Artır
                                 </button>
                             </div>
@@ -282,7 +282,7 @@
                                     <i class="fa-solid fa-chevron-down text-[10px]"></i>
                                 </div>
                                 <div class="text-2xl font-extrabold text-slate-900" id="user-ads-balance">1</div>
-                                <button type="button" onclick="buyAdPackage()" class="w-full bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-sm">
+                                <button type="button" onclick="window.buyAdPackage()" class="w-full bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-sm cursor-pointer">
                                     Alış
                                 </button>
                             </div>
@@ -292,7 +292,7 @@
                     <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
                         <div class="flex justify-between items-center">
                             <h3 class="text-base font-bold text-slate-800">Elanlarım</h3>
-                            <button type="button" onclick="openCabinetSubtab('ads')" class="text-xs text-blue-600 font-semibold hover:underline">Bütün elanlara bax</button>
+                            <button type="button" onclick="window.openCabinetSubtab('ads')" class="text-xs text-blue-600 font-semibold hover:underline cursor-pointer">Bütün elanlara bax</button>
                         </div>
                         <div id="cabinet-main-ads-preview" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
                     </div>
@@ -300,7 +300,7 @@
                     <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
                         <div class="flex justify-between items-center">
                             <h3 class="text-base font-bold text-slate-800">Son əməliyyatlar</h3>
-                            <button type="button" onclick="openCabinetSubtab('history')" class="text-xs text-blue-600 font-semibold hover:underline">Bütün əməliyyatları göstər</button>
+                            <button type="button" onclick="window.openCabinetSubtab('history')" class="text-xs text-blue-600 font-semibold hover:underline cursor-pointer">Bütün əməliyyatları göstər</button>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse text-sm">
@@ -324,22 +324,22 @@
                         <h2 class="text-2xl font-extrabold text-slate-900">Elanlarım</h2>
                         
                         <div class="flex flex-wrap gap-2 text-xs font-semibold">
-                            <button type="button" onclick="filterMyAds('all', this)" class="my-ads-tab bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-full">
+                            <button type="button" onclick="window.filterMyAds('all', this)" class="my-ads-tab bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-full cursor-pointer">
                                 Bütün elanlar (<span id="count-all-my-ads">1</span>)
                             </button>
-                            <button type="button" onclick="filterMyAds('unpaid', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                            <button type="button" onclick="window.filterMyAds('unpaid', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200 cursor-pointer">
                                 Ödəniş gözləyir
                             </button>
-                            <button type="button" onclick="filterMyAds('approved', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                            <button type="button" onclick="window.filterMyAds('approved', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200 cursor-pointer">
                                 Hazırda saytda (<span id="count-active-my-ads">1</span>)
                             </button>
-                            <button type="button" onclick="filterMyAds('expired', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                            <button type="button" onclick="window.filterMyAds('expired', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200 cursor-pointer">
                                 Vaxtı bitmiş
                             </button>
-                            <button type="button" onclick="filterMyAds('pending', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                            <button type="button" onclick="window.filterMyAds('pending', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200 cursor-pointer">
                                 Yoxlanışda
                             </button>
-                            <button type="button" onclick="filterMyAds('rejected', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                            <button type="button" onclick="window.filterMyAds('rejected', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200 cursor-pointer">
                                 Qəbul olunmayan
                             </button>
                         </div>
@@ -353,7 +353,7 @@
                     <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-6">
                         <div class="flex justify-between items-center">
                             <h2 class="text-xl font-extrabold text-slate-900">Kartlarım</h2>
-                            <button type="button" onclick="addNewBankCard()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                            <button type="button" onclick="window.addNewBankCard()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">
                                 Yeni kart əlavə et
                             </button>
                         </div>
@@ -367,7 +367,7 @@
                                         <div class="text-xs text-slate-500">Kapital Bank Əsas kart</div>
                                     </div>
                                 </div>
-                                <button type="button" onclick="showToast('✅ Visa •• 1257 əsas kart kimi seçilib')" class="text-slate-400 hover:text-slate-700 px-2">
+                                <button type="button" onclick="window.showToast('✅ Visa •• 1257 əsas kart kimi seçilib')" class="text-slate-400 hover:text-slate-700 px-2 cursor-pointer">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                             </div>
@@ -383,7 +383,7 @@
                                         <div class="text-xs text-slate-500">ABB</div>
                                     </div>
                                 </div>
-                                <button type="button" onclick="showToast('✅ MasterCard •• 8194 aktivdir')" class="text-slate-400 hover:text-slate-700 px-2">
+                                <button type="button" onclick="window.showToast('✅ MasterCard •• 8194 aktivdir')" class="text-slate-400 hover:text-slate-700 px-2 cursor-pointer">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                             </div>
@@ -399,7 +399,7 @@
                                         <div class="text-xs text-slate-500">Kapital Bank</div>
                                     </div>
                                 </div>
-                                <button type="button" onclick="showToast('✅ MasterCard •• 6046 aktivdir')" class="text-slate-400 hover:text-slate-700 px-2">
+                                <button type="button" onclick="window.showToast('✅ MasterCard •• 6046 aktivdir')" class="text-slate-400 hover:text-slate-700 px-2 cursor-pointer">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                             </div>
@@ -418,7 +418,7 @@
                                 <div class="text-2xl font-extrabold text-slate-900 mt-1"><span id="user-wallet-balance-2">0</span> ₼</div>
                             </div>
                         </div>
-                        <button type="button" onclick="topUpBalance()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                        <button type="button" onclick="window.topUpBalance()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer">
                             Hesabı artır
                         </button>
                     </div>
@@ -456,7 +456,7 @@
                     <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-6">
                         <div class="flex justify-between items-center">
                             <h2 class="text-2xl font-extrabold text-slate-900">Profil</h2>
-                            <button type="button" onclick="saveUserProfile()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-5 py-2.5 rounded-xl transition">
+                            <button type="button" onclick="window.saveUserProfile()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-5 py-2.5 rounded-xl transition cursor-pointer">
                                 Redaktə et
                             </button>
                         </div>
@@ -495,7 +495,7 @@
                 <h2 class="text-xl font-extrabold text-slate-900 flex items-center">
                     <i class="fa-solid fa-house-medical text-[#e0533c] mr-2.5"></i> <span>Yeni Elan Yerləşdir</span>
                 </h2>
-                <button type="button" onclick="switchTab('guest')" class="text-xs font-bold text-slate-500 hover:text-slate-800">← Geri qayıt</button>
+                <button type="button" onclick="window.switchTab('guest')" class="text-xs font-bold text-slate-500 hover:text-slate-800 cursor-pointer">← Geri qayıt</button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -536,7 +536,7 @@
                     <i class="fa-solid fa-images text-[#e0533c] text-2xl mb-2"></i>
                     <span class="text-sm font-extrabold text-slate-800">Qalereyadan fotoları seçin</span>
                     <span class="text-xs text-slate-400 mt-1">iPhone və Android fotoları avtomatik uyğunlaşdırılır</span>
-                    <input type="file" id="villa-photo-input" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(event)">
+                    <input type="file" id="villa-photo-input" accept="image/*" multiple class="hidden" onchange="window.handlePhotoUpload(event)">
                 </label>
                 <div id="photo-check-status" class="hidden rounded-xl p-3 text-xs font-semibold"></div>
                 <div id="photo-preview-wrapper" class="hidden">
@@ -544,7 +544,7 @@
                 </div>
             </div>
 
-            <button type="button" onclick="publishVillaToCloud()" class="w-full bg-[#e0533c] hover:bg-[#c9452f] text-white font-extrabold py-3.5 rounded-2xl text-sm uppercase tracking-wider shadow-md transition">
+            <button type="button" onclick="window.publishVillaToCloud()" class="w-full bg-[#e0533c] hover:bg-[#c9452f] text-white font-extrabold py-3.5 rounded-2xl text-sm uppercase tracking-wider shadow-md transition cursor-pointer">
                 Elanı yerləşdir
             </button>
         </div>
@@ -562,7 +562,7 @@
             <p class="text-xs text-slate-500">PIN-kodu daxil edin (PIN: <b class="text-[#e0533c]">7887</b>)</p>
             <input type="password" id="admin-pin-input" maxlength="4" placeholder="••••" class="w-36 text-center text-xl tracking-widest font-extrabold bg-slate-50 border border-slate-300 rounded-2xl py-2.5 text-slate-900">
             <div>
-                <button type="button" onclick="unlockAdminPanel()" class="bg-[#e0533c] text-white font-extrabold px-8 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow">
+                <button type="button" onclick="window.unlockAdminPanel()" class="bg-[#e0533c] text-white font-extrabold px-8 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow cursor-pointer">
                     Daxil ol
                 </button>
             </div>
@@ -595,27 +595,27 @@
             <div class="flex justify-between items-center bg-slate-50 rounded-2xl p-4 border border-slate-200">
                 <span class="text-sm font-bold text-slate-700">Qablaşdırma sayı:</span>
                 <div class="flex items-center space-x-3">
-                    <button type="button" onclick="changeOxyQty(-1)" class="w-8 h-8 rounded-lg bg-slate-200 text-slate-800 font-bold">-</button>
+                    <button type="button" onclick="window.changeOxyQty(-1)" class="w-8 h-8 rounded-lg bg-slate-200 text-slate-800 font-bold cursor-pointer">-</button>
                     <span id="oxy-qty" class="text-base font-extrabold text-cyan-600">1</span>
-                    <button type="button" onclick="changeOxyQty(1)" class="w-8 h-8 rounded-lg bg-cyan-500 text-white font-bold">+</button>
+                    <button type="button" onclick="window.changeOxyQty(1)" class="w-8 h-8 rounded-lg bg-cyan-500 text-white font-bold cursor-pointer">+</button>
                 </div>
             </div>
 
-            <button type="button" onclick="orderPoolCare()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-extrabold py-4 rounded-2xl text-sm uppercase tracking-wider shadow-md transition">
+            <button type="button" onclick="window.orderPoolCare()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-extrabold py-4 rounded-2xl text-sm uppercase tracking-wider shadow-md transition cursor-pointer">
                 <i class="fa-brands fa-whatsapp mr-1.5 text-base"></i> Pulsuz çatdırılma ilə sifariş et
             </button>
         </div>
     </main>
 
     <!-- МОДАЛЬНОЕ ОКНО БРОНИРОВАНИЯ ВИЛЛЫ -->
-    <div id="booking-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+    <div id="booking-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="window.closeModal('booking-modal')">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <div>
                     <div class="text-xs text-slate-400 font-bold uppercase">Bron sifarişi</div>
                     <div id="booking-modal-title" class="font-extrabold text-base text-slate-900">Novxanı — 150 ₼/gün</div>
                 </div>
-                <button type="button" onclick="closeModal('booking-modal')" class="text-slate-400 hover:text-slate-700 text-lg">
+                <button type="button" onclick="window.closeModal('booking-modal')" class="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -627,7 +627,7 @@
                 </div>
                 <div>
                     <label class="text-slate-500 font-semibold block mb-1">Gün sayı</label>
-                    <select id="nights-count" onchange="updateBookingModalTotal()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-bold text-slate-800">
+                    <select id="nights-count" onchange="window.updateBookingModalTotal()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-bold text-slate-800">
                         <option value="1">1 gün</option>
                         <option value="2" selected>2 gün</option>
                         <option value="3">3 gün</option>
@@ -653,7 +653,7 @@
                     <i class="fa-solid fa-phone"></i>
                     <span>Zəng et</span>
                 </a>
-                <button type="button" onclick="confirmWhatsAppFromModal()" class="w-1/2 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold py-3 rounded-xl text-xs text-center flex items-center justify-center space-x-1.5 shadow">
+                <button type="button" onclick="window.confirmWhatsAppFromModal()" class="w-1/2 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold py-3 rounded-xl text-xs text-center flex items-center justify-center space-x-1.5 shadow cursor-pointer">
                     <i class="fa-brands fa-whatsapp text-base"></i>
                     <span>WhatsApp Bron</span>
                 </button>
@@ -775,47 +775,57 @@
             return combined;
         }
 
-        // ОТКРЫТИЕ / ЗАКРЫТИЕ ВЫПАДАЮЩЕГО ОКНА "Qiymət, ₼" (КАК НА ВИДЕО BINA.AZ)
-        function togglePriceDropdown() {
+        // НАДЁЖНОЕ ОТКРЫТИЕ / ЗАКРЫТИЕ ВЫПАДАЮЩЕГО ОКНА "Qiymət, ₼"
+        window.togglePriceDropdown = function(e) {
+            if (e) e.stopPropagation();
             const panel = document.getElementById('price-dropdown-panel');
             const chevron = document.getElementById('price-chevron');
             const isHidden = panel.classList.contains('hidden');
-            closeAllDropdowns();
+
+            document.getElementById('profile-dropdown').classList.add('hidden');
+            document.getElementById('profile-chevron').classList.remove('rotate-180');
+
             if (isHidden) {
                 panel.classList.remove('hidden');
                 chevron.classList.add('rotate-180');
+            } else {
+                panel.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
             }
-        }
+        };
 
-        function toggleProfileDropdown() {
+        // НАДЁЖНОЕ ОТКРЫТИЕ / ЗАКРЫТИЕ ВЫПАДАЮЩЕГО МЕНЮ "Giriş"
+        window.toggleProfileDropdown = function(e) {
+            if (e) e.stopPropagation();
             const menu = document.getElementById('profile-dropdown');
             const chevron = document.getElementById('profile-chevron');
             const isHidden = menu.classList.contains('hidden');
-            closeAllDropdowns();
+
+            document.getElementById('price-dropdown-panel').classList.add('hidden');
+            document.getElementById('price-chevron').classList.remove('rotate-180');
+
             if (isHidden) {
                 menu.classList.remove('hidden');
                 chevron.classList.add('rotate-180');
+            } else {
+                menu.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
             }
-        }
+        };
 
-        function closeAllDropdowns() {
-            document.getElementById('price-dropdown-panel').classList.add('hidden');
-            document.getElementById('price-chevron').classList.remove('rotate-180');
-            document.getElementById('profile-dropdown').classList.add('hidden');
-            document.getElementById('profile-chevron').classList.remove('rotate-180');
-        }
-
-        // Закрытие выпадающих списков при клике вне них
-        document.addEventListener('click', function(e) {
-            const priceContainer = document.getElementById('price-dropdown-container');
-            const girisContainer = document.getElementById('giris-dropdown-container');
-            if (priceContainer && !priceContainer.contains(e.target) && girisContainer && !girisContainer.contains(e.target)) {
-                closeAllDropdowns();
-            }
-        });
+        window.closeAllDropdowns = function() {
+            const pPanel = document.getElementById('price-dropdown-panel');
+            const pChev = document.getElementById('price-chevron');
+            const gMenu = document.getElementById('profile-dropdown');
+            const gChev = document.getElementById('profile-chevron');
+            if (pPanel) pPanel.classList.add('hidden');
+            if (pChev) pChev.classList.remove('rotate-180');
+            if (gMenu) gMenu.classList.add('hidden');
+            if (gChev) gChev.classList.remove('rotate-180');
+        };
 
         // ОБРАБОТКА ВВОДА min. и maks. ЦЕНЫ
-        function onPriceInput() {
+        window.onPriceInput = function() {
             const minVal = document.getElementById('filter-price-min').value.trim();
             const maxVal = document.getElementById('filter-price-max').value.trim();
             const label = document.getElementById('price-btn-label');
@@ -830,33 +840,33 @@
                 label.innerText = "Qiymət, ₼";
             }
 
-            applySearchFilters();
-        }
+            window.applySearchFilters();
+        };
 
-        function applySearchFilters() {
+        window.applySearchFilters = function() {
             renderAllViews();
-        }
+        };
 
-        function resetSearchFilters() {
+        window.resetSearchFilters = function() {
             document.getElementById('filter-district').value = 'all';
             document.getElementById('filter-period').value = 'all';
             document.getElementById('filter-rooms').value = 'all';
             document.getElementById('filter-price-min').value = '';
             document.getElementById('filter-price-max').value = '';
             document.getElementById('price-btn-label').innerText = 'Qiymət, ₼';
-            closeAllDropdowns();
+            window.closeAllDropdowns();
             renderAllViews();
-        }
+        };
 
-        function openCabinetSubtab(subtab) {
-            switchTab('cabinet');
+        window.openCabinetSubtab = function(subtab) {
+            window.switchTab('cabinet');
 
             ['main', 'ads', 'payments', 'history', 'profile'].forEach(st => {
                 const box = document.getElementById('cab-sub-' + st);
                 const btn = document.getElementById('cab-btn-' + st);
                 if (box) box.classList.add('hidden');
                 if (btn) {
-                    btn.className = "cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition";
+                    btn.className = "cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition cursor-pointer";
                 }
             });
 
@@ -864,28 +874,28 @@
             const activeBtn = document.getElementById('cab-btn-' + subtab);
             if (activeBox) activeBox.classList.remove('hidden');
             if (activeBtn) {
-                activeBtn.className = "cab-nav-btn w-full text-left px-4 py-3 rounded-xl bg-blue-100/80 text-blue-600 font-bold text-sm flex items-center space-x-3 transition";
+                activeBtn.className = "cab-nav-btn w-full text-left px-4 py-3 rounded-xl bg-blue-100/80 text-blue-600 font-bold text-sm flex items-center space-x-3 transition cursor-pointer";
             }
-        }
+        };
 
-        function topUpBalance() {
+        window.topUpBalance = function() {
             walletBalance += 20;
             document.getElementById('user-wallet-balance').innerText = walletBalance;
             document.getElementById('user-wallet-balance-2').innerText = walletBalance;
-            showToast("✅ Şəxsi hesab +20 ₼ artırıldı! (Balans: " + walletBalance + " ₼)");
-        }
+            window.showToast("✅ Şəxsi hesab +20 ₼ artırıldı! (Balans: " + walletBalance + " ₼)");
+        };
 
-        function buyAdPackage() {
+        window.buyAdPackage = function() {
             adsBalance += 1;
             document.getElementById('user-ads-balance').innerText = adsBalance;
-            showToast("✅ +1 Elan paketi əlavə olundu! (Balans: " + adsBalance + ")");
-        }
+            window.showToast("✅ +1 Elan paketi əlavə olundu! (Balans: " + adsBalance + ")");
+        };
 
-        function addNewBankCard() {
-            showToast("💳 Yeni bank kartı əlavə etmə pəncərəsi aktivdir");
-        }
+        window.addNewBankCard = function() {
+            window.showToast("💳 Yeni bank kartı əlavə etmə pəncərəsi aktivdir");
+        };
 
-        function saveUserProfile() {
+        window.saveUserProfile = function() {
             const name = document.getElementById('prof-name-input').value.trim() || "Kamil";
             const email = document.getElementById('prof-email-input').value.trim() || "lion131983@mail.ru";
             const phone = document.getElementById('prof-phone-input').value.trim() || "(055) 350-78-87";
@@ -893,17 +903,17 @@
             document.getElementById('cab-header-name').innerText = name;
             document.getElementById('cab-header-email').innerText = email;
             document.getElementById('cab-header-phone').innerText = phone;
-            showToast("✅ Profil məlumatları yadda saxlanıldı!");
-        }
+            window.showToast("✅ Profil məlumatları yadda saxlanıldı!");
+        };
 
-        function filterMyAds(statusFilter, btnEl) {
+        window.filterMyAds = function(statusFilter, btnEl) {
             currentMyAdsFilter = statusFilter;
             document.querySelectorAll('.my-ads-tab').forEach(b => {
-                b.className = "my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200";
+                b.className = "my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200 cursor-pointer";
             });
-            btnEl.className = "my-ads-tab bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-full";
+            btnEl.className = "my-ads-tab bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-full cursor-pointer";
             renderAllViews();
-        }
+        };
 
         function renderAllViews() {
             const allVillas = getAllVillas();
@@ -918,7 +928,6 @@
                 badge.classList.add('hidden');
             }
 
-            // Фильтрация по полям верхней панели поиска
             const distVal = document.getElementById('filter-district').value;
             const periodVal = document.getElementById('filter-period').value;
             const roomsVal = document.getElementById('filter-rooms').value;
@@ -935,14 +944,13 @@
 
             document.getElementById('villas-count-label').innerText = filtered.length + " elan tapıldı";
 
-            // 1. Рендер карточек вилл в точности как в оригинальном kirayevilla.com
             const container = document.getElementById('villas-container');
             if (filtered.length === 0) {
                 container.innerHTML = `<div class="col-span-full bg-white rounded-2xl p-8 text-center text-slate-500 border border-slate-200">Seçilmiş parametrlərə uyğun elan tapılmadı.</div>`;
             } else {
                 container.innerHTML = filtered.map(v => `
                 <div class="bg-white border border-slate-200 hover:shadow-lg rounded-2xl overflow-hidden transition-all duration-200 flex flex-col">
-                    <div class="relative h-52 cursor-pointer" onclick="openBookingModal('${v.id}')">
+                    <div class="relative h-52 cursor-pointer" onclick="window.openBookingModal('${v.id}')">
                         <img src="${v.image}" alt="${v.name}" class="w-full h-full object-cover">
                         ${v.isTop ? `<span class="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow">PREMIUM</span>` : ''}
                         <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white px-3 py-1 rounded-lg text-sm font-extrabold">
@@ -955,14 +963,13 @@
                             <div class="text-xs text-slate-500 mt-1">${v.roomsInfo || (v.rooms + ' otaq • ' + v.guests + ' nəfər')}</div>
                             <div class="text-xs text-blue-600 font-medium mt-1">🏊 ${v.poolSize || 'Hovuz 8 × 4'}</div>
                         </div>
-                        <button type="button" onclick="openBookingModal('${v.id}')" class="w-full bg-[#e0533c]/90 hover:bg-[#e0533c] text-white font-bold py-2.5 rounded-xl text-xs transition shadow-sm">
+                        <button type="button" onclick="window.openBookingModal('${v.id}')" class="w-full bg-[#e0533c]/90 hover:bg-[#e0533c] text-white font-bold py-2.5 rounded-xl text-xs transition shadow-sm cursor-pointer">
                             Bron et / Əlaqə
                         </button>
                     </div>
                 </div>`).join('');
             }
 
-            // 2. Рендер объявлений хозяина в Личном Кабинете
             const myVillas = [defaultVillas[0], ...cloudVillas];
             document.getElementById('count-all-my-ads').innerText = myVillas.length;
             document.getElementById('count-active-my-ads').innerText = myVillas.filter(v => v.status === 'approved').length;
@@ -1023,16 +1030,16 @@
 
                             <div class="flex items-center space-x-1.5 pt-2 border-t border-slate-100">
                                 <input type="number" id="price-edit-${v.id}" value="${v.price}" class="w-20 bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-900">
-                                <button type="button" onclick="updateVillaPriceLive('${v.id}')" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 rounded-lg text-[11px] transition">
+                                <button type="button" onclick="window.updateVillaPriceLive('${v.id}')" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 rounded-lg text-[11px] transition cursor-pointer">
                                     Qiyməti yenilə
                                 </button>
                             </div>
 
                             <div class="flex items-center space-x-2">
-                                <button type="button" onclick="showToast('🔥 Premium reklam paketi aktivdir!')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-2 rounded-xl text-xs transition">
+                                <button type="button" onclick="window.showToast('🔥 Premium reklam paketi aktivdir!')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-2 rounded-xl text-xs transition cursor-pointer">
                                     Reklam et
                                 </button>
-                                <button type="button" onclick="openBookingModal('${v.id}')" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs">
+                                <button type="button" onclick="window.openBookingModal('${v.id}')" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs cursor-pointer">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                             </div>
@@ -1041,11 +1048,10 @@
                 `).join('');
             }
 
-            // 3. Таблица операций
             const renderOpsTableRows = (list) => list.map(op => `
                 <tr class="hover:bg-slate-50 transition">
                     <td class="py-3.5 pr-4">
-                        <a href="javascript:void(0)" onclick="switchTab('guest')" class="text-blue-600 hover:underline font-medium block max-w-xs leading-snug">${op.title}</a>
+                        <a href="javascript:void(0)" onclick="window.switchTab('guest')" class="text-blue-600 hover:underline font-medium block max-w-xs leading-snug">${op.title}</a>
                     </td>
                     <td class="py-3.5 pr-4 text-slate-700">${op.service}</td>
                     <td class="py-3.5 pr-4 text-slate-600">${op.date}</td>
@@ -1058,7 +1064,6 @@
             document.getElementById('cabinet-recent-ops').innerHTML = renderOpsTableRows(operationsHistory.slice(0, 4));
             document.getElementById('cabinet-full-history-list').innerHTML = renderOpsTableRows(operationsHistory);
 
-            // 4. Админ-панель
             const pendingContainer = document.getElementById('admin-pending-list');
             if (pendingVillas.length === 0) {
                 pendingContainer.innerHTML = `<div class="text-xs text-slate-400 py-2">Hazırda təsdiq gözləyən villa yoxdur.</div>`;
@@ -1069,8 +1074,8 @@
                         <div class="text-sm font-extrabold text-slate-900">${v.district}</div>
                         <div class="text-xs text-amber-600 font-bold">Qiymət: ${v.price} ₼ | 📞 ${v.ownerPhone || ''}</div>
                         <div class="grid grid-cols-2 gap-2 pt-1">
-                            <button type="button" onclick="approveVilla('${v.id}')" class="bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs">✅ Təsdiqlə</button>
-                            <button type="button" onclick="deleteVilla('${v.id}')" class="bg-red-100 text-red-600 font-bold py-2 rounded-xl text-xs">❌ Sil</button>
+                            <button type="button" onclick="window.approveVilla('${v.id}')" class="bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">✅ Təsdiqlə</button>
+                            <button type="button" onclick="window.deleteVilla('${v.id}')" class="bg-red-100 text-red-600 font-bold py-2 rounded-xl text-xs cursor-pointer">❌ Sil</button>
                         </div>
                     </div>`).join('');
             }
@@ -1089,36 +1094,36 @@
             `).join('');
         }
 
-        function openBookingModal(villaId) {
+        window.openBookingModal = function(villaId) {
             const all = getAllVillas();
             const found = all.find(v => v.id === villaId);
             if (found) {
                 selectedVilla = found;
                 document.getElementById('booking-modal-title').innerText = found.district + " — " + found.price + " ₼/gün";
-                updateBookingModalTotal();
+                window.updateBookingModalTotal();
                 document.getElementById('booking-modal').classList.remove('hidden');
             }
-        }
+        };
 
-        function updateBookingModalTotal() {
+        window.updateBookingModalTotal = function() {
             const nights = parseInt(document.getElementById('nights-count').value) || 2;
             const total = (selectedVilla ? selectedVilla.price : 150) * nights;
             const dep = Math.round(total * 0.15);
             document.getElementById('booking-modal-total').innerText = total + " ₼";
             document.getElementById('booking-modal-deposit').innerText = dep + " ₼";
-        }
+        };
 
-        function confirmWhatsAppFromModal() {
+        window.confirmWhatsAppFromModal = function() {
             const nights = parseInt(document.getElementById('nights-count').value) || 2;
             const date = document.getElementById('checkin-date').value;
             const total = selectedVilla.price * nights;
             const dep = Math.round(total * 0.15);
             const msg = "Salam! kirayevilla.com saytından bron sifarişi:\n\n🏡 Məkan: " + selectedVilla.district + "\n📅 Tarix: " + date + "\n🌙 Gün sayı: " + nights + "\n💰 Ümumi məbləğ: " + total + " AZN (15% Beh: " + dep + " AZN)";
             window.open("https://wa.me/" + adminPhone + "?text=" + encodeURIComponent(msg), "_blank");
-            closeModal('booking-modal');
-        }
+            window.closeModal('booking-modal');
+        };
 
-        async function handlePhotoUpload(event) {
+        window.handlePhotoUpload = async function(event) {
             const files = Array.from(event.target.files || []).slice(0, 5);
             if (files.length === 0) return;
 
@@ -1173,9 +1178,9 @@
 
             statusBox.className = "rounded-xl p-3 text-xs font-bold bg-emerald-50 border border-emerald-200 text-emerald-700";
             statusBox.innerText = "✅ Fotolar yükləndi (" + verifiedPhotosArray.length + ")";
-        }
+        };
 
-        function publishVillaToCloud() {
+        window.publishVillaToCloud = function() {
             const district = document.getElementById('owner-villa-district').value;
             const price = parseInt(document.getElementById('owner-villa-price').value) || 150;
             const rooms = parseInt(document.getElementById('owner-villa-rooms').value) || 5;
@@ -1205,11 +1210,11 @@
             });
 
             renderAllViews();
-            showToast("✅ Yeni elan əlavə olundu!");
-            switchTab('guest');
-        }
+            window.showToast("✅ Yeni elan əlavə olundu!");
+            window.switchTab('guest');
+        };
 
-        function updateVillaPriceLive(villaId) {
+        window.updateVillaPriceLive = function(villaId) {
             const input = document.getElementById('price-edit-' + villaId);
             if (!input) return;
             const newPrice = parseInt(input.value);
@@ -1220,46 +1225,47 @@
             const cv = cloudVillas.find(v => v.id === villaId);
             if (cv) cv.price = newPrice;
             renderAllViews();
-            showToast("✅ Qiymət dərhal yeniləndi!");
-        }
+            window.showToast("✅ Qiymət dərhal yeniləndi!");
+        };
 
-        function approveVilla(villaId) {
+        window.approveVilla = function(villaId) {
             const cv = cloudVillas.find(v => v.id === villaId);
             if (cv) cv.status = 'approved';
             renderAllViews();
-            showToast("✅ Villa təsdiqləndi!");
-        }
+            window.showToast("✅ Villa təsdiqləndi!");
+        };
 
-        function deleteVilla(villaId) {
+        window.deleteVilla = function(villaId) {
             cloudVillas = cloudVillas.filter(v => v.id !== villaId);
             renderAllViews();
-            showToast("🗑 Villa silindi.");
-        }
+            window.showToast("🗑 Villa silindi.");
+        };
 
-        function unlockAdminPanel() {
+        window.unlockAdminPanel = function() {
             const pin = document.getElementById('admin-pin-input').value.trim();
             if (pin === "7887") {
                 document.getElementById('admin-login-box').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                showToast("👑 Admin Panel aktivdir!");
+                window.showToast("👑 Admin Panel aktivdir!");
             } else {
-                showToast("❌ Yanlış PIN-kod! Sizin PIN: 7887");
+                window.showToast("❌ Yanlış PIN-kod! Sizin PIN: 7887");
             }
-        }
+        };
 
-        function setLanguage(lang) {
+        window.setLanguage = function(lang) {
             currentLang = lang;
-            document.getElementById('lang-az').className = lang === 'az' ? "px-2.5 py-1 rounded-md bg-[#e0533c] text-white transition" : "px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition";
-            document.getElementById('lang-ru').className = lang === 'ru' ? "px-2.5 py-1 rounded-md bg-[#e0533c] text-white transition" : "px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition";
+            document.getElementById('lang-az').className = lang === 'az' ? "px-2.5 py-1 rounded-md bg-[#e0533c] text-white transition cursor-pointer" : "px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition cursor-pointer";
+            document.getElementById('lang-ru').className = lang === 'ru' ? "px-2.5 py-1 rounded-md bg-[#e0533c] text-white transition cursor-pointer" : "px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition cursor-pointer";
 
             document.getElementById('t-main-heading').innerText = lang === 'ru' ? "Аренда домов и дач" : "Həyət evləri / Bağ evləri kirayə";
             document.getElementById('t-btn-new-ad').innerText = lang === 'ru' ? "Разместить" : "Elan yerləşdir";
             document.getElementById('t-btn-login').innerText = lang === 'ru' ? "Кабинет" : "Giriş";
             document.getElementById('t-btn-reset').innerText = lang === 'ru' ? "Сбросить" : "Sıfırla";
             renderAllViews();
-        }
+        };
 
-        function switchTab(tab) {
+        window.switchTab = function(tab) {
+            window.closeAllDropdowns();
             document.getElementById('section-guest').classList.add('hidden');
             document.getElementById('section-cabinet').classList.add('hidden');
             document.getElementById('section-add-villa').classList.add('hidden');
@@ -1280,35 +1286,37 @@
                 document.getElementById('section-admin').classList.remove('hidden');
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        };
 
-        function changeOxyQty(delta) {
+        window.changeOxyQty = function(delta) {
             oxyQty = Math.max(1, oxyQty + delta);
             document.getElementById('oxy-qty').innerText = oxyQty;
-        }
+        };
 
-        function closeModal(id) {
+        window.closeModal = function(id) {
             document.getElementById(id).classList.add('hidden');
-        }
+        };
 
-        function showToast(msg) {
+        window.showToast = function(msg) {
             const box = document.getElementById('toast-box');
             document.getElementById('toast-text').innerText = msg;
             box.classList.remove('hidden');
             setTimeout(() => box.classList.add('hidden'), 3500);
-        }
+        };
 
-        function orderPoolCare() {
+        window.orderPoolCare = function() {
             const message = "Salam! OXY POOL xlor tabletləri sifariş etmək istəyirəm.\n\n📦 Miqdar: " + oxyQty + " qablaşdırma\n🚚 Çatdırılma: Bakı və ətrafına pulsuz çatdırılma\n📞 Əlaqə: 055 350 78 87";
             window.open("https://wa.me/" + adminPhone + "?text=" + encodeURIComponent(message), "_blank");
-        }
+        };
 
-        window.addEventListener('DOMContentLoaded', () => {
+        // Мгновенная инициализация без ожидания внешних скриптов
+        (function initApp() {
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('checkin-date').valueAsDate = tomorrow;
+            const dateInput = document.getElementById('checkin-date');
+            if (dateInput) dateInput.valueAsDate = tomorrow;
             renderAllViews();
-        });
+        })();
     </script>
 </body>
 </html>
