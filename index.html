@@ -2,45 +2,31 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0b0f19">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="VILLA CLUB">
-    <title>BAKU VILLA CLUB — Lüks Villa İcarəsi və Şəxsi Kabinet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAKU VILLA CLUB — Kirayə Villalar və Şəxsi Kabinet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #0b0f19;
-            color: #f3f4f6;
-            -webkit-tap-highlight-color: transparent;
+            background-color: #f4f5f7;
+            color: #1e293b;
         }
         .gold-gradient {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
         .cyan-gradient {
-            background: linear-gradient(135deg, #22d3ee 0%, #0284c7 100%);
-        }
-        .emerald-gradient {
-            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-        }
-        .card-glass {
-            background: rgba(30, 41, 59, 0.78);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
         }
         .service-active {
-            border-color: #f59e0b !important;
-            background: rgba(245, 158, 11, 0.15) !important;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.18);
+            border-color: #d97706 !important;
+            background-color: #fffbeb !important;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.12);
         }
         .villa-selected {
-            border-color: #f59e0b !important;
-            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4);
+            border-color: #d97706 !important;
+            box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.25);
         }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -54,107 +40,96 @@
             height: 20px;
             width: 20px;
             border-radius: 50%;
-            background: #f59e0b;
+            background: #d97706;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.7);
         }
     </style>
 </head>
-<body class="pb-36 max-w-md mx-auto relative min-h-screen shadow-2xl border-x border-slate-800/80 bg-[#0b0f19]">
+<body class="min-h-screen flex flex-col bg-[#f4f5f7] text-slate-800">
 
-    <!-- Верхняя панель прямой связи и переключатель 3 языков (AZ / RU / EN) -->
-    <div class="bg-slate-950 border-b border-amber-500/20 px-3 py-2 flex justify-between items-center text-[11px]">
-        <div class="flex items-center space-x-2">
-            <a href="tel:+994553507887" class="text-amber-400 font-extrabold hover:underline flex items-center">
-                <i class="fa-solid fa-phone-volume mr-1 text-[10px] animate-pulse"></i> 055 350 78 87
-            </a>
-            <a href="https://wa.me/994553507887" target="_blank" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-md font-bold hover:bg-emerald-500 hover:text-slate-950 transition">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp
-            </a>
-        </div>
-
-        <div class="flex bg-slate-900 rounded-lg p-0.5 border border-slate-700 space-x-0.5">
-            <button type="button" onclick="setLanguage('az')" id="lang-az" class="px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950 font-extrabold text-[10px] transition">AZ</button>
-            <button type="button" onclick="setLanguage('ru')" id="lang-ru" class="px-2.5 py-0.5 rounded-md text-slate-400 font-bold text-[10px] hover:text-white transition">RU</button>
-            <button type="button" onclick="setLanguage('en')" id="lang-en" class="px-2.5 py-0.5 rounded-md text-slate-400 font-bold text-[10px] hover:text-white transition">EN</button>
-        </div>
-    </div>
-
-    <!-- Баннер установки приложения на телефон (PWA) -->
-    <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 border-b border-indigo-500/30 px-3 py-2 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-mobile-screen-button text-amber-400 text-sm"></i>
-            <span id="t-pwa-banner" class="text-[11px] font-semibold text-slate-200">Tətbiqi telefonun ekranına əlavə et</span>
-        </div>
-        <button type="button" onclick="openPwaModal()" id="t-pwa-btn" class="bg-amber-500/20 border border-amber-500/50 text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-lg hover:bg-amber-500 hover:text-slate-950 transition">
-            📲 Yüklə
-        </button>
-    </div>
-
-    <!-- Шапка навигации с кнопкой "+ Yeni elan" и выпадающим меню Профиля -->
-    <header class="sticky top-0 z-40 card-glass px-3 py-2.5 border-b border-slate-800 space-y-2.5">
-        <div class="flex justify-between items-center relative">
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="switchTab('guest')">
-                <div class="w-8 h-8 rounded-xl gold-gradient flex items-center justify-center shadow-md">
-                    <i class="fa-solid fa-crown text-slate-950 text-sm"></i>
+    <!-- ШАПКА САЙТА НА ВЕСЬ ЭКРАН КОМПЬЮТЕРА -->
+    <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 lg:px-8 h-16 flex justify-between items-center">
+            
+            <!-- Логотип и основная навигация для ПК -->
+            <div class="flex items-center space-x-8">
+                <div class="flex items-center space-x-2.5 cursor-pointer" onclick="switchTab('guest')">
+                    <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center shadow">
+                        <i class="fa-solid fa-crown text-white text-base"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-lg tracking-wider block leading-none text-slate-900">KIRAYE<span class="text-amber-600">VILLA</span></span>
+                        <span id="t-subtitle" class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Bakı Lüks Məkanlar</span>
+                    </div>
                 </div>
-                <div>
-                    <span class="font-extrabold text-sm tracking-wider block leading-none">VILLA<span class="text-amber-400">CLUB</span></span>
-                    <span id="t-subtitle" class="text-[9px] text-slate-400 uppercase tracking-widest">Bakı Lüks Məkanlar</span>
-                </div>
+
+                <!-- Верхнее меню как на полноценном компьютерном сайте -->
+                <nav class="hidden md:flex items-center space-x-1 text-sm font-bold">
+                    <button type="button" onclick="switchTab('guest')" id="tab-guest" class="px-4 py-2 rounded-xl bg-amber-500 text-white transition">
+                        🏡 <span id="t-nav-catalog">Kataloq</span>
+                    </button>
+                    <button type="button" onclick="switchTab('cabinet')" id="tab-cabinet" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                        👤 <span id="t-nav-cabinet">Şəxsi kabinet</span>
+                    </button>
+                    <button type="button" onclick="switchTab('owner')" id="tab-owner" class="px-4 py-2 rounded-xl text-cyan-600 hover:bg-cyan-50 transition">
+                        💧 <span id="t-nav-pool">OXY Hovuz</span>
+                    </button>
+                    <button type="button" onclick="switchTab('admin')" id="tab-admin" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 flex items-center space-x-1.5 transition">
+                        <i class="fa-solid fa-user-shield text-amber-500"></i>
+                        <span>Admin</span>
+                        <span id="pending-count-badge" class="hidden bg-red-500 text-white text-[10px] font-extrabold px-1.5 py-0.2 rounded-full">0</span>
+                    </button>
+                </nav>
             </div>
 
-            <div class="flex items-center space-x-1.5">
-                <button type="button" onclick="switchTab('add-villa')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-2.5 py-1.5 rounded-xl text-[10px] flex items-center space-x-1 shadow transition">
-                    <i class="fa-solid fa-circle-plus"></i>
+            <!-- Правая часть шапки: Телефон, Языки, + Yeni elan и Профиль -->
+            <div class="flex items-center space-x-3">
+                <a href="tel:+994553507887" class="hidden lg:flex items-center text-sm font-extrabold text-slate-800 hover:text-amber-600 mr-2">
+                    <i class="fa-solid fa-phone-volume text-amber-600 mr-1.5"></i> (055) 350-78-87
+                </a>
+
+                <!-- Переключатель языков AZ | RU | EN -->
+                <div class="flex bg-slate-100 rounded-xl p-1 border border-slate-200 space-x-0.5">
+                    <button type="button" onclick="setLanguage('az')" id="lang-az" class="px-2.5 py-1 rounded-lg bg-white text-slate-900 shadow-sm font-extrabold text-xs transition">AZ</button>
+                    <button type="button" onclick="setLanguage('ru')" id="lang-ru" class="px-2.5 py-1 rounded-lg text-slate-500 font-bold text-xs hover:text-slate-900 transition">RU</button>
+                    <button type="button" onclick="setLanguage('en')" id="lang-en" class="px-2.5 py-1 rounded-lg text-slate-500 font-bold text-xs hover:text-slate-900 transition">EN</button>
+                </div>
+
+                <!-- Зеленая кнопка + Yeni elan (как на Фото 1) -->
+                <button type="button" onclick="switchTab('add-villa')" class="bg-[#2b5329] hover:bg-[#1f3d1e] text-white font-bold px-4 py-2 rounded-full text-xs flex items-center space-x-1.5 shadow-sm transition">
+                    <i class="fa-solid fa-circle-plus text-sm"></i>
                     <span id="t-btn-new-ad">Yeni elan</span>
                 </button>
 
-                <button type="button" onclick="switchTab('admin')" id="tab-admin" class="px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-[10px] font-bold text-slate-300 hover:border-amber-500 flex items-center space-x-1 transition">
-                    <i class="fa-solid fa-user-shield text-amber-400"></i>
-                    <span id="pending-count-badge" class="hidden bg-red-500 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full">0</span>
-                </button>
-
-                <!-- Кнопка иконки профиля -->
+                <!-- Кнопка иконки профиля и выпадающее меню (Точь-в-точь как на Фото 1) -->
                 <div class="relative">
-                    <button type="button" onclick="toggleProfileDropdown()" id="profile-menu-btn" class="px-2.5 py-1.5 rounded-xl bg-blue-500/20 border border-blue-400/40 text-blue-400 hover:bg-blue-500/30 flex items-center space-x-1.5 transition">
-                        <i class="fa-solid fa-circle-user text-sm"></i>
-                        <i id="profile-chevron" class="fa-solid fa-chevron-down text-[9px] transition-transform"></i>
+                    <button type="button" onclick="toggleProfileDropdown()" id="profile-menu-btn" class="px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 flex items-center space-x-2 transition">
+                        <i class="fa-solid fa-circle-user text-xl"></i>
+                        <i id="profile-chevron" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
                     </button>
 
-                    <!-- Выпадающее окошко профиля -->
-                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-60 bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200 p-4 z-50 space-y-3">
+                    <!-- Выпадающее окошко профиля (Фото 1) -->
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white text-slate-800 rounded-2xl shadow-xl border border-slate-200 p-4 z-50 space-y-3">
                         <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
-                            <div class="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center text-xl shrink-0">
+                            <div class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-xl shrink-0">
                                 <i class="fa-solid fa-user"></i>
                             </div>
                             <div class="overflow-hidden">
-                                <div class="font-extrabold text-xs text-slate-900">(055) 350-78-87</div>
-                                <div class="text-[11px] font-semibold text-slate-600 truncate">lion131983@mail.ru</div>
+                                <div class="font-extrabold text-sm text-slate-900">(055) 350-78-87</div>
+                                <div class="text-xs font-bold text-slate-600 truncate">lion131983@mail.ru</div>
                             </div>
                         </div>
-                        <div class="space-y-1 text-xs font-semibold">
-                            <button type="button" onclick="openCabinetSubtab('main'); toggleProfileDropdown();" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-100 text-slate-800 flex items-center justify-between transition">
-                                <span>Şəxsi kabinet</span>
-                                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                        <div class="space-y-1 text-sm font-medium text-slate-700">
+                            <button type="button" onclick="openCabinetSubtab('main'); toggleProfileDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition block">
+                                Şəxsi kabinet
                             </button>
-                            <button type="button" onclick="openCabinetSubtab('ads'); toggleProfileDropdown();" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-100 text-slate-800 flex items-center justify-between transition">
-                                <span>Elanlarım (1)</span>
-                                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                            <button type="button" onclick="openCabinetSubtab('ads'); toggleProfileDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition block">
+                                Elanlarım
                             </button>
-                            <button type="button" onclick="openCabinetSubtab('payments'); toggleProfileDropdown();" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-100 text-slate-800 flex items-center justify-between transition">
-                                <span>Ödəniş üsulu (Kartlarım)</span>
-                                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                            <button type="button" onclick="openCabinetSubtab('payments'); toggleProfileDropdown();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-100 transition block">
+                                Ödəniş üsulu (Kartlarım)
                             </button>
-                            <button type="button" onclick="openCabinetSubtab('history'); toggleProfileDropdown();" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-100 text-slate-800 flex items-center justify-between transition">
-                                <span>Əməliyyat tarixçəsi</span>
-                                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
-                            </button>
-                            <button type="button" onclick="openCabinetSubtab('profile'); toggleProfileDropdown();" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-100 text-slate-800 flex items-center justify-between transition">
-                                <span>Profil</span>
-                                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
-                            </button>
-                            <button type="button" onclick="toggleProfileDropdown(); switchTab('guest');" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-red-50 text-red-600 transition">
+                            <button type="button" onclick="toggleProfileDropdown(); switchTab('guest');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-red-50 text-red-600 transition block">
                                 Çıxış
                             </button>
                         </div>
@@ -163,676 +138,643 @@
             </div>
         </div>
 
-        <!-- Основные вкладки -->
-        <div class="grid grid-cols-4 bg-slate-900/95 rounded-xl p-1 text-[10px] font-bold gap-1 border border-slate-800">
-            <button type="button" onclick="switchTab('guest')" id="tab-guest" class="py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1">
-                🏡 <span id="t-nav-catalog">Kataloq</span>
-            </button>
-            <button type="button" onclick="switchTab('cabinet')" id="tab-cabinet" class="py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1">
-                👤 <span id="t-nav-cabinet">Kabinet</span>
-            </button>
-            <button type="button" onclick="switchTab('add-villa')" id="tab-add" class="py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1">
-                ➕ <span id="t-nav-add">Yeni elan</span>
-            </button>
-            <button type="button" onclick="switchTab('owner')" id="tab-owner" class="py-1.5 rounded-lg text-cyan-400 hover:text-cyan-300 transition-all text-center truncate px-1">
-                💧 <span id="t-nav-pool">OXY Hovuz</span>
-            </button>
+        <!-- Мобильное меню (видно только на телефонах) -->
+        <div class="md:hidden grid grid-cols-4 gap-1 px-3 py-2 bg-slate-50 border-t border-slate-200 text-xs font-bold">
+            <button type="button" onclick="switchTab('guest')" class="py-1.5 rounded-lg bg-amber-500 text-white text-center">Kataloq</button>
+            <button type="button" onclick="switchTab('cabinet')" class="py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 text-center">Kabinet</button>
+            <button type="button" onclick="switchTab('add-villa')" class="py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 text-center">Yeni elan</button>
+            <button type="button" onclick="switchTab('owner')" class="py-1.5 rounded-lg bg-white border border-slate-200 text-cyan-600 text-center">OXY Hovuz</button>
         </div>
     </header>
 
-    <!-- ========================================== -->
-    <!-- ВКЛАДКА 1: КАТАЛОГ ВИЛЛ И БРОНИРОВАНИЕ     -->
-    <!-- ========================================== -->
-    <main id="section-guest" class="space-y-5 p-4">
-
-        <div class="bg-gradient-to-r from-red-600/90 via-orange-600/90 to-amber-600/90 rounded-2xl p-3.5 flex items-center justify-between shadow-lg border border-amber-400/30">
-            <div class="flex items-center space-x-2.5 pr-2">
-                <span class="text-2xl animate-bounce">🔥</span>
-                <div>
-                    <div id="t-hot-badge" class="text-[10px] uppercase font-extrabold tracking-wider text-amber-100 bg-black/25 px-2 py-0.5 rounded-full inline-block mb-0.5">
-                        Sabah üçün qaynar təklif!
-                    </div>
-                    <div id="t-hot-desc" class="text-xs font-bold text-white leading-tight">Həftəiçi günlərə 30% endirim</div>
-                </div>
-            </div>
-            <button type="button" onclick="applyHotDeal()" id="hot-deal-btn" class="bg-white text-slate-950 text-[11px] font-extrabold px-3 py-2 rounded-xl shadow-md hover:bg-amber-100 active:scale-95 transition shrink-0">
-                Aktivləşdir
-            </button>
-        </div>
-
-        <div>
-            <div class="flex justify-between items-center mb-2">
-                <span id="t-filter-title" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ərazini seçin:</span>
-                <span class="text-[11px] text-amber-400 font-semibold" id="villas-count-label">4 villa</span>
-            </div>
-            <div class="flex space-x-2 overflow-x-auto pb-1 text-xs no-scrollbar">
-                <button type="button" onclick="filterVillas('all', this)" id="t-loc-all" class="filter-btn bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl whitespace-nowrap transition shadow">
-                    Hamısı
-                </button>
-                <button type="button" onclick="filterVillas('Novxanı', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
-                    📍 Novxanı
-                </button>
-                <button type="button" onclick="filterVillas('Mərdəkan', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
-                    📍 Mərdəkan
-                </button>
-                <button type="button" onclick="filterVillas('Şüvəlan', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
-                    📍 Şüvəlan
-                </button>
-                <button type="button" onclick="filterVillas('Bilgəh', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
-                    📍 Bilgəh
-                </button>
-                <button type="button" onclick="filterVillas('Zaqulba', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
-                    📍 Zaqulba
-                </button>
-                <button type="button" onclick="filterVillas('Qəbələ', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
-                    📍 Qəbələ
-                </button>
-            </div>
-        </div>
-
-        <div class="space-y-4" id="villas-container"></div>
-
-        <div class="bg-amber-500/10 border border-amber-500/40 rounded-2xl p-3.5 flex justify-between items-center shadow-inner">
-            <div class="flex items-center space-x-2.5 pr-2">
-                <i class="fa-solid fa-house-circle-check text-amber-400 text-lg"></i>
-                <div>
-                    <div id="t-selected-label" class="text-[10px] text-amber-300 uppercase font-bold tracking-wider">Seçilmiş villa:</div>
-                    <div id="selected-villa-title" class="text-xs font-extrabold text-white">5 otaqlı bağ evi 210 m² — Novxanı</div>
-                </div>
-            </div>
-            <span id="selected-villa-price" class="text-sm font-extrabold text-amber-400 bg-slate-900/90 px-2.5 py-1 rounded-xl border border-amber-500/30 shrink-0">150 ₼/gün</span>
-        </div>
-
-        <!-- 1. Параметры бронирования -->
-        <div class="card-glass rounded-3xl p-4 space-y-4">
-            <h2 class="font-extrabold text-xs uppercase tracking-wider text-amber-400 flex items-center">
-                <i class="fa-regular fa-calendar-check mr-2 text-sm"></i> <span id="t-step1-title">1. Bron parametrləri</span>
-            </h2>
+    <!-- ========================================================================= -->
+    <!-- ВКЛАДКА 1: КАТАЛОГ ВИЛЛ И БРОНИРОВАНИЕ (ШИРОКИЙ ЭКРАН ДЛЯ КОМПЬЮТЕРА)     -->
+    <!-- ========================================================================= -->
+    <main id="section-guest" class="max-w-7xl w-full mx-auto px-4 lg:px-8 py-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label id="t-checkin-label" class="text-[11px] text-slate-400 font-medium block mb-1">Giriş tarixi</label>
-                    <input type="date" id="checkin-date" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-amber-500">
+            <!-- ЛЕВАЯ КОЛОНКА (8 из 12 на ПК): Фильтры и Сетка Вилл -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Баннер Горящего Предложения -->
+                <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 rounded-2xl p-4 flex items-center justify-between shadow-md text-white">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-3xl">🔥</span>
+                        <div>
+                            <div id="t-hot-badge" class="text-[11px] uppercase font-extrabold tracking-wider bg-black/20 px-2.5 py-0.5 rounded-full inline-block mb-1">
+                                Sabah üçün qaynar təklif!
+                            </div>
+                            <div id="t-hot-desc" class="text-base font-extrabold">Həftəiçi günlərə 30% endirim</div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="applyHotDeal()" id="hot-deal-btn" class="bg-white text-slate-900 text-xs font-extrabold px-4 py-2.5 rounded-xl shadow hover:bg-amber-50 transition shrink-0">
+                        Aktivləşdir
+                    </button>
                 </div>
-                <div>
-                    <label id="t-nights-label" class="text-[11px] text-slate-400 font-medium block mb-1">Gün sayı</label>
-                    <select id="nights-count" onchange="calculateTotal()" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-amber-500">
-                        <option value="1">1</option>
-                        <option value="2" selected>2</option>
-                        <option value="3">3</option>
-                        <option value="5">5</option>
-                        <option value="7">7</option>
-                    </select>
+
+                <!-- Фильтр по районам -->
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span id="t-filter-title" class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Ərazini seçin:</span>
+                        <span class="text-xs text-amber-600 font-bold" id="villas-count-label">4 villa</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <button type="button" onclick="filterVillas('all', this)" id="t-loc-all" class="filter-btn bg-amber-500 text-white font-bold px-4 py-2 rounded-xl transition shadow-sm">
+                            Hamısı
+                        </button>
+                        <button type="button" onclick="filterVillas('Novxanı', this)" class="filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition">
+                            📍 Novxanı
+                        </button>
+                        <button type="button" onclick="filterVillas('Mərdəkan', this)" class="filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition">
+                            📍 Mərdəkan
+                        </button>
+                        <button type="button" onclick="filterVillas('Şüvəlan', this)" class="filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition">
+                            📍 Şüvəlan
+                        </button>
+                        <button type="button" onclick="filterVillas('Bilgəh', this)" class="filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition">
+                            📍 Bilgəh
+                        </button>
+                        <button type="button" onclick="filterVillas('Zaqulba', this)" class="filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition">
+                            📍 Zaqulba
+                        </button>
+                        <button type="button" onclick="filterVillas('Qəbələ', this)" class="filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition">
+                            📍 Qəbələ
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Сетка карточек вилл (2 колонки на компьютере) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="villas-container"></div>
             </div>
 
-            <div class="pt-1">
-                <div class="flex justify-between text-xs mb-2">
-                    <span id="t-guests-title" class="text-slate-300 font-medium">Qonaq sayı (hesabı bölürük):</span>
-                    <span id="guests-label" class="font-extrabold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/30">6 nəfər</span>
+            <!-- ПРАВАЯ КОЛОНКА (4 из 12 на ПК): Калькулятор бронирования и VIP-консьерж -->
+            <div class="lg:col-span-4 lg:sticky lg:top-24 space-y-5">
+                
+                <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-lg space-y-5">
+                    <!-- Выбранная вилла -->
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 flex justify-between items-center">
+                        <div class="pr-2">
+                            <div id="t-selected-label" class="text-[10px] text-amber-700 uppercase font-extrabold tracking-wider">Seçilmiş villa:</div>
+                            <div id="selected-villa-title" class="text-sm font-extrabold text-slate-900 mt-0.5">5 otaqlı bağ evi 210 m² — Novxanı</div>
+                        </div>
+                        <span id="selected-villa-price" class="text-sm font-extrabold text-amber-700 bg-white px-3 py-1.5 rounded-xl border border-amber-300 shrink-0 shadow-sm">150 ₼/gün</span>
+                    </div>
+
+                    <!-- 1. Параметры бронирования -->
+                    <div class="space-y-3">
+                        <h2 class="font-extrabold text-xs uppercase tracking-wider text-slate-700 flex items-center">
+                            <i class="fa-regular fa-calendar-check mr-2 text-amber-600 text-sm"></i> <span id="t-step1-title">1. Bron parametrləri</span>
+                        </h2>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label id="t-checkin-label" class="text-xs text-slate-500 font-semibold block mb-1">Giriş tarixi</label>
+                                <input type="date" id="checkin-date" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label id="t-nights-label" class="text-xs text-slate-500 font-semibold block mb-1">Gün sayı</label>
+                                <select id="nights-count" onchange="calculateTotal()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-amber-500">
+                                    <option value="1">1 gün</option>
+                                    <option value="2" selected>2 gün</option>
+                                    <option value="3">3 gün</option>
+                                    <option value="5">5 gün</option>
+                                    <option value="7">7 gün</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="pt-1">
+                            <div class="flex justify-between text-xs mb-1.5">
+                                <span id="t-guests-title" class="text-slate-600 font-semibold">Qonaq sayı (hesabı bölürük):</span>
+                                <span id="guests-label" class="font-extrabold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-lg">6 nəfər</span>
+                            </div>
+                            <input type="range" id="guests-range" min="2" max="15" value="6" oninput="calculateTotal()" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- 2. VIP Консьерж -->
+                    <div class="space-y-2.5 pt-2 border-t border-slate-100">
+                        <h2 class="font-extrabold text-xs uppercase tracking-wider text-slate-700 flex items-center">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-2 text-amber-600 text-sm"></i> <span id="t-step2-title">2. VIP Konsyerj Xidmətləri</span>
+                        </h2>
+                        <p id="t-step2-desc" class="text-[11px] text-slate-500">Əlavə xidmətləri seçin — siz gələnə qədər hər şey hazır olacaq:</p>
+
+                        <div class="space-y-2">
+                            <div onclick="toggleService(this, 'kebab', 120)" class="service-item cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-2xl p-2.5 flex justify-between items-center transition-all">
+                                <div class="flex items-center space-x-2.5 pr-2">
+                                    <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-lg shrink-0">🥩</div>
+                                    <div>
+                                        <div id="t-srv1-title" class="text-xs font-bold text-slate-800">Şəxsi kababçı + ət seti</div>
+                                        <div id="t-srv1-desc" class="text-[10px] text-slate-500">Marinadlanmış kabab, lülə, tərəvəzlər</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-extrabold text-amber-600 shrink-0">+120 ₼</span>
+                            </div>
+
+                            <div onclick="toggleService(this, 'fridge', 80)" class="service-item cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-2xl p-2.5 flex justify-between items-center transition-all">
+                                <div class="flex items-center space-x-2.5 pr-2">
+                                    <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-lg shrink-0">🥂</div>
+                                    <div>
+                                        <div id="t-srv2-title" class="text-xs font-bold text-slate-800">Dolu soyuducu paketi</div>
+                                        <div id="t-srv2-desc" class="text-[10px] text-slate-500">Meyvələr, qəlyanaltılar, sərin içkilər</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-extrabold text-amber-600 shrink-0">+80 ₼</span>
+                            </div>
+
+                            <div onclick="toggleService(this, 'transfer', 60)" class="service-item cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-2xl p-2.5 flex justify-between items-center transition-all">
+                                <div class="flex items-center space-x-2.5 pr-2">
+                                    <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-lg shrink-0">🚐</div>
+                                    <div>
+                                        <div id="t-srv3-title" class="text-xs font-bold text-slate-800">VIP Transfer (Minivan)</div>
+                                        <div id="t-srv3-desc" class="text-[10px] text-slate-500">Bakıdan villaya gediş və dönüş</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-extrabold text-amber-600 shrink-0">+60 ₼</span>
+                            </div>
+
+                            <div onclick="toggleService(this, 'hookah', 50)" class="service-item cursor-pointer border border-slate-200 bg-slate-50 hover:bg-slate-100 rounded-2xl p-2.5 flex justify-between items-center transition-all">
+                                <div class="flex items-center space-x-2.5 pr-2">
+                                    <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-lg shrink-0">💨</div>
+                                    <div>
+                                        <div id="t-srv4-title" class="text-xs font-bold text-slate-800">Hovuz kənarında Qəlyan</div>
+                                        <div id="t-srv4-desc" class="text-[10px] text-slate-500">2 meyvəli çaşa + usta xidməti</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-extrabold text-amber-600 shrink-0">+50 ₼</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Итоговая сумма и кнопка Бронирования -->
+                    <div class="pt-3 border-t border-slate-200 space-y-3">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <span id="t-total-lbl" class="text-xs text-slate-500 uppercase font-bold block">Cəmi məbləğ:</span>
+                                <span id="total-price" class="text-2xl font-extrabold text-slate-900">300 ₼</span>
+                                <span id="per-person-price" class="text-xs text-amber-700 font-bold bg-amber-100 px-2 py-0.5 rounded-md ml-1">
+                                    ~50 ₼ / nəfər
+                                </span>
+                            </div>
+                            <span id="deposit-badge" class="text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-lg font-extrabold">
+                                Beh 15%: 45 ₼
+                            </span>
+                        </div>
+
+                        <button type="button" onclick="sendWhatsAppBooking()" class="w-full gold-gradient text-white font-extrabold py-3.5 rounded-2xl text-sm uppercase tracking-wider shadow-md hover:opacity-95 flex items-center justify-center space-x-2 transition">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            <span id="t-book-btn">Bron et / Əlaqə</span>
+                        </button>
+
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-[11px] text-emerald-900 leading-relaxed" id="t-deposit-info">
+                            <b>Təhlükəsiz Bron (15% Beh):</b> Bronu təsdiqləmək üçün cəmi 15% beh ödənilir. Qalan 85% məbləği villaya daxil olduqda yerində ödəyirsiniz.
+                        </div>
+                    </div>
                 </div>
-                <input type="range" id="guests-range" min="2" max="15" value="6" oninput="calculateTotal()" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+
             </div>
         </div>
-
-        <!-- 2. VIP Консьерж -->
-        <div class="card-glass rounded-3xl p-4 space-y-3">
-            <div class="flex justify-between items-center">
-                <h2 class="font-extrabold text-xs uppercase tracking-wider text-amber-400 flex items-center">
-                    <i class="fa-solid fa-wand-magic-sparkles mr-2 text-sm"></i> <span id="t-step2-title">2. VIP Konsyerj Xidmətləri</span>
-                </h2>
-            </div>
-            <p id="t-step2-desc" class="text-[11px] text-slate-400 leading-relaxed">Əlavə xidmətləri seçin — siz gələnə qədər hər şey hazır olacaq:</p>
-
-            <div class="space-y-2.5 pt-1">
-                <div onclick="toggleService(this, 'kebab', 120)" class="service-item cursor-pointer border border-slate-700/80 bg-slate-900/60 rounded-2xl p-3 flex justify-between items-center transition-all">
-                    <div class="flex items-center space-x-3 pr-2">
-                        <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl shrink-0">🥩</div>
-                        <div>
-                            <div id="t-srv1-title" class="text-xs font-bold text-white">Şəxsi kababçı + ət seti</div>
-                            <div id="t-srv1-desc" class="text-[11px] text-slate-400">Marinadlanmış kabab, lülə, manqal tərəvəzləri</div>
-                        </div>
-                    </div>
-                    <span class="text-xs font-extrabold text-amber-400 shrink-0">+120 ₼</span>
-                </div>
-
-                <div onclick="toggleService(this, 'fridge', 80)" class="service-item cursor-pointer border border-slate-700/80 bg-slate-900/60 rounded-2xl p-3 flex justify-between items-center transition-all">
-                    <div class="flex items-center space-x-3 pr-2">
-                        <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl shrink-0">🥂</div>
-                        <div>
-                            <div id="t-srv2-title" class="text-xs font-bold text-white">Dolu soyuducu paketi</div>
-                            <div id="t-srv2-desc" class="text-[11px] text-slate-400">Mövsümi meyvələr, qəlyanaltılar, sərin içkilər</div>
-                        </div>
-                    </div>
-                    <span class="text-xs font-extrabold text-amber-400 shrink-0">+80 ₼</span>
-                </div>
-
-                <div onclick="toggleService(this, 'transfer', 60)" class="service-item cursor-pointer border border-slate-700/80 bg-slate-900/60 rounded-2xl p-3 flex justify-between items-center transition-all">
-                    <div class="flex items-center space-x-3 pr-2">
-                        <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl shrink-0">🚐</div>
-                        <div>
-                            <div id="t-srv3-title" class="text-xs font-bold text-white">VIP Transfer (Minivan)</div>
-                            <div id="t-srv3-desc" class="text-[11px] text-slate-400">Bakıdan villaya gediş və dönüş</div>
-                        </div>
-                    </div>
-                    <span class="text-xs font-extrabold text-amber-400 shrink-0">+60 ₼</span>
-                </div>
-
-                <div onclick="toggleService(this, 'hookah', 50)" class="service-item cursor-pointer border border-slate-700/80 bg-slate-900/60 rounded-2xl p-3 flex justify-between items-center transition-all">
-                    <div class="flex items-center space-x-3 pr-2">
-                        <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-xl shrink-0">💨</div>
-                        <div>
-                            <div id="t-srv4-title" class="text-xs font-bold text-white">Hovuz kənarında Premium Qəlyan</div>
-                            <div id="t-srv4-desc" class="text-[11px] text-slate-400">2 meyvəli çaşa + usta xidməti</div>
-                        </div>
-                    </div>
-                    <span class="text-xs font-extrabold text-amber-400 shrink-0">+50 ₼</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-emerald-950/50 border border-emerald-500/30 rounded-2xl p-3.5 flex items-start space-x-3">
-            <i class="fa-solid fa-shield-check text-emerald-400 text-lg mt-0.5"></i>
-            <div class="text-[11px] text-emerald-100 leading-relaxed" id="t-deposit-info">
-                <b>Təhlükəsiz Bron (15% Beh):</b> Bronu təsdiqləmək üçün cəmi 15% beh ödənilir. Qalan 85% məbləği villaya daxil olduqda yerində ödəyirsiniz.
-            </div>
-        </div>
-
     </main>
 
-    <!-- ========================================================== -->
-    <!-- РАЗДЕЛ: ŞƏXSİ KABİNET (ВСЕ ВКЛАДКИ С ВАШИХ ФОТО)           -->
-    <!-- ========================================================== -->
-    <main id="section-cabinet" class="hidden space-y-4 p-4">
-
-        <div class="card-glass rounded-3xl p-4 flex items-center justify-between border border-slate-700/80">
-            <div class="flex items-center space-x-3">
-                <div class="w-12 h-12 rounded-full bg-slate-700 text-slate-200 flex items-center justify-center text-2xl shadow-inner">
-                    <i class="fa-solid fa-circle-user"></i>
-                </div>
-                <div>
-                    <div class="text-sm font-extrabold text-white" id="cab-header-name">Kamil</div>
-                    <div class="text-xs font-semibold text-amber-400" id="cab-header-phone">(055) 350-78-87</div>
-                    <div class="text-[10px] text-slate-400" id="cab-header-email">lion131983@mail.ru</div>
-                </div>
-            </div>
-            <button type="button" onclick="switchTab('add-villa')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-extrabold px-3 py-2 rounded-xl shadow flex items-center space-x-1.5">
-                <i class="fa-solid fa-plus"></i>
-                <span>Yeni elan</span>
-            </button>
-        </div>
-
-        <!-- Навигационное меню Личного кабинета -->
-        <div class="flex space-x-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-            <button type="button" onclick="openCabinetSubtab('main')" id="cab-btn-main" class="cab-nav-btn bg-blue-600 text-white font-extrabold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 shadow">
-                <i class="fa-solid fa-chart-simple"></i>
-                <span>Şəxsi kabinet</span>
-            </button>
-            <button type="button" onclick="openCabinetSubtab('ads')" id="cab-btn-ads" class="cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700">
-                <i class="fa-regular fa-square-plus"></i>
-                <span>Elanlarım</span>
-            </button>
-            <button type="button" onclick="openCabinetSubtab('payments')" id="cab-btn-payments" class="cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700">
-                <i class="fa-solid fa-wallet"></i>
-                <span>Ödəniş üsulu</span>
-            </button>
-            <button type="button" onclick="openCabinetSubtab('history')" id="cab-btn-history" class="cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700">
-                <i class="fa-solid fa-receipt"></i>
-                <span>Əməliyyat tarixçəsi</span>
-            </button>
-            <button type="button" onclick="openCabinetSubtab('profile')" id="cab-btn-profile" class="cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700">
-                <i class="fa-regular fa-user"></i>
-                <span>Profil</span>
-            </button>
-        </div>
-
-        <!-- 1. Вкладка: Şəxsi kabinet -->
-        <div id="cab-sub-main" class="space-y-4">
-            <div class="card-glass rounded-3xl p-4 space-y-3 border border-slate-700/80">
-                <h3 class="text-xs font-extrabold text-slate-300 uppercase tracking-wider">Balanslar</h3>
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 space-y-2.5">
-                        <div class="text-[11px] text-slate-400">Şəxsi hesab</div>
-                        <div class="text-xl font-extrabold text-white"><span id="user-wallet-balance">0</span> ₼</div>
-                        <button type="button" onclick="topUpBalance()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-2 rounded-xl text-xs transition shadow">
-                            Artır
-                        </button>
+    <!-- ========================================================================= -->
+    <!-- РАЗДЕЛ 2: ŞƏXSİ KABİNET (ТОЧНАЯ КОМПЬЮТЕРНАЯ КОПИЯ ВАШИХ СКРИНШОТОВ)      -->
+    <!-- ========================================================================= -->
+    <main id="section-cabinet" class="hidden max-w-7xl w-full mx-auto px-4 lg:px-8 py-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- ЛЕВАЯ КОЛОНКА ПРОФИЛЯ (Точь-в-точь как на Фото 2, 3, 4, 5, 6, 7) -->
+            <aside class="lg:col-span-3 space-y-6">
+                <div class="flex flex-col items-start space-y-2 px-2">
+                    <div class="w-16 h-16 rounded-full bg-slate-600 text-white flex items-center justify-center text-3xl shadow-sm">
+                        <i class="fa-solid fa-user"></i>
                     </div>
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 space-y-2.5">
-                        <div class="flex justify-between items-center text-[11px] text-slate-400">
-                            <span>Elanlar balansı</span>
-                            <i class="fa-solid fa-chevron-down text-[9px]"></i>
-                        </div>
-                        <div class="text-xl font-extrabold text-white" id="user-ads-balance">1</div>
-                        <button type="button" onclick="buyAdPackage()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-2 rounded-xl text-xs transition shadow">
-                            Alış
+                    <div class="pt-1">
+                        <div class="text-base font-bold text-slate-900" id="cab-header-name">Kamil</div>
+                        <div class="text-sm font-medium text-slate-600" id="cab-header-phone">(055) 350-78-87</div>
+                        <div class="text-xs text-slate-400" id="cab-header-email">lion131983@mail.ru</div>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <div class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Əsas</div>
+                    
+                    <button type="button" onclick="openCabinetSubtab('main')" id="cab-btn-main" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl bg-blue-100/80 text-blue-600 font-bold text-sm flex items-center space-x-3 transition">
+                        <i class="fa-solid fa-chart-simple text-base w-5 text-center"></i>
+                        <span>Şəxsi kabinet</span>
+                    </button>
+
+                    <button type="button" onclick="openCabinetSubtab('ads')" id="cab-btn-ads" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition">
+                        <i class="fa-regular fa-square-plus text-base w-5 text-center"></i>
+                        <span>Elanlarım</span>
+                    </button>
+
+                    <button type="button" onclick="openCabinetSubtab('payments')" id="cab-btn-payments" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition">
+                        <i class="fa-solid fa-wallet text-base w-5 text-center"></i>
+                        <span>Ödəniş üsulu</span>
+                    </button>
+
+                    <button type="button" onclick="openCabinetSubtab('history')" id="cab-btn-history" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition">
+                        <i class="fa-solid fa-receipt text-base w-5 text-center"></i>
+                        <span>Əməliyyat tarixçəsi</span>
+                    </button>
+
+                    <button type="button" onclick="openCabinetSubtab('profile')" id="cab-btn-profile" class="cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition">
+                        <i class="fa-regular fa-user text-base w-5 text-center"></i>
+                        <span>Profil</span>
+                    </button>
+
+                    <div class="pt-4">
+                        <button type="button" onclick="switchTab('guest')" class="w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-red-50 hover:text-red-600 font-medium text-sm flex items-center space-x-3 transition">
+                            <i class="fa-solid fa-arrow-right-from-bracket text-base w-5 text-center"></i>
+                            <span>Çıxış</span>
                         </button>
                     </div>
                 </div>
-            </div>
+            </aside>
 
-            <div class="card-glass rounded-3xl p-4 space-y-3 border border-slate-700/80">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xs font-extrabold text-white">Elanlarım</h3>
-                    <button type="button" onclick="openCabinetSubtab('ads')" class="text-[11px] text-blue-400 font-bold hover:underline">Bütün elanlara bax</button>
-                </div>
-                <div id="cabinet-main-ads-preview" class="space-y-3"></div>
-            </div>
+            <!-- ПРАВАЯ ЧАСТЬ КАБИНЕТА (9 из 12 колонок на ПК) -->
+            <div class="lg:col-span-9 space-y-6">
 
-            <div class="card-glass rounded-3xl p-4 space-y-3 border border-slate-700/80">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xs font-extrabold text-white">Son əməliyyatlar</h3>
-                    <button type="button" onclick="openCabinetSubtab('history')" class="text-[11px] text-blue-400 font-bold hover:underline">Bütün əməliyyatları göstər</button>
-                </div>
-                <div class="space-y-2.5 text-xs" id="cabinet-recent-ops"></div>
-            </div>
-        </div>
+                <!-- 1. Вкладка: Şəxsi kabinet (Фото 2 и Фото 3) -->
+                <div id="cab-sub-main" class="space-y-6">
+                    <h1 class="text-2xl font-extrabold text-slate-900">Kabinet</h1>
 
-        <!-- 2. Вкладка: Elanlarım -->
-        <div id="cab-sub-ads" class="hidden space-y-4">
-            <div class="card-glass rounded-3xl p-4 space-y-4 border border-slate-700/80">
-                <h2 class="text-base font-extrabold text-white">Elanlarım</h2>
-                
-                <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar text-[11px] font-bold">
-                    <button type="button" onclick="filterMyAds('all', this)" class="my-ads-tab bg-blue-600/20 text-blue-400 border border-blue-500/40 px-3 py-1.5 rounded-full whitespace-nowrap">
-                        Bütün elanlar (<span id="count-all-my-ads">1</span>)
-                    </button>
-                    <button type="button" onclick="filterMyAds('approved', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
-                        Hazırda saytda (<span id="count-active-my-ads">1</span>)
-                    </button>
-                    <button type="button" onclick="filterMyAds('unpaid', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
-                        Ödəniş gözləyir
-                    </button>
-                    <button type="button" onclick="filterMyAds('expired', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
-                        Vaxtı bitmiş
-                    </button>
-                    <button type="button" onclick="filterMyAds('pending', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
-                        Yoxlanışda
-                    </button>
-                    <button type="button" onclick="filterMyAds('rejected', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
-                        Qəbul olunmayan
-                    </button>
-                </div>
-
-                <div id="cabinet-ads-full-list" class="space-y-4"></div>
-            </div>
-        </div>
-
-        <!-- 3. Вкладка: Ödəniş üsulu / Kartlarım -->
-        <div id="cab-sub-payments" class="hidden space-y-4">
-            <div class="card-glass rounded-3xl p-4 space-y-4 border border-slate-700/80">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-base font-extrabold text-white">Kartlarım</h2>
-                    <button type="button" onclick="addNewBankCard()" class="bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600 hover:text-white text-[11px] font-extrabold px-3 py-1.5 rounded-xl transition">
-                        Yeni kart əlavə et
-                    </button>
-                </div>
-
-                <div id="saved-cards-list" class="space-y-2.5">
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-11 h-8 rounded-lg bg-blue-900/60 border border-blue-500/40 flex items-center justify-center font-extrabold text-[11px] text-blue-200 tracking-wider">
-                                VISA
+                    <!-- Блок Balanslar (Фото 2) -->
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
+                        <h3 class="text-base font-bold text-slate-800">Balanslar</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl">
+                            <div class="bg-[#f4f6f9] rounded-2xl p-5 space-y-4">
+                                <div class="text-xs text-slate-500 font-medium">Şəxsi hesab</div>
+                                <div class="text-2xl font-extrabold text-slate-900"><span id="user-wallet-balance">0</span> ₼</div>
+                                <button type="button" onclick="topUpBalance()" class="w-full bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-sm">
+                                    Artır
+                                </button>
                             </div>
-                            <div>
-                                <div class="text-xs font-extrabold text-white">Visa •• 1257</div>
-                                <div class="text-[11px] text-emerald-400 font-semibold">Kapital Bank • Əsas kart</div>
-                            </div>
-                        </div>
-                        <button type="button" onclick="showToast('✅ Visa •• 1257 əsas kart kimi seçilib')" class="text-slate-400 hover:text-white px-2">
-                            <i class="fa-solid fa-ellipsis"></i>
-                        </button>
-                    </div>
-
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-11 h-8 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center">
-                                <div class="flex -space-x-1.5">
-                                    <span class="w-3.5 h-3.5 rounded-full bg-red-500 inline-block"></span>
-                                    <span class="w-3.5 h-3.5 rounded-full bg-amber-500/90 inline-block"></span>
+                            <div class="bg-[#f4f6f9] rounded-2xl p-5 space-y-4">
+                                <div class="flex justify-between items-center text-xs text-slate-500 font-medium">
+                                    <span>Elanlar balansı</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
                                 </div>
-                            </div>
-                            <div>
-                                <div class="text-xs font-extrabold text-white">MasterCard •• 8194</div>
-                                <div class="text-[11px] text-slate-400">ABB</div>
+                                <div class="text-2xl font-extrabold text-slate-900" id="user-ads-balance">1</div>
+                                <button type="button" onclick="buyAdPackage()" class="w-full bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-sm">
+                                    Alış
+                                </button>
                             </div>
                         </div>
-                        <button type="button" onclick="showToast('✅ MasterCard •• 8194 aktivdir')" class="text-slate-400 hover:text-white px-2">
-                            <i class="fa-solid fa-ellipsis"></i>
-                        </button>
                     </div>
 
-                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-11 h-8 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center">
-                                <div class="flex -space-x-1.5">
-                                    <span class="w-3.5 h-3.5 rounded-full bg-red-500 inline-block"></span>
-                                    <span class="w-3.5 h-3.5 rounded-full bg-amber-500/90 inline-block"></span>
+                    <!-- Блок Elanlarım внутри обзора (Фото 2) -->
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-base font-bold text-slate-800">Elanlarım</h3>
+                            <button type="button" onclick="openCabinetSubtab('ads')" class="text-xs text-blue-600 font-semibold hover:underline">Bütün elanlara bax</button>
+                        </div>
+                        <div id="cabinet-main-ads-preview" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                    </div>
+
+                    <!-- Блок Son əməliyyatlar (Фото 3) -->
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-base font-bold text-slate-800">Son əməliyyatlar</h3>
+                            <button type="button" onclick="openCabinetSubtab('history')" class="text-xs text-blue-600 font-semibold hover:underline">Bütün əməliyyatları göstər</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-xs text-slate-400">
+                                        <th class="pb-3 font-medium">Elan</th>
+                                        <th class="pb-3 font-medium">Xidmət</th>
+                                        <th class="pb-3 font-medium">Tarix</th>
+                                        <th class="pb-3 font-medium text-right">Balans</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cabinet-recent-ops" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Вкладка: Elanlarım (Фото 4) -->
+                <div id="cab-sub-ads" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+                        <h2 class="text-2xl font-extrabold text-slate-900">Elanlarım</h2>
+                        
+                        <div class="flex flex-wrap gap-2 text-xs font-semibold">
+                            <button type="button" onclick="filterMyAds('all', this)" class="my-ads-tab bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-full">
+                                Bütün elanlar (<span id="count-all-my-ads">1</span>)
+                            </button>
+                            <button type="button" onclick="filterMyAds('unpaid', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                                Ödəniş gözləyir
+                            </button>
+                            <button type="button" onclick="filterMyAds('approved', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                                Hazırda saytda (<span id="count-active-my-ads">1</span>)
+                            </button>
+                            <button type="button" onclick="filterMyAds('expired', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                                Vaxtı bitmiş
+                            </button>
+                            <button type="button" onclick="filterMyAds('pending', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                                Yoxlanışda
+                            </button>
+                            <button type="button" onclick="filterMyAds('rejected', this)" class="my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200">
+                                Qəbul olunmayan
+                            </button>
+                        </div>
+
+                        <div id="cabinet-ads-full-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5"></div>
+                    </div>
+                </div>
+
+                <!-- 3. Вкладка: Ödəniş üsulu / Kartlarım (Фото 5) -->
+                <div id="cab-sub-payments" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-xl font-extrabold text-slate-900">Kartlarım</h2>
+                            <button type="button" onclick="addNewBankCard()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                                Yeni kart əlavə et
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl">
+                            <div class="bg-[#f4f6f9] border border-slate-200 rounded-2xl p-4 flex justify-between items-center">
+                                <div class="flex items-center space-x-3.5">
+                                    <div class="font-extrabold text-sm text-blue-800 tracking-wider">VISA</div>
+                                    <div>
+                                        <div class="text-sm font-bold text-slate-800">Visa••1257</div>
+                                        <div class="text-xs text-slate-500">Kapital Bank Əsas kart</div>
+                                    </div>
                                 </div>
+                                <button type="button" onclick="showToast('✅ Visa •• 1257 əsas kart kimi seçilib')" class="text-slate-400 hover:text-slate-700 px-2">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
                             </div>
-                            <div>
-                                <div class="text-xs font-extrabold text-white">MasterCard •• 6046</div>
-                                <div class="text-[11px] text-slate-400">Kapital Bank</div>
+
+                            <div class="bg-[#f4f6f9] border border-slate-200 rounded-2xl p-4 flex justify-between items-center">
+                                <div class="flex items-center space-x-3.5">
+                                    <div class="flex -space-x-1.5">
+                                        <span class="w-4 h-4 rounded-full bg-red-500 inline-block"></span>
+                                        <span class="w-4 h-4 rounded-full bg-amber-500/90 inline-block"></span>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-slate-800">MasterCard••8194</div>
+                                        <div class="text-xs text-slate-500">ABB</div>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="showToast('✅ MasterCard •• 8194 aktivdir')" class="text-slate-400 hover:text-slate-700 px-2">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                            </div>
+
+                            <div class="bg-[#f4f6f9] border border-slate-200 rounded-2xl p-4 flex justify-between items-center">
+                                <div class="flex items-center space-x-3.5">
+                                    <div class="flex -space-x-1.5">
+                                        <span class="w-4 h-4 rounded-full bg-red-500 inline-block"></span>
+                                        <span class="w-4 h-4 rounded-full bg-amber-500/90 inline-block"></span>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-bold text-slate-800">MasterCard••6046</div>
+                                        <div class="text-xs text-slate-500">Kapital Bank</div>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="showToast('✅ MasterCard •• 6046 aktivdir')" class="text-slate-400 hover:text-slate-700 px-2">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
                             </div>
                         </div>
-                        <button type="button" onclick="showToast('✅ MasterCard •• 6046 aktivdir')" class="text-slate-400 hover:text-white px-2">
-                            <i class="fa-solid fa-ellipsis"></i>
+
+                        <p class="text-xs text-slate-400 text-center pt-2">
+                            Yeni kart əlavə et düyməsini sıxmaqla siz İstifadəçi razılaşmasını və Ofertanı qəbul etdiyinizi təsdiqləmiş olursunuz.
+                        </p>
+                    </div>
+
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex justify-between items-start">
+                        <div class="space-y-4">
+                            <h3 class="text-xl font-extrabold text-slate-900">Şəxsi hesab</h3>
+                            <div class="bg-[#f4f6f9] rounded-2xl px-6 py-4 min-w-[220px]">
+                                <div class="text-xs text-slate-500">Şəxsi hesab</div>
+                                <div class="text-2xl font-extrabold text-slate-900 mt-1"><span id="user-wallet-balance-2">0</span> ₼</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="topUpBalance()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
+                            Hesabı artır
                         </button>
                     </div>
                 </div>
 
-                <p class="text-[10px] text-slate-400 leading-relaxed">
-                    Yeni kart əlavə et düyməsini sıxmaqla siz İstifadəçi razılaşmasını və Ofertanı qəbul etdiyinizi təsdiqləmiş olursunuz.
-                </p>
-            </div>
+                <!-- 4. Вкладка: Əməliyyat tarixçəsi (Фото 6) -->
+                <div id="cab-sub-history" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+                        <h2 class="text-2xl font-extrabold text-slate-900">Əməliyyat tarixçəsi</h2>
 
-            <div class="card-glass rounded-3xl p-4 flex justify-between items-center border border-slate-700/80">
-                <div>
-                    <div class="text-xs text-slate-400 font-semibold">Şəxsi hesab</div>
-                    <div class="text-xl font-extrabold text-white mt-0.5"><span id="user-wallet-balance-2">0</span> ₼</div>
+                        <div class="flex space-x-2 text-xs font-semibold">
+                            <button type="button" class="bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-full">Bütün əməliyyatlar</button>
+                            <button type="button" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-full">Şəxsi hesab</button>
+                            <button type="button" class="bg-slate-100 text-slate-600 px-4 py-2 rounded-full">Paketlər və yerləşdirmələr</button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-xs text-slate-400">
+                                        <th class="pb-3 font-medium">Elan</th>
+                                        <th class="pb-3 font-medium">Xidmət</th>
+                                        <th class="pb-3 font-medium">Tarix</th>
+                                        <th class="pb-3 font-medium text-right">Balans</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cabinet-full-history-list" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <button type="button" onclick="topUpBalance()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition">
-                    Hesabı artır
-                </button>
+
+                <!-- 5. Вкладка: Profil (Фото 7) -->
+                <div id="cab-sub-profile" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-2xl font-extrabold text-slate-900">Profil</h2>
+                            <button type="button" onclick="saveUserProfile()" class="bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-bold px-5 py-2.5 rounded-xl transition">
+                                Redaktə et
+                            </button>
+                        </div>
+
+                        <div class="space-y-5 max-w-md text-sm">
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Ad</label>
+                                <input type="text" id="prof-name-input" value="Kamil" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 font-semibold focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">E-mail</label>
+                                <input type="email" id="prof-email-input" value="lion131983@mail.ru" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 font-semibold focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Telefon</label>
+                                <input type="tel" id="prof-phone-input" value="(055) 350-78-87" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 font-semibold focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Şifrə</label>
+                                <input type="password" value="••••••••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 font-semibold focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-        <!-- 4. Вкладка: Əməliyyat tarixçəsi -->
-        <div id="cab-sub-history" class="hidden space-y-4">
-            <div class="card-glass rounded-3xl p-4 space-y-4 border border-slate-700/80">
-                <h2 class="text-base font-extrabold text-white">Əməliyyat tarixçəsi</h2>
-
-                <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar text-[11px] font-bold">
-                    <button type="button" class="bg-blue-600/20 text-blue-400 border border-blue-500/40 px-3 py-1.5 rounded-full whitespace-nowrap">Bütün əməliyyatlar</button>
-                    <button type="button" class="bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">Şəxsi hesab</button>
-                    <button type="button" class="bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">Paketlər və yerləşdirmələr</button>
-                </div>
-
-                <div class="space-y-2.5 text-xs" id="cabinet-full-history-list"></div>
-            </div>
-        </div>
-
-        <!-- 5. Вкладка: Profil -->
-        <div id="cab-sub-profile" class="hidden space-y-4">
-            <div class="card-glass rounded-3xl p-5 space-y-4 border border-slate-700/80">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                    <h2 class="text-base font-extrabold text-white">Profil</h2>
-                    <button type="button" onclick="saveUserProfile()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-xl shadow transition">
-                        Redaktə et / Yadda saxla
-                    </button>
-                </div>
-
-                <div class="space-y-3.5 text-xs">
-                    <div>
-                        <label class="text-slate-400 block mb-1">Ad</label>
-                        <input type="text" id="prof-name-input" value="Kamil" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">E-mail</label>
-                        <input type="email" id="prof-email-input" value="lion131983@mail.ru" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">Telefon</label>
-                        <input type="tel" id="prof-phone-input" value="(055) 350-78-87" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="text-slate-400 block mb-1">Şifrə</label>
-                        <input type="password" value="••••••••••••••" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </main>
 
     <!-- ========================================== -->
     <!-- ВКЛАДКА 3: ДОБАВЛЕНИЕ ВИЛЛЫ (+ YENİ ELAN)  -->
     <!-- ========================================== -->
-    <main id="section-add-villa" class="hidden space-y-5 p-4">
-
-        <div class="bg-gradient-to-r from-amber-500/20 via-slate-900 to-amber-500/10 border border-amber-500/40 rounded-3xl p-4 space-y-1.5">
-            <div class="flex items-center space-x-2 text-amber-400 font-extrabold text-xs uppercase">
-                <i class="fa-solid fa-bolt"></i>
-                <span id="t-owner-banner-title">Asan Foto Yükləmə (iPhone və Android)</span>
-            </div>
-            <p id="t-owner-banner-desc" class="text-[11px] text-slate-300 leading-relaxed">
-                Villanızı birbaşa kataloqa əlavə edin! Təsdiqdən sonra «Şəxsi kabinet -> Elanlarım» bölməsindən qiyməti istənilən vaxt dəyişə bilərsiniz.
-            </p>
-        </div>
-
-        <div class="card-glass rounded-3xl p-5 space-y-4">
-            <h2 class="text-base font-extrabold text-white flex items-center">
-                <i class="fa-solid fa-house-medical text-amber-400 mr-2"></i> <span id="t-form-header">Yeni Villa Əlavə Et</span>
+    <main id="section-add-villa" class="hidden max-w-3xl w-full mx-auto px-4 py-8">
+        <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-200 space-y-6">
+            <h2 class="text-xl font-extrabold text-slate-900 flex items-center">
+                <i class="fa-solid fa-house-medical text-amber-500 mr-2.5"></i> <span id="t-form-header">Yeni Villa Əlavə Et</span>
             </h2>
 
-            <div class="space-y-3.5">
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label id="t-lbl-district" class="text-xs text-slate-400 font-medium block mb-1">Ərazi (Rayon)</label>
-                        <select id="owner-villa-district" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white font-semibold focus:outline-none focus:border-amber-500">
-                            <option value="Novxanı">📍 Novxanı</option>
-                            <option value="Mərdəkan">📍 Mərdəkan</option>
-                            <option value="Şüvəlan">📍 Şüvəlan</option>
-                            <option value="Bilgəh">📍 Bilgəh</option>
-                            <option value="Zaqulba">📍 Zaqulba</option>
-                            <option value="Nardaran">📍 Nardaran</option>
-                            <option value="Qəbələ">📍 Qəbələ</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label id="t-lbl-price" class="text-xs text-slate-400 font-medium block mb-1">Günlük qiymət (AZN)</label>
-                        <input type="number" id="owner-villa-price" placeholder="150" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-amber-500">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label id="t-lbl-guests" class="text-xs text-slate-400 font-medium block mb-1">Otaq / Qonaq sayı</label>
-                        <input type="number" id="owner-villa-guests" placeholder="12" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label id="t-lbl-phone" class="text-xs text-slate-400 font-medium block mb-1">Sahibin nömrəsi (Gizli)</label>
-                        <input type="tel" id="owner-villa-phone" placeholder="055 350 78 87" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                </div>
-
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label id="t-lbl-desc" class="text-xs text-slate-400 font-medium block mb-1.5">Villanın üstünlükləri (Seçin):</label>
-                    <div class="grid grid-cols-2 gap-2 text-[11px]">
-                        <label class="flex items-center space-x-2 bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 cursor-pointer">
-                            <input type="checkbox" value="İsti hovuz" checked class="amen-check accent-amber-500">
-                            <span id="t-amen-pool">🏊‍♂️ İsti hovuz</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 cursor-pointer">
-                            <input type="checkbox" value="Manqal zonası" checked class="amen-check accent-amber-500">
-                            <span id="t-amen-bbq">🔥 Manqal zonası</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 cursor-pointer">
-                            <input type="checkbox" value="Sauna / Hamam" class="amen-check accent-amber-500">
-                            <span id="t-amen-sauna">🧖‍♂️ Sauna / Hamam</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 cursor-pointer">
-                            <input type="checkbox" value="Besedka / Terras" checked class="amen-check accent-amber-500">
-                            <span id="t-amen-terrace">🏡 Besedka / Terras</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div>
-                    <label id="t-lbl-plan" class="text-xs text-slate-400 font-medium block mb-1">Əməkdaşlıq və Reklam tarifi:</label>
-                    <select id="owner-ad-plan" class="w-full bg-slate-900 border border-amber-500/50 rounded-xl px-3.5 py-2.5 text-xs text-amber-300 font-bold focus:outline-none">
-                        <option value="Premium 30 gün (60 AZN)">🔥 Premium 30 gün — 60 ₼</option>
-                        <option value="15% Komissiya (Abunə haqqı yoxdur)">Komissiya: Hər brondan 15% (Pulsuz yerləşdirmə)</option>
+                    <label id="t-lbl-district" class="text-xs text-slate-500 font-bold block mb-1.5">Ərazi (Rayon)</label>
+                    <select id="owner-villa-district" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-semibold">
+                        <option value="Novxanı">📍 Novxanı</option>
+                        <option value="Mərdəkan">📍 Mərdəkan</option>
+                        <option value="Şüvəlan">📍 Şüvəlan</option>
+                        <option value="Bilgəh">📍 Bilgəh</option>
+                        <option value="Zaqulba">📍 Zaqulba</option>
+                        <option value="Nardaran">📍 Nardaran</option>
+                        <option value="Qəbələ">📍 Qəbələ</option>
                     </select>
                 </div>
-
-                <div class="space-y-2">
-                    <label id="t-lbl-photo" class="text-xs text-amber-400 font-bold block">Villanın fotoları (iPhone və Android dəstəyi):</label>
-                    <label for="villa-photo-input" class="cursor-pointer border-2 border-dashed border-amber-500/50 hover:border-amber-400 bg-slate-900/80 rounded-2xl p-4 flex flex-col items-center justify-center text-center transition active:scale-95">
-                        <div class="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl mb-2">
-                            <i class="fa-solid fa-images"></i>
-                        </div>
-                        <span id="t-upload-btn-text" class="text-xs font-extrabold text-white">Qalereyadan fotoları seçin (1-5 ədəd)</span>
-                        <span id="t-upload-hint" class="text-[10px] text-slate-400 mt-1">iPhone (iOS) və Android fotoları avtomatik HD formatına uyğunlaşdırılır</span>
-                        <input type="file" id="villa-photo-input" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(event)">
-                    </label>
-
-                    <div id="photo-check-status" class="hidden rounded-xl p-3 text-xs font-semibold"></div>
-                    <div id="photo-preview-wrapper" class="hidden space-y-2">
-                        <div id="photo-preview-grid" class="grid grid-cols-3 gap-2"></div>
-                    </div>
+                <div>
+                    <label id="t-lbl-price" class="text-xs text-slate-500 font-bold block mb-1.5">Günlük qiymət (AZN)</label>
+                    <input type="number" id="owner-villa-price" placeholder="150" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold">
                 </div>
-
-                <div class="bg-emerald-950/60 border border-emerald-500/40 rounded-2xl p-3 flex items-start space-x-3">
-                    <input type="checkbox" id="owner-oxy-bonus" checked class="mt-1 w-4 h-4 accent-emerald-500 shrink-0">
-                    <label for="owner-oxy-bonus" id="t-oxy-check-label" class="text-[11px] text-emerald-200 leading-relaxed cursor-pointer">
-                        <b>«💧 OXY Təmiz Su»</b> nişanı almaq və OXY POOL xlor tabletlərini pulsuz çatdırılma ilə sifariş etmək istəyirəm.
-                    </label>
+                <div>
+                    <label id="t-lbl-guests" class="text-xs text-slate-500 font-bold block mb-1.5">Maksimum qonaq</label>
+                    <input type="number" id="owner-villa-guests" placeholder="12" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-semibold">
                 </div>
-
-                <button type="button" onclick="publishVillaToCloud()" id="submit-villa-btn" class="w-full gold-gradient text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-lg transition active:scale-95">
-                    <i class="fa-solid fa-paper-plane mr-1.5"></i> <span id="t-submit-villa-btn">Elanı yerləşdir</span>
-                </button>
+                <div>
+                    <label id="t-lbl-phone" class="text-xs text-slate-500 font-bold block mb-1.5">Sahibin nömrəsi</label>
+                    <input type="tel" id="owner-villa-phone" placeholder="055 350 78 87" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-semibold">
+                </div>
             </div>
+
+            <div>
+                <label id="t-lbl-desc" class="text-xs text-slate-500 font-bold block mb-2">Villanın üstünlükləri:</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs font-semibold">
+                    <label class="flex items-center space-x-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer">
+                        <input type="checkbox" value="İsti hovuz" checked class="amen-check accent-amber-500">
+                        <span>🏊‍♂️ İsti hovuz</span>
+                    </label>
+                    <label class="flex items-center space-x-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer">
+                        <input type="checkbox" value="Manqal zonası" checked class="amen-check accent-amber-500">
+                        <span>🔥 Manqal zonası</span>
+                    </label>
+                    <label class="flex items-center space-x-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer">
+                        <input type="checkbox" value="Sauna / Hamam" class="amen-check accent-amber-500">
+                        <span>🧖‍♂️ Sauna / Hamam</span>
+                    </label>
+                    <label class="flex items-center space-x-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 cursor-pointer">
+                        <input type="checkbox" value="Besedka / Terras" checked class="amen-check accent-amber-500">
+                        <span>🏡 Besedka / Terras</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs text-slate-700 font-bold block">Villanın fotoları (1-5 ədəd):</label>
+                <label for="villa-photo-input" class="cursor-pointer border-2 border-dashed border-amber-400 hover:bg-amber-50/40 bg-slate-50 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition">
+                    <i class="fa-solid fa-images text-amber-500 text-2xl mb-2"></i>
+                    <span class="text-sm font-extrabold text-slate-800">Qalereyadan fotoları seçin</span>
+                    <span class="text-xs text-slate-400 mt-1">iPhone və Android fotoları avtomatik uyğunlaşdırılır</span>
+                    <input type="file" id="villa-photo-input" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(event)">
+                </label>
+                <div id="photo-check-status" class="hidden rounded-xl p-3 text-xs font-semibold"></div>
+                <div id="photo-preview-wrapper" class="hidden">
+                    <div id="photo-preview-grid" class="grid grid-cols-5 gap-2"></div>
+                </div>
+            </div>
+
+            <button type="button" onclick="publishVillaToCloud()" class="w-full gold-gradient text-white font-extrabold py-3.5 rounded-2xl text-sm uppercase tracking-wider shadow-md">
+                Elanı yerləşdir
+            </button>
         </div>
     </main>
 
     <!-- ========================================== -->
-    <!-- ВКЛАДКА 4: ПАНЕЛЬ АДМИНИСТРАТОРА (PIN 7887) -->
+    <!-- ВКЛАДКА 4: АДМИН-ПАНЕЛЬ (PIN 7887)         -->
     <!-- ========================================== -->
-    <main id="section-admin" class="hidden space-y-5 p-4">
-        <div id="admin-login-box" class="card-glass rounded-3xl p-6 text-center space-y-4 border border-amber-500/30">
-            <div class="w-12 h-12 rounded-2xl gold-gradient mx-auto flex items-center justify-center text-slate-950 text-xl shadow-lg">
+    <main id="section-admin" class="hidden max-w-4xl w-full mx-auto px-4 py-8">
+        <div id="admin-login-box" class="bg-white rounded-3xl p-8 text-center space-y-4 border border-slate-200 shadow-sm max-w-md mx-auto">
+            <div class="w-12 h-12 rounded-2xl gold-gradient mx-auto flex items-center justify-center text-white text-xl shadow">
                 <i class="fa-solid fa-lock"></i>
             </div>
+            <h2 class="text-lg font-extrabold text-slate-900">Admin Panelə Giriş</h2>
+            <p class="text-xs text-slate-500">PIN-kodu daxil edin (PIN: <b class="text-amber-600">7887</b>)</p>
+            <input type="password" id="admin-pin-input" maxlength="4" placeholder="••••" class="w-36 text-center text-xl tracking-widest font-extrabold bg-slate-50 border border-slate-300 rounded-2xl py-2.5 text-slate-900">
             <div>
-                <h2 class="text-base font-extrabold text-white">Admin Panelə Giriş</h2>
-                <p class="text-xs text-slate-400 mt-1">Digər sahiblərin villalarını təsdiqləmək üçün PIN-kodu daxil edin (Sizin PIN: <b class="text-amber-400">7887</b>)</p>
-            </div>
-            <input type="password" id="admin-pin-input" maxlength="4" placeholder="••••" class="w-36 text-center text-xl tracking-widest font-extrabold bg-slate-900 border border-amber-500/50 rounded-2xl py-2.5 text-amber-400 focus:outline-none">
-            <div>
-                <button type="button" onclick="unlockAdminPanel()" class="gold-gradient text-slate-950 font-extrabold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg">
+                <button type="button" onclick="unlockAdminPanel()" class="gold-gradient text-white font-extrabold px-8 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow">
                     Daxil ol
                 </button>
             </div>
         </div>
 
-        <div id="admin-dashboard" class="hidden space-y-5">
-            <div class="bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/40 rounded-3xl p-4 space-y-1">
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-extrabold text-amber-400 uppercase">👑 Admin: 055 350 78 87</span>
-                    <span class="text-[10px] bg-emerald-500 text-slate-950 font-extrabold px-2 py-0.5 rounded-full">15% Komissiya Rejimi</span>
-                </div>
-                <p class="text-[11px] text-slate-300">
-                    Burada sahiblərin yüklədiyi fotolara baxa, gizli telefon nömrələrini görə və bir düymə ilə kataloqa buraxa bilərsiniz.
-                </p>
+        <div id="admin-dashboard" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
+                <h3 class="text-sm font-extrabold uppercase text-amber-600">⏳ Təsdiq gözləyən villalar</h3>
+                <div id="admin-pending-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
-
-            <div class="card-glass rounded-3xl p-4 space-y-3">
-                <h3 class="text-xs font-extrabold uppercase tracking-wider text-amber-400">⏳ Təsdiq gözləyən villalar</h3>
-                <div id="admin-pending-list" class="space-y-3"></div>
-            </div>
-
-            <div class="card-glass rounded-3xl p-4 space-y-3">
-                <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-400">✅ Kataloqda aktiv olan villalar</h3>
-                <div id="admin-approved-list" class="space-y-3"></div>
+            <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-3">
+                <h3 class="text-sm font-extrabold uppercase text-emerald-600">✅ Kataloqda aktiv olan villalar</h3>
+                <div id="admin-approved-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
         </div>
     </main>
 
     <!-- ========================================== -->
-    <!-- ВКЛАДКА 5: БАССЕЙНЫ (МАГАЗИН OXY POOL)     -->
+    <!-- ВКЛАДКА 5: МАГАЗИН OXY POOL                -->
     <!-- ========================================== -->
-    <main id="section-owner" class="hidden space-y-5 p-4">
-        <div class="bg-gradient-to-br from-cyan-950 via-slate-900 to-blue-950 rounded-3xl p-5 border border-cyan-500/40 shadow-2xl space-y-4">
+    <main id="section-owner" class="hidden max-w-3xl w-full mx-auto px-4 py-8">
+        <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-5">
             <div class="flex justify-between items-center">
-                <span id="t-oxy-badge" class="bg-cyan-400 text-slate-950 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-                    Villa sahibləri üçün
-                </span>
-                <span id="t-oxy-free" class="text-xs text-cyan-300 font-bold">🚚 Pulsuz çatdırılma</span>
+                <span class="bg-cyan-100 text-cyan-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase">Villa sahibləri üçün</span>
+                <span class="text-xs text-cyan-600 font-bold">🚚 Pulsuz çatdırılma</span>
             </div>
+            <h2 class="text-2xl font-extrabold text-slate-900">OXY POOL ilə Kristal Təmiz Hovuz</h2>
+            <p class="text-sm text-slate-600">5-i 1-də kompleks qulluq: dezinfeksiya, yosunlara qarşı qoruma və ideal şəffaflıq. Bakı və ətrafına pulsuz çatdırılma!</p>
 
-            <div>
-                <h2 id="t-oxy-title" class="text-xl font-extrabold text-white leading-tight">OXY POOL ilə Kristal Təmiz Hovuz</h2>
-                <p id="t-oxy-subtitle" class="text-xs text-cyan-200/90 mt-1">Bakı və ətrafına pulsuz çatdırılma — birbaşa bağınızın qapısına qədər çatdırırıq!</p>
-            </div>
-
-            <div class="bg-slate-900/90 rounded-2xl p-4 space-y-4 border border-cyan-500/30">
-                <div class="flex items-center space-x-3.5">
-                    <div class="w-16 h-16 rounded-2xl cyan-gradient flex flex-col items-center justify-center text-slate-950 font-extrabold shrink-0 shadow-lg">
-                        <i class="fa-solid fa-droplet text-xl"></i>
-                        <span class="text-[9px] mt-0.5">OXY POOL</span>
-                    </div>
-                    <div>
-                        <div id="t-oxy-prod" class="font-extrabold text-sm text-white">OXY POOL Xlor Tabletləri</div>
-                        <div id="t-oxy-prod-desc" class="text-[11px] text-slate-300 mt-0.5">5-i 1-də kompleks qulluq: dezinfeksiya, yosunlara qarşı qoruma və ideal şəffaflıq.</div>
-                    </div>
-                </div>
-
-                <div class="flex justify-between items-center bg-slate-800/80 rounded-xl p-2.5 border border-slate-700">
-                    <span id="t-oxy-qty-lbl" class="text-xs font-semibold text-slate-300 pl-1">Qablaşdırma sayı:</span>
-                    <div class="flex items-center space-x-3">
-                        <button type="button" onclick="changeOxyQty(-1)" class="w-7 h-7 rounded-lg bg-slate-700 text-white font-bold hover:bg-slate-600">-</button>
-                        <span id="oxy-qty" class="text-sm font-extrabold text-cyan-400">1</span>
-                        <button type="button" onclick="changeOxyQty(1)" class="w-7 h-7 rounded-lg bg-cyan-500 text-slate-950 font-bold hover:bg-cyan-400">+</button>
-                    </div>
-                </div>
-
-                <button type="button" onclick="orderPoolCare()" class="w-full cyan-gradient text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs uppercase tracking-wider transition shadow-lg active:scale-95">
-                    <i class="fa-brands fa-whatsapp mr-1.5 text-base align-middle"></i> <span id="t-oxy-order-btn">Pulsuz çatdırılma ilə sifariş et</span>
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <!-- ========================================== -->
-    <!-- НИЖНЯЯ ПАНЕЛЬ КАЛЬКУЛЯТОРА С 15% ЗАДАТКОМ  -->
-    <!-- ========================================== -->
-    <div id="bottom-bar" class="fixed bottom-0 left-0 right-0 max-w-md mx-auto card-glass border-t border-slate-700/90 px-4 py-3 z-40 shadow-2xl">
-        <div class="flex justify-between items-center">
-            <div>
-                <div class="flex items-center space-x-1.5">
-                    <span id="t-total-lbl" class="text-[10px] text-slate-400 uppercase font-bold">Cəmi:</span>
-                    <span id="deposit-badge" class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-extrabold">
-                        Beh 15%: 45 ₼
-                    </span>
-                </div>
-                <div class="flex items-baseline space-x-2 mt-0.5">
-                    <span id="total-price" class="text-2xl font-extrabold text-white">300 ₼</span>
-                    <span id="per-person-price" class="text-[11px] text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
-                        ~50 ₼ / nəfər
-                    </span>
+            <div class="flex justify-between items-center bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <span class="text-sm font-bold text-slate-700">Qablaşdırma sayı:</span>
+                <div class="flex items-center space-x-3">
+                    <button type="button" onclick="changeOxyQty(-1)" class="w-8 h-8 rounded-lg bg-slate-200 text-slate-800 font-bold">-</button>
+                    <span id="oxy-qty" class="text-base font-extrabold text-cyan-600">1</span>
+                    <button type="button" onclick="changeOxyQty(1)" class="w-8 h-8 rounded-lg bg-cyan-500 text-white font-bold">+</button>
                 </div>
             </div>
-            <button type="button" onclick="sendWhatsAppBooking()" class="gold-gradient text-slate-950 font-extrabold px-4 py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-lg flex items-center space-x-1.5 active:scale-95 transition">
-                <i class="fa-brands fa-whatsapp text-lg"></i>
-                <span id="t-book-btn">Bron et</span>
+
+            <button type="button" onclick="orderPoolCare()" class="w-full cyan-gradient text-white font-extrabold py-4 rounded-2xl text-sm uppercase tracking-wider shadow-md">
+                <i class="fa-brands fa-whatsapp mr-1.5 text-base"></i> Pulsuz çatdırılma ilə sifariş et
             </button>
         </div>
-    </div>
+    </main>
 
-    <!-- ========================================== -->
-    <!-- МОДАЛЬНОЕ ОКНО WHATSAPP ЗАЯВКИ             -->
-    <!-- ========================================== -->
-    <div id="whatsapp-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="card-glass border border-slate-600 rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+    <!-- МОДАЛЬНОЕ ОКНО WHATSAPP ЗАЯВКИ -->
+    <div id="whatsapp-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <div class="flex items-center space-x-2">
-                    <i class="fa-brands fa-whatsapp text-emerald-400 text-2xl"></i>
-                    <span class="font-bold text-sm text-white">WhatsApp Sifariş (055 350 78 87)</span>
+                    <i class="fa-brands fa-whatsapp text-emerald-500 text-2xl"></i>
+                    <span class="font-extrabold text-sm text-slate-900">WhatsApp Sifariş (055 350 78 87)</span>
                 </div>
-                <button type="button" onclick="closeModal('whatsapp-modal')" class="text-slate-400 hover:text-white text-lg">
+                <button type="button" onclick="closeModal('whatsapp-modal')" class="text-slate-400 hover:text-slate-700 text-lg">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            
-            <div class="text-xs text-slate-300 bg-slate-900/90 p-3.5 rounded-2xl border border-slate-700 whitespace-pre-line leading-relaxed max-h-60 overflow-y-auto" id="modal-message-preview"></div>
-
+            <div class="text-xs text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-200 whitespace-pre-line leading-relaxed max-h-60 overflow-y-auto" id="modal-message-preview"></div>
             <div class="flex space-x-2 pt-1">
-                <button type="button" onclick="closeModal('whatsapp-modal')" class="w-1/3 bg-slate-800 text-slate-300 font-bold py-3 rounded-xl text-xs">
-                    Geri
-                </button>
-                <a id="modal-whatsapp-link" href="#" target="_blank" onclick="closeModal('whatsapp-modal')" class="w-2/3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl text-xs text-center flex items-center justify-center space-x-1.5 shadow-lg">
+                <button type="button" onclick="closeModal('whatsapp-modal')" class="w-1/3 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl text-xs">Geri</button>
+                <a id="modal-whatsapp-link" href="#" target="_blank" onclick="closeModal('whatsapp-modal')" class="w-2/3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold py-3 rounded-xl text-xs text-center flex items-center justify-center space-x-1.5 shadow">
                     <i class="fa-brands fa-whatsapp text-base"></i>
                     <span>WhatsApp-a göndər</span>
                 </a>
@@ -840,46 +782,11 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- МОДАЛЬНОЕ ОКНО УСТАНОВКИ НА ТЕЛЕФОН (PWA)  -->
-    <!-- ========================================== -->
-    <div id="pwa-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="card-glass border border-amber-500/40 rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <div class="flex items-center space-x-2">
-                    <div class="w-7 h-7 rounded-lg gold-gradient flex items-center justify-center text-slate-950">
-                        <i class="fa-solid fa-crown text-xs"></i>
-                    </div>
-                    <span class="font-extrabold text-sm text-white">Telefona Quraşdırma</span>
-                </div>
-                <button type="button" onclick="closeModal('pwa-modal')" class="text-slate-400 hover:text-white text-lg">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
-                <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700">
-                    <div class="font-extrabold text-amber-400 mb-1"><i class="fa-brands fa-apple mr-1"></i> iPhone (Safari):</div>
-                    <p>Aşağıdakı <b>«Paylaş» (Share)</b> düyməsini basın və <b>«Ana Ekrana Əlavə Et» (Add to Home Screen)</b> seçin.</p>
-                </div>
-                <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700">
-                    <div class="font-extrabold text-emerald-400 mb-1"><i class="fa-brands fa-android mr-1"></i> Android (Chrome):</div>
-                    <p>Yuxarı sağ küncdəki <b>3 nöqtəni (⋮)</b> basın və <b>«Tətbiqi quraşdır» (Install App)</b> seçin.</p>
-                </div>
-            </div>
-            <button type="button" onclick="closeModal('pwa-modal')" class="w-full gold-gradient text-slate-950 font-extrabold py-3 rounded-xl text-xs uppercase">
-                Bağla
-            </button>
-        </div>
-    </div>
-
     <!-- Уведомление (Toast) -->
-    <div id="toast-box" class="hidden fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-amber-500 text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold flex items-center space-x-2 max-w-xs w-full">
+    <div id="toast-box" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center space-x-2">
         <span id="toast-text"></span>
     </div>
 
-    <!-- ========================================== -->
-    <!-- APPLICATION LOGIC (РАБОТАЕТ БЕЗ СБОЕВ)     -->
-    <!-- ========================================== -->
     <script>
         const operationsHistory = [
             { title: "İcarəyə verilir 5 otaqlı həyət evi/bağ evi 210 m², Novxanı q.", service: "Premium 30 gün", date: "21.10.2026, 12:04", amount: "-60,00 ₼" },
@@ -893,11 +800,8 @@
         const translations = {
             az: {
                 subtitle: "Bakı Lüks Məkanlar",
-                pwaBanner: "Tətbiqi telefonun ekranına əlavə et",
-                pwaBtn: "📲 Yüklə",
                 navCatalog: "Kataloq",
-                navCabinet: "Kabinet",
-                navAdd: "Yeni elan",
+                navCabinet: "Şəxsi kabinet",
                 navPool: "OXY Hovuz",
                 hotBadge: "Sabah üçün qaynar təklif!",
                 hotDesc: "Həftəiçi günlərə 30% endirim",
@@ -915,24 +819,17 @@
                 step2Title: "2. VIP Konsyerj Xidmətləri",
                 step2Desc: "Əlavə xidmətləri seçin — siz gələnə qədər hər şey hazır olacaq:",
                 srv1Title: "Şəxsi kababçı + ət seti",
-                srv1Desc: "Marinadlanmış kabab, lülə, manqal tərəvəzləri",
                 srv2Title: "Dolu soyuducu paketi",
-                srv2Desc: "Mövsümi meyvələr, qəlyanaltılar, sərin içkilər",
                 srv3Title: "VIP Transfer (Minivan)",
-                srv3Desc: "Bakıdan villaya gediş və dönüş",
-                srv4Title: "Hovuz kənarında Premium Qəlyan",
-                srv4Desc: "2 meyvəli çaşa + usta xidməti",
-                depositInfo: "<b>Təhlükəsiz Bron (15% Beh):</b> Bronu təsdiqləmək üçün cəmi 15% beh ödənilir. Qalan 85% məbləği villaya daxil olduqda yerində ödəyirsiniz.",
-                totalLbl: "Cəmi:",
+                srv4Title: "Hovuz kənarında Qəlyan",
+                totalLbl: "Cəmi məbləğ:",
                 depositLbl: "Beh 15%:",
-                bookBtn: "Bron et",
-                topBadge: "PREMIUM ELAN",
+                bookBtn: "Bron et / Əlaqə",
+                topBadge: "PREMIUM",
                 oxyWaterBadge: "💧 OXY Təmiz Su",
                 partnerBadge: "📢 Tərəfdaş",
                 chosenBadge: "✓ Seçilib",
-                upToGuests: "nəfərədək",
-                photoLowResError: "❌ Şəkil çox kiçikdir və ya zədələnib! Zəhmət olmasa normal telefon fotosu seçin.",
-                photoSuccessMsg: "✅ Fotolar iPhone/Android üçün optimallaşdırıldı və yükləndi!",
+                upToGuests: "nəfər",
                 statusPending: "⏳ Yoxlanışda",
                 statusApproved: "Hazırda saytda",
                 savePriceBtn: "Qiyməti yenilə",
@@ -940,14 +837,11 @@
             },
             ru: {
                 subtitle: "Премиум виллы Баку",
-                pwaBanner: "Установите приложение на экран телефона",
-                pwaBtn: "📲 Скачать",
                 navCatalog: "Каталог",
-                navCabinet: "Кабинет",
-                navAdd: "Сдать виллу",
+                navCabinet: "Личный кабинет",
                 navPool: "OXY Бассейн",
-                hotBadge: "Горящее окно на завтра!",
-                hotDesc: "Скидка 30% на будний день",
+                hotBadge: "Горящее предложение!",
+                hotDesc: "Скидка 30% на будние дни",
                 hotBtn: "Активировать",
                 hotBtnActive: "Скидка -30% ✓",
                 filterTitle: "Выберите локацию:",
@@ -957,19 +851,14 @@
                 step1Title: "1. Параметры бронирования",
                 checkinLabel: "Дата заезда",
                 nightsLabel: "Суток",
-                guestsTitle: "Гостей (делим счёт на всех):",
+                guestsTitle: "Гостей (делим счёт):",
                 personUnit: "чел.",
-                step2Title: "2. VIP-Консьерж под ключ",
+                step2Title: "2. VIP-Консьерж",
                 step2Desc: "Отметьте услуги — всё будет готово к вашему приезду:",
                 srv1Title: "Личный шашлычник + сет мяса",
-                srv1Desc: "Маринованный кебаб, люля, овощи на мангале",
-                srv2Title: "Полный холодильник к приезду",
-                srv2Desc: "Сезонные фрукты, закуски, напитки",
+                srv2Title: "Полный холодильник",
                 srv3Title: "VIP-трансфер (Minivan)",
-                srv3Desc: "Из Баку до дверей виллы и обратно",
                 srv4Title: "Премиум кальян у бассейна",
-                srv4Desc: "2 фруктовые чаши + работа мастера",
-                depositInfo: "<b>Безопасная бронь (Задаток 15%):</b> Для фиксации даты оплачивается только 15% задатка. Остальные 85% вы платите при заезде на виллу.",
                 totalLbl: "Итого:",
                 depositLbl: "Задаток 15%:",
                 bookBtn: "Забронировать",
@@ -978,8 +867,6 @@
                 partnerBadge: "📢 Партнёр",
                 chosenBadge: "✓ Выбрано",
                 upToGuests: "гостей",
-                photoLowResError: "❌ Файл повреждён или слишком маленький! Выберите обычное фото с телефона.",
-                photoSuccessMsg: "✅ Фотографии с телефона успешно обработаны и загружены!",
                 statusPending: "⏳ На проверке",
                 statusApproved: "Сейчас на сайте",
                 savePriceBtn: "Обновить цену",
@@ -987,11 +874,8 @@
             },
             en: {
                 subtitle: "Baku Luxury Villas",
-                pwaBanner: "Add the app icon to your phone screen",
-                pwaBtn: "📲 Install",
                 navCatalog: "Catalog",
-                navCabinet: "Cabinet",
-                navAdd: "New Ad",
+                navCabinet: "My Cabinet",
                 navPool: "OXY Pool",
                 hotBadge: "Hot Deal for Tomorrow!",
                 hotDesc: "30% OFF on weekday bookings",
@@ -1004,29 +888,22 @@
                 step1Title: "1. Booking Details",
                 checkinLabel: "Check-in Date",
                 nightsLabel: "Nights",
-                guestsTitle: "Guests (split total cost):",
+                guestsTitle: "Guests (split cost):",
                 personUnit: "guests",
-                step2Title: "2. VIP Concierge Add-ons",
-                step2Desc: "Select extra services — everything will be ready for your arrival:",
+                step2Title: "2. VIP Concierge",
+                step2Desc: "Select extra services for your arrival:",
                 srv1Title: "Private Kebab Chef + Meat Set",
-                srv1Desc: "Marinated kebabs, lyulya, grilled vegetables",
                 srv2Title: "Pre-stocked Full Fridge",
-                srv2Desc: "Seasonal fruits, snacks, soft drinks & ice",
                 srv3Title: "VIP Minivan Transfer",
-                srv3Desc: "Round-trip pickup from Baku to the villa",
-                srv4Title: "Premium Poolside Hookah",
-                srv4Desc: "2 fruit bowls + master service",
-                depositInfo: "<b>Secure Booking (15% Deposit):</b> Pay only 15% deposit to lock your dates. The remaining 85% is paid upon arrival at the villa.",
+                srv4Title: "Poolside Hookah",
                 totalLbl: "Total:",
                 depositLbl: "15% Deposit:",
                 bookBtn: "Book Now",
-                topBadge: "PREMIUM AD",
+                topBadge: "PREMIUM",
                 oxyWaterBadge: "💧 OXY Pure Water",
                 partnerBadge: "📢 Partner",
                 chosenBadge: "✓ Selected",
-                upToGuests: "guests max",
-                photoLowResError: "❌ Image is corrupted or too small! Please select a standard photo from your phone.",
-                photoSuccessMsg: "✅ Photos optimized and uploaded seamlessly!",
+                upToGuests: "guests",
                 statusPending: "⏳ Pending",
                 statusApproved: "Active on site",
                 savePriceBtn: "Update Price",
@@ -1135,7 +1012,7 @@
                 const btn = document.getElementById('cab-btn-' + st);
                 if (box) box.classList.add('hidden');
                 if (btn) {
-                    btn.className = "cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700";
+                    btn.className = "cab-nav-btn w-full text-left px-4 py-3 rounded-xl text-slate-700 hover:bg-slate-200/60 font-medium text-sm flex items-center space-x-3 transition";
                 }
             });
 
@@ -1143,7 +1020,7 @@
             const activeBtn = document.getElementById('cab-btn-' + subtab);
             if (activeBox) activeBox.classList.remove('hidden');
             if (activeBtn) {
-                activeBtn.className = "cab-nav-btn bg-blue-600 text-white font-extrabold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 shadow";
+                activeBtn.className = "cab-nav-btn w-full text-left px-4 py-3 rounded-xl bg-blue-100/80 text-blue-600 font-bold text-sm flex items-center space-x-3 transition";
             }
         }
 
@@ -1151,7 +1028,7 @@
             walletBalance += 20;
             document.getElementById('user-wallet-balance').innerText = walletBalance;
             document.getElementById('user-wallet-balance-2').innerText = walletBalance;
-            showToast("✅ Şəxsi hesab +20 ₼ artırıldı! (Cari balans: " + walletBalance + " ₼)");
+            showToast("✅ Şəxsi hesab +20 ₼ artırıldı! (Balans: " + walletBalance + " ₼)");
         }
 
         function buyAdPackage() {
@@ -1178,9 +1055,9 @@
         function filterMyAds(statusFilter, btnEl) {
             currentMyAdsFilter = statusFilter;
             document.querySelectorAll('.my-ads-tab').forEach(b => {
-                b.className = "my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap";
+                b.className = "my-ads-tab bg-slate-100 text-slate-600 px-4 py-2 rounded-full hover:bg-slate-200";
             });
-            btnEl.className = "my-ads-tab bg-blue-600/20 text-blue-400 border border-blue-500/40 px-3 py-1.5 rounded-full whitespace-nowrap";
+            btnEl.className = "my-ads-tab bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-full";
             renderAllViews();
         }
 
@@ -1198,6 +1075,7 @@
                 badge.classList.add('hidden');
             }
 
+            // 1. Рендер карточек вилл в каталоге (Светлый стиль для ПК)
             const container = document.getElementById('villas-container');
             const filtered = approvedVillas.filter(v => currentDistrictFilter === 'all' || v.district === currentDistrictFilter);
             document.getElementById('villas-count-label').innerText = filtered.length + " villa";
@@ -1205,41 +1083,36 @@
             container.innerHTML = filtered.map(v => {
                 const isSelected = selectedVilla && selectedVilla.id === v.id;
                 const displayPrice = hotDealActive ? Math.round(v.price * 0.7) : v.price;
-                const photosCount = (v.images && v.images.length) ? v.images.length : 1;
                 return `
-                <div onclick="selectVillaById('${v.id}')" class="villa-card ${isSelected ? 'villa-selected border-2 border-amber-500' : 'border border-slate-700/80 opacity-90 hover:opacity-100'} cursor-pointer relative rounded-3xl overflow-hidden transition-all duration-300">
-                    <img src="${v.image}" alt="${v.name}" class="w-full h-52 object-cover" onerror="this.src='https://placehold.co/800x500/1e293b/fbbf24?text=VILLA+CLUB'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent"></div>
-                    
-                    <div class="absolute top-3 left-3 right-3 flex justify-between items-start">
-                        <div class="flex flex-wrap gap-1.5">
-                            ${v.isTop ? `<span class="gold-gradient text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center shadow-md"><i class="fa-solid fa-crown mr-1"></i> ${t.topBadge}</span>` : `<span class="bg-slate-900/85 text-amber-300 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-amber-500/30">${t.partnerBadge}</span>`}
-                            ${v.oxyWater ? `<span class="bg-emerald-500/95 text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-md">${t.oxyWaterBadge}</span>` : ''}
+                <div onclick="selectVillaById('${v.id}')" class="bg-white ${isSelected ? 'villa-selected border-2 border-amber-500' : 'border border-slate-200 hover:shadow-md'} cursor-pointer rounded-3xl overflow-hidden transition-all duration-200 flex flex-col">
+                    <div class="relative h-52">
+                        <img src="${v.image}" alt="${v.name}" class="w-full h-full object-cover">
+                        <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                            ${v.isTop ? `<span class="gold-gradient text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow"><i class="fa-solid fa-crown mr-1"></i> ${t.topBadge}</span>` : ''}
+                            ${v.oxyWater ? `<span class="bg-emerald-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">${t.oxyWaterBadge}</span>` : ''}
                         </div>
-                        <div class="flex items-center space-x-1">
-                            ${photosCount > 1 ? `<span class="bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg border border-slate-700"><i class="fa-regular fa-images mr-1 text-amber-400"></i>${photosCount}</span>` : ''}
-                            <span class="${isSelected ? '' : 'hidden'} bg-amber-500 text-slate-950 text-[10px] font-extrabold px-2 py-1 rounded-lg shadow">
-                                ${t.chosenBadge}
-                            </span>
+                        <span class="${isSelected ? '' : 'hidden'} absolute top-3 right-3 bg-amber-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow">
+                            ${t.chosenBadge}
+                        </span>
+                        <div class="absolute bottom-3 left-3 bg-slate-900/85 text-white px-3 py-1 rounded-xl text-sm font-extrabold">
+                            ${hotDealActive ? `<span class="line-through text-xs text-slate-300 mr-1">${v.price}</span>${displayPrice} ₼/gün` : `${v.price} ₼/gün`}
                         </div>
                     </div>
-
-                    <div class="absolute bottom-3 left-4 right-4 flex justify-between items-end">
-                        <div class="pr-2">
-                            <span class="text-[11px] text-amber-400 font-bold block mb-0.5">📍 ${v.district} • ${v.roomsInfo || (v.guests + ' ' + t.upToGuests)}</span>
-                            <h3 class="text-base font-extrabold text-white leading-tight">${v.name}</h3>
-                            <p class="text-[11px] text-slate-300 mt-0.5">${v.desc || ''}</p>
+                    <div class="p-4 flex-1 flex flex-col justify-between space-y-2">
+                        <div>
+                            <div class="text-xs text-amber-600 font-bold mb-0.5">📍 ${v.district} • ${v.roomsInfo || (v.guests + ' ' + t.upToGuests)}</div>
+                            <h3 class="text-base font-extrabold text-slate-900 leading-snug">${v.name}</h3>
+                            <p class="text-xs text-slate-500 mt-1">${v.desc || ''}</p>
                         </div>
-                        <div class="text-right bg-slate-900/90 px-3 py-1.5 rounded-2xl border border-amber-500/40 shrink-0">
-                            <span class="text-[10px] text-slate-400 block">${t.perDay}</span>
-                            <span class="text-base font-extrabold text-amber-400">
-                                ${hotDealActive ? `<span class="line-through text-xs text-slate-400 mr-1">${v.price}</span>${displayPrice} ₼` : `${v.price} ₼`}
-                            </span>
+                        <div class="pt-2 border-t border-slate-100 flex justify-between items-center text-xs font-bold text-amber-600">
+                            <span>Bron et / Seç</span>
+                            <i class="fa-solid fa-arrow-right"></i>
                         </div>
                     </div>
                 </div>`;
             }).join('');
 
+            // 2. Рендер объявлений хозяина в Личном Кабинете (Точь-в-точь как на Фото 2 и Фото 4)
             const myVillas = [defaultVillas[0], ...cloudVillas];
             document.getElementById('count-all-my-ads').innerText = myVillas.length;
             document.getElementById('count-active-my-ads').innerText = myVillas.filter(v => v.status === 'approved').length;
@@ -1247,20 +1120,20 @@
             const previewContainer = document.getElementById('cabinet-main-ads-preview');
             const firstVilla = myVillas[0];
             previewContainer.innerHTML = `
-                <div class="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden max-w-xs">
-                    <div class="relative h-36">
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="relative h-44">
                         <img src="${firstVilla.image}" class="w-full h-full object-cover">
-                        <span class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/90 text-red-500 flex items-center justify-center shadow">
-                            <i class="fa-solid fa-heart text-xs"></i>
+                        <span class="absolute top-3 right-3 text-red-500 text-xl drop-shadow">
+                            <i class="fa-solid fa-heart"></i>
                         </span>
-                        <span class="absolute bottom-2.5 left-2.5 bg-emerald-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full shadow">
+                        <span class="absolute bottom-3 left-3 bg-emerald-500/90 text-white text-[11px] font-bold px-3 py-1 rounded-full">
                             Hazırda saytda
                         </span>
                     </div>
-                    <div class="p-3 space-y-1">
-                        <div class="text-sm font-extrabold text-white">${firstVilla.price} ₼/gün</div>
-                        <div class="text-xs text-slate-300 font-semibold">${firstVilla.district} q.</div>
-                        <div class="text-[11px] text-slate-400">${firstVilla.roomsInfo || '5 otaqlı • 210 m²'}</div>
+                    <div class="p-3.5 space-y-1">
+                        <div class="text-base font-extrabold text-slate-900">${firstVilla.price} ₼/gün</div>
+                        <div class="text-xs text-slate-700 font-medium">${firstVilla.district} q.</div>
+                        <div class="text-xs text-slate-500">${firstVilla.roomsInfo || '5 otaqlı • 210 m²'}</div>
                     </div>
                 </div>
             `;
@@ -1274,43 +1147,43 @@
 
             const fullAdsContainer = document.getElementById('cabinet-ads-full-list');
             if (filteredMyVillas.length === 0) {
-                fullAdsContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">Bu bölmədə elan yoxdur.</div>`;
+                fullAdsContainer.innerHTML = `<div class="text-sm text-slate-400 py-6">Bu bölmədə elan yoxdur.</div>`;
             } else {
                 fullAdsContainer.innerHTML = filteredMyVillas.map(v => `
-                    <div class="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
+                    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
                         <div class="relative h-44">
                             <img src="${v.image}" class="w-full h-full object-cover">
-                            <span class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 text-red-500 flex items-center justify-center shadow">
-                                <i class="fa-solid fa-heart text-sm"></i>
+                            <span class="absolute top-3 right-3 text-red-500 text-xl drop-shadow">
+                                <i class="fa-solid fa-heart"></i>
                             </span>
-                            <span class="absolute bottom-3 left-3 ${v.status === 'approved' ? 'bg-emerald-500 text-slate-950' : 'bg-amber-500 text-slate-950'} text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
+                            <span class="absolute bottom-3 left-3 bg-emerald-500/90 text-white text-[11px] font-bold px-3 py-1 rounded-full">
                                 ${v.status === 'approved' ? t.statusApproved : t.statusPending}
                             </span>
                         </div>
-                        <div class="p-3.5 space-y-3">
-                            <div class="flex justify-between items-start">
+                        <div class="p-4 space-y-3">
+                            <div class="flex justify-between items-end">
                                 <div>
-                                    <div class="text-base font-extrabold text-white">${v.price} ₼/gün</div>
-                                    <div class="text-xs text-slate-200 font-semibold">${v.district} q.</div>
-                                    <div class="text-[11px] text-slate-400">${v.roomsInfo || '5 otaqlı • 210 m²'}</div>
-                                    <div class="text-[10px] text-slate-500 mt-0.5">Bakı, bugün 12:04</div>
+                                    <div class="text-lg font-extrabold text-slate-900">${v.price} ₼/gün</div>
+                                    <div class="text-xs text-slate-700 font-semibold">${v.district} q.</div>
+                                    <div class="text-xs text-slate-600">${v.roomsInfo || '5 otaqlı • 210 m²'}</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">Bakı, bugün 12:04</div>
                                 </div>
-                                <i class="fa-solid fa-crown text-amber-400 text-sm"></i>
+                                <i class="fa-solid fa-crown text-amber-500 text-xs"></i>
                             </div>
 
-                            <div class="flex items-center space-x-2 pt-1 border-t border-slate-800">
-                                <input type="number" id="price-edit-${v.id}" value="${v.price}" class="w-24 bg-slate-800 border border-slate-600 rounded-xl px-2.5 py-1.5 text-xs font-extrabold text-amber-400">
-                                <span class="text-[11px] text-slate-400">₼/gün</span>
-                                <button type="button" onclick="updateVillaPriceLive('${v.id}')" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-1.5 rounded-xl text-[11px] transition">
+                            <!-- Изменение цены в реальном времени -->
+                            <div class="flex items-center space-x-1.5 pt-2 border-t border-slate-100">
+                                <input type="number" id="price-edit-${v.id}" value="${v.price}" class="w-20 bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-xs font-extrabold text-slate-900">
+                                <button type="button" onclick="updateVillaPriceLive('${v.id}')" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 rounded-lg text-[11px] transition">
                                     ${t.savePriceBtn}
                                 </button>
                             </div>
 
                             <div class="flex items-center space-x-2">
-                                <button type="button" onclick="showToast('🔥 Premium reklam paketi aktivdir!')" class="flex-1 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 text-blue-300 font-extrabold py-2 rounded-xl text-xs transition">
+                                <button type="button" onclick="showToast('🔥 Premium reklam paketi aktivdir!')" class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-2 rounded-xl text-xs transition">
                                     Reklam et
                                 </button>
-                                <button type="button" onclick="selectVillaById('${v.id}'); switchTab('guest');" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold">
+                                <button type="button" onclick="selectVillaById('${v.id}'); switchTab('guest');" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs">
                                     <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                             </div>
@@ -1319,53 +1192,48 @@
                 `).join('');
             }
 
-            const renderOpsHtml = (list) => list.map(op => `
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 flex justify-between items-center gap-2">
-                    <div class="space-y-0.5 pr-2">
-                        <div class="text-[11px] font-bold text-blue-400 hover:underline cursor-pointer leading-snug" onclick="switchTab('guest')">${op.title}</div>
-                        <div class="text-[10px] text-slate-400">${op.service} • ${op.date}</div>
-                    </div>
-                    <div class="text-xs font-extrabold text-white shrink-0 flex items-center space-x-1.5">
-                        <span>${op.amount}</span>
-                        <i class="fa-solid fa-chevron-right text-[9px] text-slate-500"></i>
-                    </div>
-                </div>
+            // 3. Рендер таблицы операций (Точь-в-точь как на Фото 3 и Фото 6)
+            const renderOpsTableRows = (list) => list.map(op => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="py-3.5 pr-4">
+                        <a href="javascript:void(0)" onclick="switchTab('guest')" class="text-blue-600 hover:underline font-medium block max-w-xs leading-snug">${op.title}</a>
+                    </td>
+                    <td class="py-3.5 pr-4 text-slate-700">${op.service}</td>
+                    <td class="py-3.5 pr-4 text-slate-600">${op.date}</td>
+                    <td class="py-3.5 text-right font-bold text-slate-900 whitespace-nowrap">
+                        ${op.amount} <i class="fa-solid fa-chevron-right text-[10px] text-slate-400 ml-2"></i>
+                    </td>
+                </tr>
             `).join('');
 
-            document.getElementById('cabinet-recent-ops').innerHTML = renderOpsHtml(operationsHistory.slice(0, 4));
-            document.getElementById('cabinet-full-history-list').innerHTML = renderOpsHtml(operationsHistory);
+            document.getElementById('cabinet-recent-ops').innerHTML = renderOpsTableRows(operationsHistory.slice(0, 4));
+            document.getElementById('cabinet-full-history-list').innerHTML = renderOpsTableRows(operationsHistory);
 
+            // 4. Админ-панель
             const pendingContainer = document.getElementById('admin-pending-list');
             if (pendingVillas.length === 0) {
                 pendingContainer.innerHTML = `<div class="text-xs text-slate-400 py-2">Hazırda təsdiq gözləyən villa yoxdur.</div>`;
             } else {
                 pendingContainer.innerHTML = pendingVillas.map(v => `
-                    <div class="bg-slate-900 border border-amber-500/40 rounded-2xl p-3 space-y-2.5">
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
                         <img src="${v.image}" class="w-full h-36 object-cover rounded-xl">
-                        <div>
-                            <div class="text-xs font-extrabold text-white">${v.name}</div>
-                            <div class="text-[11px] text-amber-400 font-bold">Qiymət: ${v.price} ₼ | Qonaq: ${v.guests}</div>
-                            <div class="text-[11px] text-emerald-300 font-bold mt-0.5">📞 Sahibin nömrəsi: ${v.ownerPhone || 'Qeyd edilməyib'}</div>
-                        </div>
+                        <div class="text-sm font-extrabold text-slate-900">${v.name}</div>
+                        <div class="text-xs text-amber-600 font-bold">Qiymət: ${v.price} ₼ | 📞 ${v.ownerPhone || ''}</div>
                         <div class="grid grid-cols-2 gap-2 pt-1">
-                            <button type="button" onclick="approveVilla('${v.id}')" class="bg-emerald-500 text-slate-950 font-extrabold py-2 rounded-xl text-xs">
-                                ✅ Təsdiqlə (Kataloqa)
-                            </button>
-                            <button type="button" onclick="deleteVilla('${v.id}')" class="bg-red-500/20 border border-red-500/40 text-red-300 font-bold py-2 rounded-xl text-xs">
-                                ❌ Rədd et / Sil
-                            </button>
+                            <button type="button" onclick="approveVilla('${v.id}')" class="bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs">✅ Təsdiqlə</button>
+                            <button type="button" onclick="deleteVilla('${v.id}')" class="bg-red-100 text-red-600 font-bold py-2 rounded-xl text-xs">❌ Sil</button>
                         </div>
                     </div>`).join('');
             }
 
             const approvedContainer = document.getElementById('admin-approved-list');
             approvedContainer.innerHTML = approvedVillas.map(v => `
-                <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3 flex justify-between items-center">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
                         <img src="${v.image}" class="w-12 h-12 rounded-xl object-cover">
                         <div>
-                            <div class="text-xs font-extrabold text-white">${v.name}</div>
-                            <div class="text-[10px] text-amber-400 font-bold">${v.price} ₼/gün • 📞 ${v.ownerPhone || 'Partner'}</div>
+                            <div class="text-xs font-extrabold text-slate-900">${v.name}</div>
+                            <div class="text-[11px] text-amber-600 font-bold">${v.price} ₼/gün • 📞 ${v.ownerPhone || 'Partner'}</div>
                         </div>
                     </div>
                 </div>
@@ -1378,17 +1246,15 @@
             const files = Array.from(event.target.files || []).slice(0, 5);
             if (files.length === 0) return;
 
-            const t = translations[currentLang];
             const statusBox = document.getElementById('photo-check-status');
             const previewWrapper = document.getElementById('photo-preview-wrapper');
             const previewGrid = document.getElementById('photo-preview-grid');
 
-            statusBox.className = "rounded-xl p-3 text-xs font-bold bg-slate-800 border border-amber-500/40 text-amber-300";
+            statusBox.className = "rounded-xl p-3 text-xs font-bold bg-amber-50 border border-amber-200 text-amber-700";
             statusBox.innerText = "⏳ Fotolar emal olunur...";
             statusBox.classList.remove('hidden');
 
             const processedList = [];
-
             for (const file of files) {
                 try {
                     const dataUrl = await new Promise((resolve, reject) => {
@@ -1396,86 +1262,61 @@
                         reader.onload = (e) => {
                             const img = new Image();
                             img.onload = () => {
-                                const width = img.width;
-                                const height = img.height;
-                                if (width < 250 || height < 250) {
-                                    reject(new Error("too_small"));
-                                    return;
-                                }
                                 const canvas = document.createElement('canvas');
                                 const maxDim = 900;
-                                let targetW = width;
-                                let targetH = height;
-                                if (width > height && width > maxDim) {
+                                let targetW = img.width;
+                                let targetH = img.height;
+                                if (targetW > targetH && targetW > maxDim) {
+                                    targetH = Math.round((targetH * maxDim) / targetW);
                                     targetW = maxDim;
-                                    targetH = Math.round((height * maxDim) / width);
-                                } else if (height >= width && height > maxDim) {
+                                } else if (targetH >= targetW && targetH > maxDim) {
+                                    targetW = Math.round((targetW * maxDim) / targetH);
                                     targetH = maxDim;
-                                    targetW = Math.round((width * maxDim) / height);
                                 }
                                 canvas.width = targetW;
                                 canvas.height = targetH;
-                                const ctx = canvas.getContext('2d');
-                                ctx.drawImage(img, 0, 0, targetW, targetH);
-                                resolve(canvas.toDataURL('image/jpeg', 0.72));
+                                canvas.getContext('2d').drawImage(img, 0, 0, targetW, targetH);
+                                resolve(canvas.toDataURL('image/jpeg', 0.75));
                             };
-                            img.onerror = () => reject(new Error("corrupt"));
+                            img.onerror = () => reject();
                             img.src = e.target.result;
                         };
-                        reader.onerror = () => reject(new Error("read_error"));
                         reader.readAsDataURL(file);
                     });
                     processedList.push(dataUrl);
-                } catch (err) {
-                    console.warn("Skipped invalid image:", err);
-                }
-            }
-
-            if (processedList.length === 0) {
-                verifiedPhotosArray = [];
-                previewWrapper.classList.add('hidden');
-                statusBox.className = "rounded-xl p-3 text-xs font-bold bg-red-950/90 border border-red-500 text-red-200";
-                statusBox.innerText = t.photoLowResError;
-                return;
+                } catch (err) {}
             }
 
             verifiedPhotosArray = processedList;
             previewGrid.innerHTML = verifiedPhotosArray.map((src, idx) => `
-                <div class="relative rounded-xl overflow-hidden border border-emerald-500/50 h-20">
+                <div class="relative rounded-xl overflow-hidden border border-emerald-400 h-20">
                     <img src="${src}" class="w-full h-full object-cover">
-                    <span class="absolute top-1 left-1 bg-emerald-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.2 rounded">
-                        #${idx + 1} HD
-                    </span>
                 </div>
             `).join('');
             previewWrapper.classList.remove('hidden');
 
-            statusBox.className = "rounded-xl p-3 text-xs font-bold bg-emerald-950/90 border border-emerald-500 text-emerald-200";
-            statusBox.innerText = t.photoSuccessMsg + " (" + verifiedPhotosArray.length + ")";
+            statusBox.className = "rounded-xl p-3 text-xs font-bold bg-emerald-50 border border-emerald-200 text-emerald-700";
+            statusBox.innerText = "✅ Fotolar yükləndi (" + verifiedPhotosArray.length + ")";
         }
 
         function publishVillaToCloud() {
-            const t = translations[currentLang];
             const district = document.getElementById('owner-villa-district').value;
             const price = parseInt(document.getElementById('owner-villa-price').value) || 150;
             const guests = parseInt(document.getElementById('owner-villa-guests').value) || 12;
             const ownerPhone = document.getElementById('owner-villa-phone').value.trim() || "055 350 78 87";
-            const plan = document.getElementById('owner-ad-plan').value;
-            const oxyWater = document.getElementById('owner-oxy-bonus').checked;
 
             const checkedAmenities = Array.from(document.querySelectorAll('.amen-check:checked')).map(cb => cb.value);
-            const desc = checkedAmenities.length > 0 ? checkedAmenities.join(' • ') : "İsti hovuz • Manqal • İstirahət";
+            const desc = checkedAmenities.length > 0 ? checkedAmenities.join(' • ') : "İsti hovuz • Manqal";
 
-            if (verifiedPhotosArray.length === 0) {
-                showToast(t.photoLowResError);
-                return;
-            }
+            const mainImg = verifiedPhotosArray.length > 0
+                ? verifiedPhotosArray[0]
+                : "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=80";
 
-            const codeNumber = 105 + cloudVillas.length + Math.floor(Math.random() * 90);
+            const codeNumber = 105 + cloudVillas.length;
             const autoGeneratedName = "Villa #" + codeNumber + " — " + district;
 
             const newId = "villa-" + Date.now();
-            const villaData = {
+            cloudVillas.push({
                 id: newId,
                 name: autoGeneratedName,
                 district: district,
@@ -1484,22 +1325,15 @@
                 roomsInfo: "5 otaqlı • 210 m²",
                 ownerPhone: ownerPhone,
                 desc: desc,
-                plan: plan,
-                oxyWater: oxyWater,
-                image: verifiedPhotosArray[0],
-                images: verifiedPhotosArray,
-                isTop: plan.includes("Premium"),
-                status: "approved",
-                createdAt: Date.now()
-            };
+                oxyWater: true,
+                image: mainImg,
+                images: verifiedPhotosArray.length > 0 ? verifiedPhotosArray : [mainImg],
+                isTop: true,
+                status: "approved"
+            });
 
-            cloudVillas.push(villaData);
             renderAllViews();
-
             showToast("✅ " + autoGeneratedName + " əlavə olundu!");
-            verifiedPhotosArray = [];
-            document.getElementById('photo-preview-wrapper').classList.add('hidden');
-            document.getElementById('photo-check-status').classList.add('hidden');
             openCabinetSubtab('ads');
         }
 
@@ -1555,9 +1389,9 @@
         function filterVillas(district, btnElement) {
             currentDistrictFilter = district;
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = "filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition";
+                btn.className = "filter-btn bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition";
             });
-            btnElement.className = "filter-btn bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl whitespace-nowrap transition shadow";
+            btnElement.className = "filter-btn bg-amber-500 text-white font-bold px-4 py-2 rounded-xl transition shadow-sm";
             renderAllViews();
         }
 
@@ -1565,13 +1399,7 @@
             hotDealActive = !hotDealActive;
             const t = translations[currentLang];
             const btn = document.getElementById('hot-deal-btn');
-            if (hotDealActive) {
-                btn.innerText = t.hotBtnActive;
-                btn.classList.replace('bg-white', 'bg-emerald-400');
-            } else {
-                btn.innerText = t.hotBtn;
-                btn.classList.replace('bg-emerald-400', 'bg-white');
-            }
+            btn.innerText = hotDealActive ? t.hotBtnActive : t.hotBtn;
             renderAllViews();
         }
 
@@ -1612,19 +1440,14 @@
             ['az', 'ru', 'en'].forEach(l => {
                 const btn = document.getElementById('lang-' + l);
                 if (!btn) return;
-                if (l === lang) {
-                    btn.className = "px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950 font-extrabold text-[10px] transition";
-                } else {
-                    btn.className = "px-2.5 py-0.5 rounded-md text-slate-400 font-bold text-[10px] hover:text-white transition";
-                }
+                btn.className = (l === lang)
+                    ? "px-2.5 py-1 rounded-lg bg-white text-slate-900 shadow-sm font-extrabold text-xs transition"
+                    : "px-2.5 py-1 rounded-lg text-slate-500 font-bold text-xs hover:text-slate-900 transition";
             });
 
             document.getElementById('t-subtitle').innerText = t.subtitle;
-            document.getElementById('t-pwa-banner').innerText = t.pwaBanner;
-            document.getElementById('t-pwa-btn').innerText = t.pwaBtn;
             document.getElementById('t-nav-catalog').innerText = t.navCatalog;
             document.getElementById('t-nav-cabinet').innerText = t.navCabinet;
-            document.getElementById('t-nav-add').innerText = t.navAdd;
             document.getElementById('t-nav-pool').innerText = t.navPool;
             document.getElementById('t-hot-badge').innerText = t.hotBadge;
             document.getElementById('t-hot-desc').innerText = t.hotDesc;
@@ -1639,14 +1462,9 @@
             document.getElementById('t-step2-title').innerText = t.step2Title;
             document.getElementById('t-step2-desc').innerText = t.step2Desc;
             document.getElementById('t-srv1-title').innerText = t.srv1Title;
-            document.getElementById('t-srv1-desc').innerText = t.srv1Desc;
             document.getElementById('t-srv2-title').innerText = t.srv2Title;
-            document.getElementById('t-srv2-desc').innerText = t.srv2Desc;
             document.getElementById('t-srv3-title').innerText = t.srv3Title;
-            document.getElementById('t-srv3-desc').innerText = t.srv3Desc;
             document.getElementById('t-srv4-title').innerText = t.srv4Title;
-            document.getElementById('t-srv4-desc').innerText = t.srv4Desc;
-            document.getElementById('t-deposit-info').innerHTML = t.depositInfo;
             document.getElementById('t-total-lbl').innerText = t.totalLbl;
             document.getElementById('t-book-btn').innerText = t.bookBtn;
 
@@ -1659,26 +1477,22 @@
             document.getElementById('section-add-villa').classList.add('hidden');
             document.getElementById('section-owner').classList.add('hidden');
             document.getElementById('section-admin').classList.add('hidden');
-            document.getElementById('bottom-bar').classList.add('hidden');
 
-            document.getElementById('tab-guest').className = "py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1";
-            document.getElementById('tab-cabinet').className = "py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1";
-            document.getElementById('tab-add').className = "py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1";
-            document.getElementById('tab-owner').className = "py-1.5 rounded-lg text-cyan-400 hover:text-cyan-300 transition-all text-center truncate px-1";
+            document.getElementById('tab-guest').className = "px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 transition";
+            document.getElementById('tab-cabinet').className = "px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 transition";
+            document.getElementById('tab-owner').className = "px-4 py-2 rounded-xl text-cyan-600 hover:bg-cyan-50 transition";
 
             if (tab === 'guest') {
                 document.getElementById('section-guest').classList.remove('hidden');
-                document.getElementById('bottom-bar').classList.remove('hidden');
-                document.getElementById('tab-guest').className = "py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1";
+                document.getElementById('tab-guest').className = "px-4 py-2 rounded-xl bg-amber-500 text-white transition";
             } else if (tab === 'cabinet') {
                 document.getElementById('section-cabinet').classList.remove('hidden');
-                document.getElementById('tab-cabinet').className = "py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1";
+                document.getElementById('tab-cabinet').className = "px-4 py-2 rounded-xl bg-amber-500 text-white transition";
             } else if (tab === 'add-villa') {
                 document.getElementById('section-add-villa').classList.remove('hidden');
-                document.getElementById('tab-add').className = "py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1";
             } else if (tab === 'owner') {
                 document.getElementById('section-owner').classList.remove('hidden');
-                document.getElementById('tab-owner').className = "py-1.5 rounded-lg bg-cyan-400 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1";
+                document.getElementById('tab-owner').className = "px-4 py-2 rounded-xl bg-cyan-500 text-white transition";
             } else if (tab === 'admin') {
                 document.getElementById('section-admin').classList.remove('hidden');
             }
@@ -1699,10 +1513,6 @@
 
         function closeModal(id) {
             document.getElementById(id).classList.add('hidden');
-        }
-
-        function openPwaModal() {
-            document.getElementById('pwa-modal').classList.remove('hidden');
         }
 
         function showToast(msg) {
@@ -1727,7 +1537,7 @@
                 : '• -';
 
             const remainder85 = res.total - res.deposit15;
-            const message = "Salam! BAKU VILLA CLUB tətbiqindən bron sifarişi:\n\n🏡 Villa: " + selectedVilla.name + " (" + selectedVilla.district + ")\n📅 Giriş tarixi: " + date + "\n🌙 Gün sayı: " + res.nights + " (" + res.effectiveNightPrice + " ₼/gün)\n👥 Qonaq sayı: " + res.guests + "\n\n✨ VIP Xidmətlər:\n" + servicesText + "\n\n💰 ÜMUMİ MƏBLƏĞ: " + res.total + " AZN (~" + res.perPerson + " AZN / nəfər)\n🔒 15% BEH (Bron təsdiqi üçün): " + res.deposit15 + " AZN\n💵 Girişdə qalan məbləğ (85%): " + remainder85 + " AZN\n\nZəhmət olmasa, bu tarixin boş olduğunu təsdiqləyin.";
+            const message = "Salam! KIRAYEVILLA saytından bron sifarişi:\n\n🏡 Villa: " + selectedVilla.name + " (" + selectedVilla.district + ")\n📅 Giriş tarixi: " + date + "\n🌙 Gün sayı: " + res.nights + " (" + res.effectiveNightPrice + " ₼/gün)\n👥 Qonaq sayı: " + res.guests + "\n\n✨ VIP Xidmətlər:\n" + servicesText + "\n\n💰 ÜMUMİ MƏBLƏĞ: " + res.total + " AZN (~" + res.perPerson + " AZN / nəfər)\n🔒 15% BEH: " + res.deposit15 + " AZN\n💵 Qalan məbləğ (85%): " + remainder85 + " AZN";
 
             showWhatsAppModal(message);
         }
