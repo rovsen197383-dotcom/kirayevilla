@@ -533,7 +533,7 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-xs text-slate-700 font-bold block">Villanın fotoları (1-5 ədəd):</label>
+                <label class="text-xs text-slate-700 font-bold block">Villanın fotoları (maksimum 10 ədəd):</label>
                 <label for="villa-photo-input" class="cursor-pointer border-2 border-dashed border-slate-300 hover:border-[#e0533c] bg-slate-50 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition">
                     <i class="fa-solid fa-images text-[#e0533c] text-2xl mb-2"></i>
                     <span class="text-sm font-extrabold text-slate-800">Qalereyadan fotoları seçin</span>
@@ -1206,12 +1206,25 @@
         };
 
         window.handlePhotoUpload = async function(event) {
-            const files = Array.from(event.target.files || []).slice(0, 5);
-            if (files.length === 0) return;
+            const input = event.target;
+            const selectedFiles = Array.from(input.files || []);
+            if (selectedFiles.length === 0) return;
 
             const statusBox = document.getElementById('photo-check-status');
             const previewWrapper = document.getElementById('photo-preview-wrapper');
             const previewGrid = document.getElementById('photo-preview-grid');
+            const remainingSlots = Math.max(0, 10 - verifiedPhotosArray.length);
+            const files = selectedFiles.slice(0, remainingSlots);
+
+            // Clear the file input so the same photo can be selected again if needed.
+            input.value = '';
+
+            if (remainingSlots === 0) {
+                statusBox.className = "rounded-xl p-3 text-xs font-bold bg-amber-50 border border-amber-200 text-amber-700";
+                statusBox.innerText = "⚠️ Maksimum 10 foto əlavə edə bilərsiniz.";
+                statusBox.classList.remove('hidden');
+                return;
+            }
 
             statusBox.className = "rounded-xl p-3 text-xs font-bold bg-amber-50 border border-amber-200 text-amber-700";
             statusBox.innerText = "⏳ Fotolar emal olunur...";
@@ -1222,6 +1235,7 @@
                 try {
                     const dataUrl = await new Promise((resolve, reject) => {
                         const reader = new FileReader();
+                        reader.onerror = () => reject(new Error('Fayl oxunmadı'));
                         reader.onload = (e) => {
                             const img = new Image();
                             img.onload = () => {
@@ -1241,25 +1255,34 @@
                                 canvas.getContext('2d').drawImage(img, 0, 0, targetW, targetH);
                                 resolve(canvas.toDataURL('image/jpeg', 0.75));
                             };
-                            img.onerror = () => reject();
+                            img.onerror = () => reject(new Error('Şəkil emal olunmadı'));
                             img.src = e.target.result;
                         };
                         reader.readAsDataURL(file);
                     });
                     processedList.push(dataUrl);
-                } catch (err) {}
+                } catch (err) {
+                    console.error('Foto emalı xətası:', err);
+                }
             }
 
-            verifiedPhotosArray = processedList;
-            previewGrid.innerHTML = verifiedPhotosArray.map((src) => `
-                <div class="relative rounded-xl overflow-hidden border border-emerald-400 h-20">
-                    <img src="${src}" class="w-full h-full object-cover">
+            // Append new photos to the existing selection instead of replacing it.
+            verifiedPhotosArray = verifiedPhotosArray.concat(processedList).slice(0, 10);
+            previewGrid.innerHTML = verifiedPhotosArray.map((src, index) => `
+                <div class="relative rounded-xl overflow-hidden border border-emerald-400 h-20" title="Foto ${index + 1}">
+                    <img src="${src}" alt="Villa fotosu ${index + 1}" class="w-full h-full object-cover">
+                    <span class="absolute bottom-0 left-0 bg-black/60 text-white text-[10px] px-1.5 py-0.5">${index + 1}</span>
                 </div>
             `).join('');
-            previewWrapper.classList.remove('hidden');
+            previewWrapper.classList.toggle('hidden', verifiedPhotosArray.length === 0);
 
-            statusBox.className = "rounded-xl p-3 text-xs font-bold bg-emerald-50 border border-emerald-200 text-emerald-700";
-            statusBox.innerText = "✅ Fotolar yükləndi (" + verifiedPhotosArray.length + ")";
+            if (selectedFiles.length > files.length) {
+                statusBox.className = "rounded-xl p-3 text-xs font-bold bg-amber-50 border border-amber-200 text-amber-700";
+                statusBox.innerText = "⚠️ Yalnız 10 fotoya qədər əlavə etmək olar. Hazırda: " + verifiedPhotosArray.length + "/10";
+            } else {
+                statusBox.className = "rounded-xl p-3 text-xs font-bold bg-emerald-50 border border-emerald-200 text-emerald-700";
+                statusBox.innerText = "✅ Fotolar əlavə olundu (" + verifiedPhotosArray.length + "/10)";
+            }
         };
 
         window.publishVillaToCloud = function() {
