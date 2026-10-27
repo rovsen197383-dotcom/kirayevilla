@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="VILLA CLUB">
-    <title>BAKU VILLA CLUB — Lüks Villa İcarəsi və VIP Servis</title>
+    <title>BAKU VILLA CLUB — Lüks Villa İcarəsi və Şəxsi Kabinet</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -31,7 +31,7 @@
             background: linear-gradient(135deg, #34d399 0%, #059669 100%);
         }
         .card-glass {
-            background: rgba(30, 41, 59, 0.76);
+            background: rgba(30, 41, 59, 0.78);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -76,7 +76,7 @@
             </a>
         </div>
 
-        <!-- Переключатель языков: AZ (По умолчанию) | RU | EN -->
+        <!-- Переключатель языков: AZ | RU | EN -->
         <div class="flex bg-slate-900 rounded-lg p-0.5 border border-slate-700 space-x-0.5">
             <button onclick="setLanguage('az')" id="lang-az" class="px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-950 font-extrabold text-[10px] transition">AZ</button>
             <button onclick="setLanguage('ru')" id="lang-ru" class="px-2.5 py-0.5 rounded-md text-slate-400 font-bold text-[10px] hover:text-white transition">RU</button>
@@ -95,9 +95,9 @@
         </button>
     </div>
 
-    <!-- Шапка навигации -->
-    <header class="sticky top-0 z-40 card-glass px-3 py-2.5 border-b border-slate-800 space-y-2">
-        <div class="flex justify-between items-center">
+    <!-- Шапка навигации с кнопкой "+ Yeni elan" и выпадающим меню Профиля -->
+    <header class="sticky top-0 z-40 card-glass px-3 py-2.5 border-b border-slate-800 space-y-2.5">
+        <div class="flex justify-between items-center relative">
             <div class="flex items-center space-x-2 cursor-pointer" onclick="switchTab('guest')">
                 <div class="w-8 h-8 rounded-xl gold-gradient flex items-center justify-center shadow-md">
                     <i class="fa-solid fa-crown text-slate-950 text-sm"></i>
@@ -108,21 +108,68 @@
                 </div>
             </div>
 
-            <!-- Кнопка входа в Админ-панель (Модерация) -->
-            <button onclick="switchTab('admin')" id="tab-admin" class="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-[10px] font-bold text-slate-300 hover:border-amber-500 flex items-center space-x-1 transition">
-                <i class="fa-solid fa-user-shield text-amber-400"></i>
-                <span id="t-nav-admin">Admin</span>
-                <span id="pending-count-badge" class="hidden bg-red-500 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full ml-1">0</span>
-            </button>
+            <!-- Правая часть: + Yeni elan, Admin и Профиль с выпадающим меню -->
+            <div class="flex items-center space-x-1.5">
+                <button onclick="switchTab('add-villa')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-2.5 py-1.5 rounded-xl text-[10px] flex items-center space-x-1 shadow transition">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span id="t-btn-new-ad">Yeni elan</span>
+                </button>
+
+                <button onclick="switchTab('admin')" id="tab-admin" class="px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-[10px] font-bold text-slate-300 hover:border-amber-500 flex items-center space-x-1 transition">
+                    <i class="fa-solid fa-user-shield text-amber-400"></i>
+                    <span id="pending-count-badge" class="hidden bg-red-500 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full">0</span>
+                </button>
+
+                <!-- Кнопка иконки профиля (как на фото 1) -->
+                <div class="relative">
+                    <button onclick="toggleProfileDropdown()" id="profile-menu-btn" class="px-2.5 py-1.5 rounded-xl bg-blue-500/20 border border-blue-400/40 text-blue-400 hover:bg-blue-500/30 flex items-center space-x-1.5 transition">
+                        <i class="fa-solid fa-circle-user text-sm"></i>
+                        <i id="profile-chevron" class="fa-solid fa-chevron-down text-[9px] transition-transform"></i>
+                    </button>
+
+                    <!-- Выпадающее окошко профиля (Фото 1) -->
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-60 bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200 p-4 z-50 space-y-3">
+                        <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="overflow-hidden">
+                                <div class="font-extrabold text-xs text-slate-900">(055) 350-78-87</div>
+                                <div class="text-[11px] font-semibold text-slate-600 truncate">lion131983@mail.ru</div>
+                            </div>
+                        </div>
+                        <div class="space-y-1 text-xs font-semibold">
+                            <button onclick="openCabinetSubtab('main'); toggleProfileDropdown();" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-100 text-slate-800 flex items-center justify-between transition">
+                                <span>Şəxsi kabinet</span>
+                                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                            </button>
+                            <button onclick="openCabinetSubtab('ads'); toggleProfileDropdown();" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-100 text-slate-800 flex items-center justify-between transition">
+                                <span>Elanlarım (1)</span>
+                                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                            </button>
+                            <button onclick="openCabinetSubtab('payments'); toggleProfileDropdown();" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-slate-100 text-slate-800 flex items-center justify-between transition">
+                                <span>Ödəniş üsulu (Kartlarım)</span>
+                                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+                            </button>
+                            <button onclick="toggleProfileDropdown(); switchTab('guest');" class="w-full text-left px-2.5 py-2 rounded-xl hover:bg-red-50 text-red-600 transition">
+                                Çıxış
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Основные вкладки -->
-        <div class="grid grid-cols-3 bg-slate-900/95 rounded-xl p-1 text-[11px] font-bold gap-1 border border-slate-800">
+        <!-- Основные вкладки (4 кнопки, включая Şəxsi kabinet) -->
+        <div class="grid grid-cols-4 bg-slate-900/95 rounded-xl p-1 text-[10px] font-bold gap-1 border border-slate-800">
             <button onclick="switchTab('guest')" id="tab-guest" class="py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1">
                 🏡 <span id="t-nav-catalog">Kataloq</span>
             </button>
+            <button onclick="switchTab('cabinet')" id="tab-cabinet" class="py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1">
+                👤 <span id="t-nav-cabinet">Kabinet</span>
+            </button>
             <button onclick="switchTab('add-villa')" id="tab-add" class="py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1">
-                ➕ <span id="t-nav-add">Villa əlavə et</span>
+                ➕ <span id="t-nav-add">Yeni elan</span>
             </button>
             <button onclick="switchTab('owner')" id="tab-owner" class="py-1.5 rounded-lg text-cyan-400 hover:text-cyan-300 transition-all text-center truncate px-1">
                 💧 <span id="t-nav-pool">OXY Hovuz</span>
@@ -161,6 +208,9 @@
                 <button onclick="filterVillas('all', this)" id="t-loc-all" class="filter-btn bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl whitespace-nowrap transition shadow">
                     Hamısı
                 </button>
+                <button onclick="filterVillas('Novxanı', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
+                    📍 Novxanı
+                </button>
                 <button onclick="filterVillas('Mərdəkan', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
                     📍 Mərdəkan
                 </button>
@@ -169,9 +219,6 @@
                 </button>
                 <button onclick="filterVillas('Bilgəh', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
                     📍 Bilgəh
-                </button>
-                <button onclick="filterVillas('Novxanı', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
-                    📍 Novxanı
                 </button>
                 <button onclick="filterVillas('Zaqulba', this)" class="filter-btn bg-slate-800/90 text-slate-300 px-3.5 py-2 rounded-xl whitespace-nowrap border border-slate-700 transition">
                     📍 Zaqulba
@@ -191,10 +238,10 @@
                 <i class="fa-solid fa-house-circle-check text-amber-400 text-lg"></i>
                 <div>
                     <div id="t-selected-label" class="text-[10px] text-amber-300 uppercase font-bold tracking-wider">Seçilmiş villa:</div>
-                    <div id="selected-villa-title" class="text-xs font-extrabold text-white">Villa #101 — Mərdəkan</div>
+                    <div id="selected-villa-title" class="text-xs font-extrabold text-white">5 otaqlı bağ evi 210 m² — Novxanı</div>
                 </div>
             </div>
-            <span id="selected-villa-price" class="text-sm font-extrabold text-amber-400 bg-slate-900/90 px-2.5 py-1 rounded-xl border border-amber-500/30 shrink-0">250 ₼/gün</span>
+            <span id="selected-villa-price" class="text-sm font-extrabold text-amber-400 bg-slate-900/90 px-2.5 py-1 rounded-xl border border-amber-500/30 shrink-0">150 ₼/gün</span>
         </div>
 
         <!-- 1. Параметры бронирования -->
@@ -286,7 +333,7 @@
             </div>
         </div>
 
-        <!-- Инфо-блок о 15% задатке (Защита вашей комиссии) -->
+        <!-- Инфо-блок о 15% задатке -->
         <div class="bg-emerald-950/50 border border-emerald-500/30 rounded-2xl p-3.5 flex items-start space-x-3">
             <i class="fa-solid fa-shield-check text-emerald-400 text-lg mt-0.5"></i>
             <div class="text-[11px] text-emerald-100 leading-relaxed" id="t-deposit-info">
@@ -296,8 +343,262 @@
 
     </main>
 
+    <!-- ========================================================== -->
+    <!-- НОВЫЙ РАЗДЕЛ: ŞƏXSİ KABİNET (ВСЕ 6 ЭКРАНОВ С ВАШИХ ФОТО)   -->
+    <!-- ========================================================== -->
+    <main id="section-cabinet" class="hidden space-y-4 p-4">
+
+        <!-- Шапка пользователя в Кабинете (Kamil | (055) 350-78-87) -->
+        <div class="card-glass rounded-3xl p-4 flex items-center justify-between border border-slate-700/80">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-full bg-slate-700 text-slate-200 flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fa-solid fa-circle-user"></i>
+                </div>
+                <div>
+                    <div class="text-sm font-extrabold text-white" id="cab-header-name">Kamil</div>
+                    <div class="text-xs font-semibold text-amber-400" id="cab-header-phone">(055) 350-78-87</div>
+                    <div class="text-[10px] text-slate-400" id="cab-header-email">lion131983@mail.ru</div>
+                </div>
+            </div>
+            <button onclick="switchTab('add-villa')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-extrabold px-3 py-2 rounded-xl shadow flex items-center space-x-1.5">
+                <i class="fa-solid fa-plus"></i>
+                <span>Yeni elan</span>
+            </button>
+        </div>
+
+        <!-- Навигационное меню Личного кабинета (5 пунктов как в левой колонке на фото) -->
+        <div class="flex space-x-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+            <button onclick="openCabinetSubtab('main')" id="cab-btn-main" class="cab-nav-btn bg-blue-600 text-white font-extrabold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 shadow">
+                <i class="fa-solid fa-chart-Simple"></i>
+                <span>Şəxsi kabinet</span>
+            </button>
+            <button onclick="openCabinetSubtab('ads')" id="cab-btn-ads" class="cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700">
+                <i class="fa-regular fa-square-plus"></i>
+                <span>Elanlarım</span>
+            </button>
+            <button onclick="openCabinetSubtab('payments')" id="cab-btn-payments" class="cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Ödəniş üsulu</span>
+            </button>
+            <button onclick="openCabinetSubtab('history')" id="cab-btn-history" class="cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Əməliyyat tarixçəsi</span>
+            </button>
+            <button onclick="openCabinetSubtab('profile')" id="cab-btn-profile" class="cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700">
+                <i class="fa-regular fa-user"></i>
+                <span>Profil</span>
+            </button>
+        </div>
+
+        <!-- 1. Вкладка: Şəxsi kabinet (Балансы + Мои объявления + Последние операции - Фото 2 и 3) -->
+        <div id="cab-sub-main" class="space-y-4">
+            <div class="card-glass rounded-3xl p-4 space-y-3 border border-slate-700/80">
+                <h3 class="text-xs font-extrabold text-slate-300 uppercase tracking-wider">Balanslar</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Личный счет -->
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 space-y-2.5">
+                        <div class="text-[11px] text-slate-400">Şəxsi hesab</div>
+                        <div class="text-xl font-extrabold text-white"><span id="user-wallet-balance">0</span> ₼</div>
+                        <button onclick="topUpBalance()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-2 rounded-xl text-xs transition shadow">
+                            Artır
+                        </button>
+                    </div>
+                    <!-- Баланс объявлений -->
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 space-y-2.5">
+                        <div class="flex justify-between items-center text-[11px] text-slate-400">
+                            <span>Elanlar balansı</span>
+                            <i class="fa-solid fa-chevron-down text-[9px]"></i>
+                        </div>
+                        <div class="text-xl font-extrabold text-white" id="user-ads-balance">1</div>
+                        <button onclick="buyAdPackage()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-2 rounded-xl text-xs transition shadow">
+                            Alış
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Карточка активного объявления внутри обзора кабинета (Фото 2) -->
+            <div class="card-glass rounded-3xl p-4 space-y-3 border border-slate-700/80">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xs font-extrabold text-white">Elanlarım</h3>
+                    <button onclick="openCabinetSubtab('ads')" class="text-[11px] text-blue-400 font-bold hover:underline">Bütün elanlara bax</button>
+                </div>
+                <div id="cabinet-main-ads-preview" class="space-y-3"></div>
+            </div>
+
+            <!-- Последние операции (Фото 3: Son əməliyyatlar) -->
+            <div class="card-glass rounded-3xl p-4 space-y-3 border border-slate-700/80">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xs font-extrabold text-white">Son əməliyyatlar</h3>
+                    <button onclick="openCabinetSubtab('history')" class="text-[11px] text-blue-400 font-bold hover:underline">Bütün əməliyyatları göstər</button>
+                </div>
+                <div class="space-y-2.5 text-xs" id="cabinet-recent-ops"></div>
+            </div>
+        </div>
+
+        <!-- 2. Вкладка: Elanlarım (Фото 4 — Фильтры статуса + карточка виллы с кнопкой Reklam et) -->
+        <div id="cab-sub-ads" class="hidden space-y-4">
+            <div class="card-glass rounded-3xl p-4 space-y-4 border border-slate-700/80">
+                <h2 class="text-base font-extrabold text-white">Elanlarım</h2>
+                
+                <!-- Табы статусов как на Фото 4 -->
+                <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar text-[11px] font-bold">
+                    <button onclick="filterMyAds('all', this)" class="my-ads-tab bg-blue-600/20 text-blue-400 border border-blue-500/40 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        Bütün elanlar (<span id="count-all-my-ads">1</span>)
+                    </button>
+                    <button onclick="filterMyAds('approved', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        Hazırda saytda (<span id="count-active-my-ads">1</span>)
+                    </button>
+                    <button onclick="filterMyAds('unpaid', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        Ödəniş gözləyir
+                    </button>
+                    <button onclick="filterMyAds('expired', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        Vaxtı bitmiş
+                    </button>
+                    <button onclick="filterMyAds('pending', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        Yoxlanışda
+                    </button>
+                    <button onclick="filterMyAds('rejected', this)" class="my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        Qəbul olunmayan
+                    </button>
+                </div>
+
+                <!-- Список моих объявлений и живое управление ценой -->
+                <div id="cabinet-ads-full-list" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- 3. Вкладка: Ödəniş üsulu / Kartlarım (Фото 5 — Привязанные карты Kapital Bank и ABB) -->
+        <div id="cab-sub-payments" class="hidden space-y-4">
+            <div class="card-glass rounded-3xl p-4 space-y-4 border border-slate-700/80">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-base font-extrabold text-white">Kartlarım</h2>
+                    <button onclick="addNewBankCard()" class="bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600 hover:text-white text-[11px] font-extrabold px-3 py-1.5 rounded-xl transition">
+                        Yeni kart əlavə et
+                    </button>
+                </div>
+
+                <!-- Карты из Фото 5 -->
+                <div id="saved-cards-list" class="space-y-2.5">
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-11 h-8 rounded-lg bg-blue-900/60 border border-blue-500/40 flex items-center justify-center font-extrabold text-[11px] text-blue-200 tracking-wider">
+                                VISA
+                            </div>
+                            <div>
+                                <div class="text-xs font-extrabold text-white">Visa •• 1257</div>
+                                <div class="text-[11px] text-emerald-400 font-semibold">Kapital Bank • Əsas kart</div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('✅ Visa •• 1257 əsas kart kimi seçilib')" class="text-slate-400 hover:text-white px-2">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-11 h-8 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center">
+                                <div class="flex -space-x-1.5">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-red-500 inline-block"></span>
+                                    <span class="w-3.5 h-3.5 rounded-full bg-amber-500/90 inline-block"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-xs font-extrabold text-white">MasterCard •• 8194</div>
+                                <div class="text-[11px] text-slate-400">ABB</div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('✅ MasterCard •• 8194 aktivdir')" class="text-slate-400 hover:text-white px-2">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3.5 flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-11 h-8 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center">
+                                <div class="flex -space-x-1.5">
+                                    <span class="w-3.5 h-3.5 rounded-full bg-red-500 inline-block"></span>
+                                    <span class="w-3.5 h-3.5 rounded-full bg-amber-500/90 inline-block"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-xs font-extrabold text-white">MasterCard •• 6046</div>
+                                <div class="text-[11px] text-slate-400">Kapital Bank</div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('✅ MasterCard •• 6046 aktivdir')" class="text-slate-400 hover:text-white px-2">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="text-[10px] text-slate-400 leading-relaxed">
+                    Yeni kart əlavə et düyməsini sıxmaqla siz İstifadəçi razılaşmasını və Ofertanı qəbul etdiyinizi təsdiqləmiş olursunuz.
+                </p>
+            </div>
+
+            <!-- Блок Личного счёта под картами (как на Фото 5) -->
+            <div class="card-glass rounded-3xl p-4 flex justify-between items-center border border-slate-700/80">
+                <div>
+                    <div class="text-xs text-slate-400 font-semibold">Şəxsi hesab</div>
+                    <div class="text-xl font-extrabold text-white mt-0.5"><span id="user-wallet-balance-2">0</span> ₼</div>
+                </div>
+                <button onclick="topUpBalance()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow transition">
+                    Hesabı artır
+                </button>
+            </div>
+        </div>
+
+        <!-- 4. Вкладка: Əməliyyat tarixçəsi (Фото 6 — Полная история транзакций) -->
+        <div id="cab-sub-history" class="hidden space-y-4">
+            <div class="card-glass rounded-3xl p-4 space-y-4 border border-slate-700/80">
+                <h2 class="text-base font-extrabold text-white">Əməliyyat tarixçəsi</h2>
+
+                <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar text-[11px] font-bold">
+                    <button class="bg-blue-600/20 text-blue-400 border border-blue-500/40 px-3 py-1.5 rounded-full whitespace-nowrap">Bütün əməliyyatlar</button>
+                    <button class="bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">Şəxsi hesab</button>
+                    <button class="bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap">Paketlər və yerləşdirmələr</button>
+                </div>
+
+                <div class="space-y-2.5 text-xs" id="cabinet-full-history-list"></div>
+            </div>
+        </div>
+
+        <!-- 5. Вкладка: Profil (Фото 7 — Личные данные Kamil, E-mail, Телефон, Пароль) -->
+        <div id="cab-sub-profile" class="hidden space-y-4">
+            <div class="card-glass rounded-3xl p-5 space-y-4 border border-slate-700/80">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <h2 class="text-base font-extrabold text-white">Profil</h2>
+                    <button onclick="saveUserProfile()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-xl shadow transition">
+                        Redaktə et / Yadda saxla
+                    </button>
+                </div>
+
+                <div class="space-y-3.5 text-xs">
+                    <div>
+                        <label class="text-slate-400 block mb-1">Ad</label>
+                        <input type="text" id="prof-name-input" value="Kamil" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-1">E-mail</label>
+                        <input type="email" id="prof-email-input" value="lion131983@mail.ru" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-1">Telefon</label>
+                        <input type="tel" id="prof-phone-input" value="(055) 350-78-87" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-1">Şifrə</label>
+                        <input type="password" value="••••••••••••••" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-bold focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
     <!-- ========================================== -->
-    <!-- ВКЛАДКА 2: ДОБАВЛЕНИЕ ВИЛЛЫ ХОЗЯИНОМ       -->
+    <!-- ВКЛАДКА 3: ДОБАВЛЕНИЕ ВИЛЛЫ (+ YENİ ELAN)  -->
     <!-- ========================================== -->
     <main id="section-add-villa" class="hidden space-y-5 p-4">
 
@@ -308,11 +609,11 @@
                 <span id="t-owner-banner-title">Asan Foto Yükləmə (iPhone və Android)</span>
             </div>
             <p id="t-owner-banner-desc" class="text-[11px] text-slate-300 leading-relaxed">
-                Villanızı birbaşa kataloqa əlavə edin! Villa adı yazmağa ehtiyac yoxdur — sistem avtomatik kod təyin edir. Təsdiqdən sonra qiyməti özünüz dəyişə bilərsiniz.
+                Villanızı birbaşa kataloqa əlavə edin! Təsdiqdən sonra «Şəxsi kabinet -> Elanlarım» bölməsindən qiyməti istənilən vaxt dəyişə bilərsiniz.
             </p>
         </div>
 
-        <!-- Форма добавления новой виллы в облако (БЕЗ ПОЛЯ ИМЕНИ ВИЛЛЫ) -->
+        <!-- Форма добавления новой виллы -->
         <div class="card-glass rounded-3xl p-5 space-y-4">
             <h2 class="text-base font-extrabold text-white flex items-center">
                 <i class="fa-solid fa-house-medical text-amber-400 mr-2"></i> <span id="t-form-header">Yeni Villa Əlavə Et</span>
@@ -323,10 +624,10 @@
                     <div>
                         <label id="t-lbl-district" class="text-xs text-slate-400 font-medium block mb-1">Ərazi (Rayon)</label>
                         <select id="owner-villa-district" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white font-semibold focus:outline-none focus:border-amber-500">
+                            <option value="Novxanı">📍 Novxanı</option>
                             <option value="Mərdəkan">📍 Mərdəkan</option>
                             <option value="Şüvəlan">📍 Şüvəlan</option>
                             <option value="Bilgəh">📍 Bilgəh</option>
-                            <option value="Novxanı">📍 Novxanı</option>
                             <option value="Zaqulba">📍 Zaqulba</option>
                             <option value="Nardaran">📍 Nardaran</option>
                             <option value="Qəbələ">📍 Qəbələ</option>
@@ -334,22 +635,22 @@
                     </div>
                     <div>
                         <label id="t-lbl-price" class="text-xs text-slate-400 font-medium block mb-1">Günlük qiymət (AZN)</label>
-                        <input type="number" id="owner-villa-price" placeholder="280" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-amber-500">
+                        <input type="number" id="owner-villa-price" placeholder="150" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-amber-500">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label id="t-lbl-guests" class="text-xs text-slate-400 font-medium block mb-1">Maksimum qonaq</label>
+                        <label id="t-lbl-guests" class="text-xs text-slate-400 font-medium block mb-1">Otaq / Qonaq sayı</label>
                         <input type="number" id="owner-villa-guests" placeholder="12" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
                     </div>
                     <div>
                         <label id="t-lbl-phone" class="text-xs text-slate-400 font-medium block mb-1">Sahibin nömrəsi (Gizli)</label>
-                        <input type="tel" id="owner-villa-phone" placeholder="050 000 00 00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                        <input type="tel" id="owner-villa-phone" placeholder="055 350 78 87" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
                     </div>
                 </div>
 
-                <!-- Удобства чекбоксами вместо ручного ввода имени -->
+                <!-- Удобства чекбоксами -->
                 <div>
                     <label id="t-lbl-desc" class="text-xs text-slate-400 font-medium block mb-1.5">Villanın üstünlükləri (Seçin):</label>
                     <div class="grid grid-cols-2 gap-2 text-[11px]">
@@ -375,12 +676,12 @@
                 <div>
                     <label id="t-lbl-plan" class="text-xs text-slate-400 font-medium block mb-1">Əməkdaşlıq və Reklam tarifi:</label>
                     <select id="owner-ad-plan" class="w-full bg-slate-900 border border-amber-500/50 rounded-xl px-3.5 py-2.5 text-xs text-amber-300 font-bold focus:outline-none">
+                        <option value="Premium 30 gün (60 AZN)">🔥 Premium 30 gün — 60 ₼</option>
                         <option value="15% Komissiya (Abunə haqqı yoxdur)">Komissiya: Hər brondan 15% (Pulsuz yerləşdirmə)</option>
-                        <option value="VIP TOP + 10% Komissiya (70 AZN/ay)">🔥 VIP TOP-da bərkitmə — 70 ₼ / ay</option>
                     </select>
                 </div>
 
-                <!-- БЕСШОВНАЯ ЗАГРУЗКА ФОТО С IPHONE (iOS) И ANDROID (Поддержка нескольких фото) -->
+                <!-- ЗАГРУЗКА ФОТО -->
                 <div class="space-y-2">
                     <label id="t-lbl-photo" class="text-xs text-amber-400 font-bold block">Villanın fotoları (iPhone və Android dəstəyi):</label>
                     <label for="villa-photo-input" class="cursor-pointer border-2 border-dashed border-amber-500/50 hover:border-amber-400 bg-slate-900/80 rounded-2xl p-4 flex flex-col items-center justify-center text-center transition active:scale-95">
@@ -392,10 +693,7 @@
                         <input type="file" id="villa-photo-input" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(event)">
                     </label>
 
-                    <!-- Статус проверки фото -->
                     <div id="photo-check-status" class="hidden rounded-xl p-3 text-xs font-semibold"></div>
-
-                    <!-- Превью загруженных фотографий (галерея) -->
                     <div id="photo-preview-wrapper" class="hidden space-y-2">
                         <div id="photo-preview-grid" class="grid grid-cols-3 gap-2"></div>
                     </div>
@@ -410,39 +708,23 @@
                 </div>
 
                 <button onclick="publishVillaToCloud()" id="submit-villa-btn" class="w-full gold-gradient text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-lg transition active:scale-95">
-                    <i class="fa-solid fa-paper-plane mr-1.5"></i> <span id="t-submit-villa-btn">Yoxlamaya göndər</span>
+                    <i class="fa-solid fa-paper-plane mr-1.5"></i> <span id="t-submit-villa-btn">Elanı yerləşdir</span>
                 </button>
             </div>
         </div>
-
-        <!-- СПИСОК ВИЛЛ ЭТОГО ХОЗЯИНА (ЖИВОЕ УПРАВЛЕНИЕ ЦЕНОЙ БЕЗ ПОВТОРНОЙ МОДЕРАЦИИ) -->
-        <div class="card-glass rounded-3xl p-5 space-y-3">
-            <div class="flex justify-between items-center">
-                <h3 class="text-sm font-extrabold text-amber-400 flex items-center">
-                    <i class="fa-solid fa-sliders mr-2"></i> <span id="t-my-villas-title">Mənim Villalarım (Qiymət İdarəetməsi)</span>
-                </h3>
-            </div>
-            <p id="t-my-villas-desc" class="text-[11px] text-slate-400">
-                Əlavə etdiyiniz villaların günlük qiymətini istənilən vaxt buradan dərhal dəyişə bilərsiniz:
-            </p>
-            <div id="owner-villas-list" class="space-y-3"></div>
-        </div>
-
     </main>
 
     <!-- ========================================== -->
-    <!-- ВКЛАДКА 3: ПАНЕЛЬ АДМИНИСТРАТОРА (PIN 7887) -->
+    <!-- ВКЛАДКА 4: ПАНЕЛЬ АДМИНИСТРАТОРА (PIN 7887) -->
     <!-- ========================================== -->
     <main id="section-admin" class="hidden space-y-5 p-4">
-        
-        <!-- Экран ввода PIN-кода -->
         <div id="admin-login-box" class="card-glass rounded-3xl p-6 text-center space-y-4 border border-amber-500/30">
             <div class="w-12 h-12 rounded-2xl gold-gradient mx-auto flex items-center justify-center text-slate-950 text-xl shadow-lg">
                 <i class="fa-solid fa-lock"></i>
             </div>
             <div>
-                <h2 id="t-admin-login-title" class="text-base font-extrabold text-white">Admin Panelə Giriş</h2>
-                <p id="t-admin-login-hint" class="text-xs text-slate-400 mt-1">Digər sahiblərin villalarını təsdiqləmək üçün PIN-kodu daxil edin (Sizin PIN: <b class="text-amber-400">7887</b>)</p>
+                <h2 class="text-base font-extrabold text-white">Admin Panelə Giriş</h2>
+                <p class="text-xs text-slate-400 mt-1">Digər sahiblərin villalarını təsdiqləmək üçün PIN-kodu daxil edin (Sizin PIN: <b class="text-amber-400">7887</b>)</p>
             </div>
             <input type="password" id="admin-pin-input" maxlength="4" placeholder="••••" class="w-36 text-center text-xl tracking-widest font-extrabold bg-slate-900 border border-amber-500/50 rounded-2xl py-2.5 text-amber-400 focus:outline-none">
             <div>
@@ -452,7 +734,6 @@
             </div>
         </div>
 
-        <!-- Открытая панель управления администратора -->
         <div id="admin-dashboard" class="hidden space-y-5">
             <div class="bg-gradient-to-r from-amber-500/20 to-emerald-500/20 border border-amber-500/40 rounded-3xl p-4 space-y-1">
                 <div class="flex justify-between items-center">
@@ -464,26 +745,20 @@
                 </p>
             </div>
 
-            <!-- Ожидают проверки -->
             <div class="card-glass rounded-3xl p-4 space-y-3">
-                <h3 class="text-xs font-extrabold uppercase tracking-wider text-amber-400 flex items-center justify-between">
-                    <span>⏳ Təsdiq gözləyən villalar</span>
-                </h3>
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-amber-400">⏳ Təsdiq gözləyən villalar</h3>
                 <div id="admin-pending-list" class="space-y-3"></div>
             </div>
 
-            <!-- Все одобренные виллы в каталоге -->
             <div class="card-glass rounded-3xl p-4 space-y-3">
-                <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-400">
-                    ✅ Kataloqda aktiv olan villalar
-                </h3>
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-400">✅ Kataloqda aktiv olan villalar</h3>
                 <div id="admin-approved-list" class="space-y-3"></div>
             </div>
         </div>
     </main>
 
     <!-- ========================================== -->
-    <!-- ВКЛАДКА 4: БАССЕЙНЫ (МАГАЗИН OXY POOL)     -->
+    <!-- ВКЛАДКА 5: БАССЕЙНЫ (МАГАЗИН OXY POOL)     -->
     <!-- ========================================== -->
     <main id="section-owner" class="hidden space-y-5 p-4">
         <div class="bg-gradient-to-br from-cyan-950 via-slate-900 to-blue-950 rounded-3xl p-5 border border-cyan-500/40 shadow-2xl space-y-4">
@@ -507,7 +782,7 @@
                     </div>
                     <div>
                         <div id="t-oxy-prod" class="font-extrabold text-sm text-white">OXY POOL Xlor Tabletləri</div>
-                        <div id="t-oxy-prod-desc" class="text-[11px] text-slate-300 mt-0.5">3-ü 1-də kompleks qulluq: dezinfeksiya, yosunlara qarşı qoruma və ideal şəffaflıq.</div>
+                        <div id="t-oxy-prod-desc" class="text-[11px] text-slate-300 mt-0.5">5-i 1-də kompleks qulluq: dezinfeksiya, yosunlara qarşı qoruma və ideal şəffaflıq.</div>
                     </div>
                 </div>
 
@@ -536,13 +811,13 @@
                 <div class="flex items-center space-x-1.5">
                     <span id="t-total-lbl" class="text-[10px] text-slate-400 uppercase font-bold">Cəmi:</span>
                     <span id="deposit-badge" class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-extrabold">
-                        Beh 15%: 75 ₼
+                        Beh 15%: 45 ₼
                     </span>
                 </div>
                 <div class="flex items-baseline space-x-2 mt-0.5">
-                    <span id="total-price" class="text-2xl font-extrabold text-white">500 ₼</span>
+                    <span id="total-price" class="text-2xl font-extrabold text-white">300 ₼</span>
                     <span id="per-person-price" class="text-[11px] text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
-                        ~83 ₼ / nəfər
+                        ~50 ₼ / nəfər
                     </span>
                 </div>
             </div>
@@ -592,7 +867,7 @@
                     <div class="w-7 h-7 rounded-lg gold-gradient flex items-center justify-center text-slate-950">
                         <i class="fa-solid fa-crown text-xs"></i>
                     </div>
-                    <span id="t-pwa-modal-title" class="font-extrabold text-sm text-white">Telefona Quraşdırma</span>
+                    <span class="font-extrabold text-sm text-white">Telefona Quraşdırma</span>
                 </div>
                 <button onclick="closeModal('pwa-modal')" class="text-slate-400 hover:text-white text-lg">
                     <i class="fa-solid fa-xmark"></i>
@@ -601,11 +876,11 @@
             <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
                 <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700">
                     <div class="font-extrabold text-amber-400 mb-1"><i class="fa-brands fa-apple mr-1"></i> iPhone (Safari):</div>
-                    <p id="t-pwa-ios">Aşağıdakı <b>«Paylaş» (Share)</b> düyməsini basın və <b>«Ana Ekrana Əlavə Et» (Add to Home Screen)</b> seçin.</p>
+                    <p>Aşağıdakı <b>«Paylaş» (Share)</b> düyməsini basın və <b>«Ana Ekrana Əlavə Et» (Add to Home Screen)</b> seçin.</p>
                 </div>
                 <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700">
                     <div class="font-extrabold text-emerald-400 mb-1"><i class="fa-brands fa-android mr-1"></i> Android (Chrome):</div>
-                    <p id="t-pwa-android">Yuxarı sağ küncdəki <b>3 nöqtəni (⋮)</b> basın və <b>«Tətbiqi quraşdır» (Install App)</b> seçin.</p>
+                    <p>Yuxarı sağ küncdəki <b>3 nöqtəni (⋮)</b> basın və <b>«Tətbiqi quraşdır» (Install App)</b> seçin.</p>
                 </div>
             </div>
             <button onclick="closeModal('pwa-modal')" class="w-full gold-gradient text-slate-950 font-extrabold py-3 rounded-xl text-xs uppercase">
@@ -638,16 +913,26 @@
             measurementId: "G-3XW9XB1J"
         };
 
-        // 3 ЯЗЫКОВЫХ ПАКЕТА (AZ - основной по умолчанию, RU, EN)
+        // ИСТОРИЯ ОПЕРАЦИЙ (Точь-в-точь как на ваших скриншотах Фото 3 и Фото 6)
+        const operationsHistory = [
+            { title: "İcarəyə verilir 5 otaqlı həyət evi/bağ evi 210 m², Novxanı q.", service: "Premium 30 gün", date: "21.10.2026, 12:04", amount: "-60,00 ₼" },
+            { title: "İcarəyə verilir 5 otaqlı həyət evi/bağ evi 210 m², Novxanı q.", service: "1 elan", date: "21.10.2026, 12:03", amount: "-6,00 ₼" },
+            { title: "İcarəyə verilir 5 otaqlı həyət evi/bağ evi 210 m², Novxanı q.", service: "Premium 30 gün", date: "21.09.2026, 10:38", amount: "-60,00 ₼" },
+            { title: "İcarəyə verilir 5 otaqlı həyət evi/bağ evi 210 m², Novxanı q.", service: "1 elan", date: "21.09.2026, 10:36", amount: "-6,00 ₼" },
+            { title: "İcarəyə verilir 5 otaqlı həyət evi/bağ evi 210 m², Novxanı q.", service: "Premium 30 gün", date: "22.08.2026, 09:46", amount: "-60,00 ₼" },
+            { title: "İcarəyə verilir 5 otaqlı həyət evi/bağ evi 210 m², Novxanı q.", service: "1 elan", date: "14.08.2026, 20:37", amount: "-6,00 ₼" }
+        ];
+
+        // 3 ЯЗЫКОВЫХ ПАКЕТА (AZ / RU / EN)
         const translations = {
             az: {
                 subtitle: "Bakı Lüks Məkanlar",
                 pwaBanner: "Tətbiqi telefonun ekranına əlavə et",
                 pwaBtn: "📲 Yüklə",
                 navCatalog: "Kataloq",
-                navAdd: "Villa əlavə et",
+                navCabinet: "Kabinet",
+                navAdd: "Yeni elan",
                 navPool: "OXY Hovuz",
-                navAdmin: "Admin",
                 hotBadge: "Sabah üçün qaynar təklif!",
                 hotDesc: "Həftəiçi günlərə 30% endirim",
                 hotBtn: "Aktivləşdir",
@@ -675,54 +960,26 @@
                 totalLbl: "Cəmi:",
                 depositLbl: "Beh 15%:",
                 bookBtn: "Bron et",
-                topBadge: "TOP SEÇİM",
+                topBadge: "PREMIUM ELAN",
                 oxyWaterBadge: "💧 OXY Təmiz Su",
                 partnerBadge: "📢 Tərəfdaş",
                 chosenBadge: "✓ Seçilib",
                 upToGuests: "nəfərədək",
-                ownerBannerTitle: "Asan Foto Yükləmə (iPhone və Android)",
-                ownerBannerDesc: "Villanızı birbaşa kataloqa əlavə edin! Villa adı yazmağa ehtiyac yoxdur — sistem avtomatik kod təyin edir. Təsdiqdən sonra qiyməti özünüz dəyişə bilərsiniz.",
-                formHeader: "Yeni Villa Əlavə Et",
-                lblDistrict: "Ərazi (Rayon)",
-                lblPrice: "Günlük qiymət (AZN)",
-                lblGuests: "Maksimum qonaq",
-                lblPhone: "Sahibin nömrəsi (Gizli)",
-                lblDesc: "Villanın üstünlükləri (Seçin):",
-                amenPool: "🏊‍♂️ İsti hovuz",
-                amenBbq: "🔥 Manqal zonası",
-                amenSauna: "🧖‍♂️ Sauna / Hamam",
-                amenTerrace: "🏡 Besedka / Terras",
-                lblPlan: "Əməkdaşlıq və Reklam tarifi:",
-                lblPhoto: "Villanın fotoları (iPhone və Android dəstəyi):",
-                uploadBtnText: "Qalereyadan fotoları seçin (1-5 ədəd)",
-                uploadHint: "iPhone (iOS) və Android fotoları avtomatik HD formatına uyğunlaşdırılır",
-                oxyCheckLabel: "<b>«💧 OXY Təmiz Su»</b> nişanı almaq və OXY POOL xlor tabletlərini pulsuz çatdırılma ilə sifariş etmək istəyirəm.",
-                submitVillaBtn: "Yoxlamaya göndər",
-                myVillasTitle: "Mənim Villalarım (Qiymət İdarəetməsi)",
-                myVillasDesc: "Əlavə etdiyiniz villaların günlük qiymətini istənilən vaxt buradan dərhal dəyişə bilərsiniz:",
                 photoLowResError: "❌ Şəkil çox kiçikdir və ya zədələnib! Zəhmət olmasa normal telefon fotosu seçin.",
                 photoSuccessMsg: "✅ Fotolar iPhone/Android üçün optimallaşdırıldı və yükləndi!",
-                statusPending: "⏳ Yoxlamada (Admin təsdiqi gözləyir)",
-                statusApproved: "✅ Təsdiqlənib (Kataloqda aktivdir)",
+                statusPending: "⏳ Yoxlanışda",
+                statusApproved: "Hazırda saytda",
                 savePriceBtn: "Qiyməti yenilə",
-                priceSavedToast: "✅ Qiymət dərhal yeniləndi!",
-                oxyBadge: "Villa sahibləri üçün",
-                oxyFree: "🚚 Pulsuz çatdırılma",
-                oxyTitle: "OXY POOL ilə Kristal Təmiz Hovuz",
-                oxySubtitle: "Bakı və ətrafına pulsuz çatdırılma — birbaşa bağınızın qapısına qədər çatdırırıq!",
-                oxyProd: "OXY POOL Xlor Tabletləri",
-                oxyProdDesc: "3-ü 1-də kompleks qulluq: dezinfeksiya, yosunlara qarşı qoruma və ideal şəffaflıq.",
-                oxyQtyLbl: "Qablaşdırma sayı:",
-                oxyOrderBtn: "Pulsuz çatdırılma ilə sifariş et"
+                priceSavedToast: "✅ Qiymət dərhal yeniləndi!"
             },
             ru: {
                 subtitle: "Премиум виллы Баку",
                 pwaBanner: "Установите приложение на экран телефона",
                 pwaBtn: "📲 Скачать",
                 navCatalog: "Каталог",
+                navCabinet: "Кабинет",
                 navAdd: "Сдать виллу",
-                navPool: "Бассейны",
-                navAdmin: "Админ",
+                navPool: "OXY Бассейн",
                 hotBadge: "Горящее окно на завтра!",
                 hotDesc: "Скидка 30% на будний день",
                 hotBtn: "Активировать",
@@ -750,54 +1007,26 @@
                 totalLbl: "Итого:",
                 depositLbl: "Задаток 15%:",
                 bookBtn: "Забронировать",
-                topBadge: "ТОП ВЫБОР",
+                topBadge: "ПРЕМИУМ",
                 oxyWaterBadge: "💧 Чистая вода OXY",
                 partnerBadge: "📢 Партнёр",
                 chosenBadge: "✓ Выбрано",
                 upToGuests: "гостей",
-                ownerBannerTitle: "Лёгкая загрузка с iPhone и Android",
-                ownerBannerDesc: "Добавьте свою виллу в каталог! Имя виллы придумывать не нужно — система сама присвоит номер по району. После одобрения вы сможете менять цену в реальном времени.",
-                formHeader: "Добавить виллу в каталог",
-                lblDistrict: "Район",
-                lblPrice: "Цена за сутки (AZN)",
-                lblGuests: "Макс. гостей",
-                lblPhone: "Телефон хозяина (Скрыт)",
-                lblDesc: "Удобства на вилле (Отметьте):",
-                amenPool: "🏊‍♂️ Подогрев бассейна",
-                amenBbq: "🔥 Мангальная зона",
-                amenSauna: "🧖‍♂️ Сауна / Хамам",
-                amenTerrace: "🏡 Беседка / Терраса",
-                lblPlan: "Тариф размещения:",
-                lblPhoto: "Фотографии виллы (Поддержка iPhone и Android):",
-                uploadBtnText: "Выбрать фото из галереи (1-5 шт.)",
-                uploadHint: "Любые фото с iPhone и Android автоматически адаптируются под HD",
-                oxyCheckLabel: "Хочу получить значок <b>«💧 Чистая вода OXY»</b> и заказать хлор OXY POOL с бесплатной доставкой.",
-                submitVillaBtn: "Отправить на модерацию",
-                myVillasTitle: "Мои виллы (Управление ценой)",
-                myVillasDesc: "Вы можете в любой момент изменить суточную цену своей виллы без повторной проверки:",
                 photoLowResError: "❌ Файл повреждён или слишком маленький! Выберите обычное фото с телефона.",
                 photoSuccessMsg: "✅ Фотографии с телефона успешно обработаны и загружены!",
-                statusPending: "⏳ На проверке у Администратора",
-                statusApproved: "✅ Одобрено (Активно в каталоге)",
+                statusPending: "⏳ На проверке",
+                statusApproved: "Сейчас на сайте",
                 savePriceBtn: "Обновить цену",
-                priceSavedToast: "✅ Цена мгновенно обновлена!",
-                oxyBadge: "Для владельцев вилл",
-                oxyFree: "🚚 Бесплатная доставка",
-                oxyTitle: "Кристально чистый бассейн с OXY POOL",
-                oxySubtitle: "Бесплатная доставка по Баку и окрестностям прямо к воротам вашей виллы!",
-                oxyProd: "Таблетки хлора OXY POOL",
-                oxyProdDesc: "Комплексный уход 3-в-1: дезинфекция, защита от водорослей и прозрачность.",
-                oxyQtyLbl: "Количество упаковок:",
-                oxyOrderBtn: "Заказать с бесплатной доставкой"
+                priceSavedToast: "✅ Цена мгновенно обновлена!"
             },
             en: {
                 subtitle: "Baku Luxury Villas",
                 pwaBanner: "Add the app icon to your phone screen",
                 pwaBtn: "📲 Install",
                 navCatalog: "Catalog",
-                navAdd: "List Villa",
+                navCabinet: "Cabinet",
+                navAdd: "New Ad",
                 navPool: "OXY Pool",
-                navAdmin: "Admin",
                 hotBadge: "Hot Deal for Tomorrow!",
                 hotDesc: "30% OFF on weekday bookings",
                 hotBtn: "Activate",
@@ -825,60 +1054,48 @@
                 totalLbl: "Total:",
                 depositLbl: "15% Deposit:",
                 bookBtn: "Book Now",
-                topBadge: "TOP PICK",
+                topBadge: "PREMIUM AD",
                 oxyWaterBadge: "💧 OXY Pure Water",
                 partnerBadge: "📢 Partner",
                 chosenBadge: "✓ Selected",
                 upToGuests: "guests max",
-                ownerBannerTitle: "Seamless iPhone & Android Photo Upload",
-                ownerBannerDesc: "List your villa in seconds! No need to enter a villa name — the system assigns an ID automatically. Once approved, you can adjust your nightly price anytime.",
-                formHeader: "Add New Villa",
-                lblDistrict: "District",
-                lblPrice: "Nightly Price (AZN)",
-                lblGuests: "Max Guests",
-                lblPhone: "Owner Phone (Hidden)",
-                lblDesc: "Villa Amenities (Select):",
-                amenPool: "🏊‍♂️ Heated Pool",
-                amenBbq: "🔥 BBQ Area",
-                amenSauna: "🧖‍♂️ Sauna / Hammam",
-                amenTerrace: "🏡 Gazebo / Terrace",
-                lblPlan: "Listing & Commission Plan:",
-                lblPhoto: "Villa Photos (iPhone & Android Support):",
-                uploadBtnText: "Select photos from gallery (1-5 photos)",
-                uploadHint: "All iPhone (iOS) & Android photos are auto-optimized to HD",
-                oxyCheckLabel: "Get the <b>«💧 OXY Pure Water»</b> badge & order OXY POOL chlorine tablets with free delivery.",
-                submitVillaBtn: "Submit for Approval",
-                myVillasTitle: "My Villas (Live Price Control)",
-                myVillasDesc: "Update your villa's nightly price in real time:",
                 photoLowResError: "❌ Image is corrupted or too small! Please select a standard photo from your phone.",
                 photoSuccessMsg: "✅ Photos optimized and uploaded seamlessly!",
-                statusPending: "⏳ Pending Admin Approval",
-                statusApproved: "✅ Approved (Live in Catalog)",
+                statusPending: "⏳ Pending",
+                statusApproved: "Active on site",
                 savePriceBtn: "Update Price",
-                priceSavedToast: "✅ Price updated live!",
-                oxyBadge: "For Villa Owners",
-                oxyFree: "🚚 Free Delivery",
-                oxyTitle: "Crystal Clear Pool with OXY POOL",
-                oxySubtitle: "Free delivery across Baku and suburbs right to your villa gates!",
-                oxyProd: "OXY POOL Chlorine Tablets",
-                oxyProdDesc: "3-in-1 care: disinfection, algae protection & crystal transparency.",
-                oxyQtyLbl: "Packages count:",
-                oxyOrderBtn: "Order with Free Delivery"
+                priceSavedToast: "✅ Price updated live!"
             }
         };
 
-        // 4 Базовые виллы в каталоге
+        // БАЗОВЫЕ ВИЛЛЫ В КАТАЛОГЕ (Первой стоит ваша вилла в Новханы за 150 AZN / 5 otaqlı • 210 m²)
         const defaultVillas = [
+            {
+                id: "default-novxani",
+                name: "5 otaqlı bağ evi 210 m² — Novxanı q.",
+                district: "Novxanı",
+                price: 150,
+                guests: 12,
+                roomsInfo: "5 otaqlı • 210 m²",
+                desc: "İsti hovuz • Manqal zonası • Besedka / Terras",
+                image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=80",
+                images: ["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=80"],
+                isTop: true,
+                oxyWater: true,
+                status: "approved",
+                ownerPhone: "055 350 78 87"
+            },
             {
                 id: "default-1",
                 name: "Villa #101 — Mərdəkan",
                 district: "Mərdəkan",
                 price: 250,
                 guests: 12,
+                roomsInfo: "4 otaqlı • 180 m²",
                 desc: "İsti hovuz • Manqal zonası • Besedka / Terras",
-                image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=80",
-                images: ["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=80"],
-                isTop: true,
+                image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80",
+                images: ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80"],
+                isTop: false,
                 oxyWater: true,
                 status: "approved",
                 ownerPhone: "055 350 78 87"
@@ -889,9 +1106,10 @@
                 district: "Şüvəlan",
                 price: 320,
                 guests: 15,
+                roomsInfo: "6 otaqlı • 260 m²",
                 desc: "İsti hovuz • Sauna / Hamam • Manqal zonası",
-                image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80",
-                images: ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80"],
+                image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=80",
+                images: ["https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=80"],
                 isTop: false,
                 oxyWater: true,
                 status: "approved",
@@ -901,27 +1119,14 @@
                 id: "default-3",
                 name: "Villa #103 — Bilgəh",
                 district: "Bilgəh",
-                price: 400,
+                price: 380,
                 guests: 10,
+                roomsInfo: "5 otaqlı • 240 m²",
                 desc: "İsti hovuz • Besedka / Terras • Manqal zonası",
-                image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=80",
-                images: ["https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=80"],
-                isTop: false,
-                oxyWater: true,
-                status: "approved",
-                ownerPhone: "Partner"
-            },
-            {
-                id: "default-4",
-                name: "Villa #104 — Novxanı",
-                district: "Novxanı",
-                price: 220,
-                guests: 14,
-                desc: "Manqal zonası • Besedka / Terras",
                 image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80",
                 images: ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80"],
                 isTop: false,
-                oxyWater: false,
+                oxyWater: true,
                 status: "approved",
                 ownerPhone: "Partner"
             }
@@ -934,7 +1139,10 @@
         let selectedServices = [];
         let hotDealActive = false;
         let currentDistrictFilter = 'all';
+        let currentMyAdsFilter = 'all';
         let oxyQty = 1;
+        let walletBalance = 0;
+        let adsBalance = 1;
         let verifiedPhotosArray = [];
         let currentUser = null;
         let db = null;
@@ -987,7 +1195,6 @@
             });
         }
 
-        // Объединение базовых и облачных вилл
         function getAllVillas() {
             const combined = [...defaultVillas];
             cloudVillas.forEach(cv => {
@@ -998,14 +1205,81 @@
             return combined;
         }
 
-        // Рендер каталога, кабинета владельца и админ-панели
+        // Выпадающее меню профиля сверху справа (Фото 1)
+        window.toggleProfileDropdown = function() {
+            const menu = document.getElementById('profile-dropdown');
+            const chevron = document.getElementById('profile-chevron');
+            menu.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+        };
+
+        // Переключение внутренних вкладок Личного Кабинета (Фото 2, 3, 4, 5, 6, 7)
+        window.openCabinetSubtab = function(subtab) {
+            switchTab('cabinet');
+
+            ['main', 'ads', 'payments', 'history', 'profile'].forEach(st => {
+                const box = document.getElementById(`cab-sub-${st}`);
+                const btn = document.getElementById(`cab-btn-${st}`);
+                if (box) box.classList.add('hidden');
+                if (btn) {
+                    btn.className = "cab-nav-btn bg-slate-800/90 text-slate-300 font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 border border-slate-700";
+                }
+            });
+
+            const activeBox = document.getElementById(`cab-sub-${subtab}`);
+            const activeBtn = document.getElementById(`cab-btn-${subtab}`);
+            if (activeBox) activeBox.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.className = "cab-nav-btn bg-blue-600 text-white font-extrabold px-3.5 py-2 rounded-xl whitespace-nowrap flex items-center space-x-1.5 shadow";
+            }
+        };
+
+        // Пополнение счёта и покупка пакета в кабинете
+        window.topUpBalance = function() {
+            walletBalance += 20;
+            document.getElementById('user-wallet-balance').innerText = walletBalance;
+            document.getElementById('user-wallet-balance-2').innerText = walletBalance;
+            showToast(`✅ Şəxsi hesab +20 ₼ artırıldı! (Cari balans: ${walletBalance} ₼)`);
+        };
+
+        window.buyAdPackage = function() {
+            adsBalance += 1;
+            document.getElementById('user-ads-balance').innerText = adsBalance;
+            showToast(`✅ +1 Elan paketi əlavə olundu! (Balans: ${adsBalance})`);
+        };
+
+        window.addNewBankCard = function() {
+            showToast("💳 Yeni bank kartı əlavə etmə pəncərəsi aktivdir");
+        };
+
+        window.saveUserProfile = function() {
+            const name = document.getElementById('prof-name-input').value.trim() || "Kamil";
+            const email = document.getElementById('prof-email-input').value.trim() || "lion131983@mail.ru";
+            const phone = document.getElementById('prof-phone-input').value.trim() || "(055) 350-78-87";
+
+            document.getElementById('cab-header-name').innerText = name;
+            document.getElementById('cab-header-email').innerText = email;
+            document.getElementById('cab-header-phone').innerText = phone;
+            showToast("✅ Profil məlumatları yadda saxlanıldı!");
+        };
+
+        window.filterMyAds = function(statusFilter, btnEl) {
+            currentMyAdsFilter = statusFilter;
+            document.querySelectorAll('.my-ads-tab').forEach(b => {
+                b.className = "my-ads-tab bg-slate-900 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-full whitespace-nowrap";
+            });
+            btnEl.className = "my-ads-tab bg-blue-600/20 text-blue-400 border border-blue-500/40 px-3 py-1.5 rounded-full whitespace-nowrap";
+            renderAllViews();
+        };
+
+        // Рендер всех разделов
         function renderAllViews() {
             const t = translations[currentLang];
             const allVillas = getAllVillas();
             const approvedVillas = allVillas.filter(v => v.status === 'approved');
             const pendingVillas = allVillas.filter(v => v.status === 'pending');
 
-            // Обновление бейджа ожидающих модерации
+            // Бейдж админа
             const badge = document.getElementById('pending-count-badge');
             if (pendingVillas.length > 0) {
                 badge.innerText = pendingVillas.length;
@@ -1030,7 +1304,7 @@
                     
                     <div class="absolute top-3 left-3 right-3 flex justify-between items-start">
                         <div class="flex flex-wrap gap-1.5">
-                            ${v.isTop ? `<span class="gold-gradient text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center shadow-md"><i class="fa-solid fa-star mr-1"></i> ${t.topBadge}</span>` : `<span class="bg-slate-900/85 text-amber-300 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-amber-500/30">${t.partnerBadge}</span>`}
+                            ${v.isTop ? `<span class="gold-gradient text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center shadow-md"><i class="fa-solid fa-crown mr-1"></i> ${t.topBadge}</span>` : `<span class="bg-slate-900/85 text-amber-300 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-amber-500/30">${t.partnerBadge}</span>`}
                             ${v.oxyWater ? `<span class="bg-emerald-500/95 text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-md">${t.oxyWaterBadge}</span>` : ''}
                         </div>
                         <div class="flex items-center space-x-1">
@@ -1043,7 +1317,7 @@
 
                     <div class="absolute bottom-3 left-4 right-4 flex justify-between items-end">
                         <div class="pr-2">
-                            <span class="text-[11px] text-amber-400 font-bold block mb-0.5">📍 ${v.district} • ${v.guests} ${t.upToGuests}</span>
+                            <span class="text-[11px] text-amber-400 font-bold block mb-0.5">📍 ${v.district} • ${v.roomsInfo || `${v.guests} ${t.upToGuests}`}</span>
                             <h3 class="text-base font-extrabold text-white leading-tight">${v.name}</h3>
                             <p class="text-[11px] text-slate-300 mt-0.5">${v.desc || ''}</p>
                         </div>
@@ -1057,49 +1331,118 @@
                 </div>`;
             }).join('');
 
-            // 2. Рендер списка вилл в Кабинете Хозяина
-            const ownerList = document.getElementById('owner-villas-list');
-            const customVillas = cloudVillas.length > 0 ? cloudVillas : [defaultVillas[0]];
-            ownerList.innerHTML = customVillas.map(v => `
-                <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-3 space-y-2.5">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <div class="text-xs font-extrabold text-white">${v.name} (${v.district})</div>
-                            <div class="text-[10px] ${v.status === 'approved' ? 'text-emerald-400' : 'text-amber-400'} font-semibold">
+            // 2. Рендер объявлений хозяина в Личном Кабинете (Фото 2 и Фото 4: карточка 150 ₼/gün, Novxanı q., 5 otaqlı • 210 m²)
+            const myVillas = [defaultVillas[0], ...cloudVillas];
+            document.getElementById('count-all-my-ads').innerText = myVillas.length;
+            document.getElementById('count-active-my-ads').innerText = myVillas.filter(v => v.status === 'approved').length;
+
+            // Превью на главной кабинета (Фото 2)
+            const previewContainer = document.getElementById('cabinet-main-ads-preview');
+            const firstVilla = myVillas[0];
+            previewContainer.innerHTML = `
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden max-w-xs">
+                    <div class="relative h-36">
+                        <img src="${firstVilla.image}" class="w-full h-full object-cover">
+                        <span class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/90 text-red-500 flex items-center justify-center shadow">
+                            <i class="fa-solid fa-heart text-xs"></i>
+                        </span>
+                        <span class="absolute bottom-2.5 left-2.5 bg-emerald-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full shadow">
+                            Hazırda saytda
+                        </span>
+                    </div>
+                    <div class="p-3 space-y-1">
+                        <div class="text-sm font-extrabold text-white">${firstVilla.price} ₼/gün</div>
+                        <div class="text-xs text-slate-300 font-semibold">${firstVilla.district} q.</div>
+                        <div class="text-[11px] text-slate-400">${firstVilla.roomsInfo || '5 otaqlı • 210 m²'}</div>
+                    </div>
+                </div>
+            `;
+
+            // Полный список в разделе Elanlarım (Фото 4)
+            const filteredMyVillas = myVillas.filter(v => {
+                if (currentMyAdsFilter === 'all') return true;
+                if (currentMyAdsFilter === 'approved') return v.status === 'approved';
+                if (currentMyAdsFilter === 'pending') return v.status === 'pending';
+                return false;
+            });
+
+            const fullAdsContainer = document.getElementById('cabinet-ads-full-list');
+            if (filteredMyVillas.length === 0) {
+                fullAdsContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">Bu bölmədə elan yoxdur.</div>`;
+            } else {
+                fullAdsContainer.innerHTML = filteredMyVillas.map(v => `
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden">
+                        <div class="relative h-44">
+                            <img src="${v.image}" class="w-full h-full object-cover">
+                            <span class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 text-red-500 flex items-center justify-center shadow">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </span>
+                            <span class="absolute bottom-3 left-3 ${v.status === 'approved' ? 'bg-emerald-500 text-slate-950' : 'bg-amber-500 text-slate-950'} text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow">
                                 ${v.status === 'approved' ? t.statusApproved : t.statusPending}
+                            </span>
+                        </div>
+                        <div class="p-3.5 space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="text-base font-extrabold text-white">${v.price} ₼/gün</div>
+                                    <div class="text-xs text-slate-200 font-semibold">${v.district} q.</div>
+                                    <div class="text-[11px] text-slate-400">${v.roomsInfo || '5 otaqlı • 210 m²'}</div>
+                                    <div class="text-[10px] text-slate-500 mt-0.5">Bakı, bugün 12:04</div>
+                                </div>
+                                <i class="fa-solid fa-crown text-amber-400 text-sm"></i>
+                            </div>
+
+                            <!-- Быстрое изменение цены прямо в карточке -->
+                            <div class="flex items-center space-x-2 pt-1 border-t border-slate-800">
+                                <input type="number" id="price-edit-${v.id}" value="${v.price}" class="w-24 bg-slate-800 border border-slate-600 rounded-xl px-2.5 py-1.5 text-xs font-extrabold text-amber-400">
+                                <span class="text-[11px] text-slate-400">₼/gün</span>
+                                <button onclick="window.updateVillaPriceLive('${v.id}')" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-1.5 rounded-xl text-[11px] transition">
+                                    ${t.savePriceBtn}
+                                </button>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <button onclick="showToast('🔥 Premium reklam paketi aktivdir!')" class="flex-1 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 text-blue-300 font-extrabold py-2 rounded-xl text-xs transition">
+                                    Reklam et
+                                </button>
+                                <button onclick="window.selectVillaById('${v.id}'); switchTab('guest');" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="number" id="price-edit-${v.id}" value="${v.price}" class="w-28 bg-slate-800 border border-slate-600 rounded-xl px-3 py-1.5 text-xs font-extrabold text-amber-400">
-                        <span class="text-xs text-slate-400">AZN</span>
-                        <button onclick="window.updateVillaPriceLive('${v.id}')" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-2 rounded-xl text-[11px] transition">
-                            ${t.savePriceBtn}
-                        </button>
+                `).join('');
+            }
+
+            // 3. Рендер таблицы операций (Фото 3 и Фото 6)
+            const renderOpsHtml = (list) => list.map(op => `
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3 flex justify-between items-center gap-2">
+                    <div class="space-y-0.5 pr-2">
+                        <div class="text-[11px] font-bold text-blue-400 hover:underline cursor-pointer leading-snug" onclick="switchTab('guest')">${op.title}</div>
+                        <div class="text-[10px] text-slate-400">${op.service} • ${op.date}</div>
+                    </div>
+                    <div class="text-xs font-extrabold text-white shrink-0 flex items-center space-x-1.5">
+                        <span>${op.amount}</span>
+                        <i class="fa-solid fa-chevron-right text-[9px] text-slate-500"></i>
                     </div>
                 </div>
             `).join('');
 
-            // 3. Рендер Админ-панели (Ожидающие)
+            document.getElementById('cabinet-recent-ops').innerHTML = renderOpsHtml(operationsHistory.slice(0, 4));
+            document.getElementById('cabinet-full-history-list').innerHTML = renderOpsHtml(operationsHistory);
+
+            // 4. Рендер Админ-панели
             const pendingContainer = document.getElementById('admin-pending-list');
             if (pendingVillas.length === 0) {
                 pendingContainer.innerHTML = `<div class="text-xs text-slate-400 py-2">Hazırda təsdiq gözləyən villa yoxdur.</div>`;
             } else {
-                pendingContainer.innerHTML = pendingVillas.map(v => {
-                    const extraPhotos = (v.images && v.images.length > 1)
-                        ? `<div class="grid grid-cols-4 gap-1.5 mt-1.5">${v.images.slice(1).map(imgUrl => `<img src="${imgUrl}" class="h-14 w-full object-cover rounded-lg border border-slate-700">`).join('')}</div>`
-                        : '';
-                    return `
+                pendingContainer.innerHTML = pendingVillas.map(v => `
                     <div class="bg-slate-900 border border-amber-500/40 rounded-2xl p-3 space-y-2.5">
                         <img src="${v.image}" class="w-full h-36 object-cover rounded-xl">
-                        ${extraPhotos}
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <div class="text-xs font-extrabold text-white">${v.name}</div>
-                                <div class="text-[11px] text-amber-400 font-bold">Qiymət: ${v.price} ₼ | Qonaq: ${v.guests}</div>
-                                <div class="text-[11px] text-emerald-300 font-bold mt-0.5">📞 Sahibin nömrəsi: ${v.ownerPhone || 'Qeyd edilməyib'}</div>
-                                <div class="text-[10px] text-slate-400">${v.desc || ''} • ${v.plan || ''}</div>
-                            </div>
+                        <div>
+                            <div class="text-xs font-extrabold text-white">${v.name}</div>
+                            <div class="text-[11px] text-amber-400 font-bold">Qiymət: ${v.price} ₼ | Qonaq: ${v.guests}</div>
+                            <div class="text-[11px] text-emerald-300 font-bold mt-0.5">📞 Sahibin nömrəsi: ${v.ownerPhone || 'Qeyd edilməyib'}</div>
                         </div>
                         <div class="grid grid-cols-2 gap-2 pt-1">
                             <button onclick="window.approveVilla('${v.id}')" class="bg-emerald-500 text-slate-950 font-extrabold py-2 rounded-xl text-xs">
@@ -1109,11 +1452,9 @@
                                 ❌ Rədd et / Sil
                             </button>
                         </div>
-                    </div>`;
-                }).join('');
+                    </div>`).join('');
             }
 
-            // 4. Рендер Админ-панели (Одобренные)
             const approvedContainer = document.getElementById('admin-approved-list');
             approvedContainer.innerHTML = approvedVillas.map(v => `
                 <div class="bg-slate-900/90 border border-slate-700 rounded-2xl p-3 flex justify-between items-center">
@@ -1124,17 +1465,13 @@
                             <div class="text-[10px] text-amber-400 font-bold">${v.price} ₼/gün • 📞 ${v.ownerPhone || 'Partner'}</div>
                         </div>
                     </div>
-                    ${!v.id.startsWith('default-') ? `
-                    <button onclick="window.deleteVilla('${v.id}')" class="text-red-400 hover:text-red-300 text-xs font-bold px-2 py-1">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>` : ''}
                 </div>
             `).join('');
 
             calculateTotal();
         }
 
-        // БЕСШОВНАЯ ЗАГРУЗКА ФОТО С IPHONE (iOS) И ANDROID
+        // ЗАГРУЗКА ФОТО
         window.handlePhotoUpload = async function(event) {
             const files = Array.from(event.target.files || []).slice(0, 5);
             if (files.length === 0) return;
@@ -1159,17 +1496,14 @@
                             img.onload = () => {
                                 const width = img.width;
                                 const height = img.height;
-
                                 if (width < 250 || height < 250) {
                                     reject(new Error("too_small"));
                                     return;
                                 }
-
                                 const canvas = document.createElement('canvas');
                                 const maxDim = 900;
                                 let targetW = width;
                                 let targetH = height;
-
                                 if (width > height && width > maxDim) {
                                     targetW = maxDim;
                                     targetH = Math.round((height * maxDim) / width);
@@ -1177,12 +1511,10 @@
                                     targetH = maxDim;
                                     targetW = Math.round((width * maxDim) / height);
                                 }
-
                                 canvas.width = targetW;
                                 canvas.height = targetH;
                                 const ctx = canvas.getContext('2d');
                                 ctx.drawImage(img, 0, 0, targetW, targetH);
-
                                 resolve(canvas.toDataURL('image/jpeg', 0.72));
                             };
                             img.onerror = () => reject(new Error("corrupt"));
@@ -1220,18 +1552,18 @@
             statusBox.innerText = `${t.photoSuccessMsg} (${verifiedPhotosArray.length})`;
         };
 
-        // Отправка новой виллы в облако
+        // Добавление новой виллы
         window.publishVillaToCloud = async function() {
             const t = translations[currentLang];
             const district = document.getElementById('owner-villa-district').value;
-            const price = parseInt(document.getElementById('owner-villa-price').value) || 250;
-            const guests = parseInt(document.getElementById('owner-villa-guests').value) || 10;
-            const ownerPhone = document.getElementById('owner-villa-phone').value.trim() || "Qeyd edilməyib";
+            const price = parseInt(document.getElementById('owner-villa-price').value) || 150;
+            const guests = parseInt(document.getElementById('owner-villa-guests').value) || 12;
+            const ownerPhone = document.getElementById('owner-villa-phone').value.trim() || "055 350 78 87";
             const plan = document.getElementById('owner-ad-plan').value;
             const oxyWater = document.getElementById('owner-oxy-bonus').checked;
 
             const checkedAmenities = Array.from(document.querySelectorAll('.amen-check:checked')).map(cb => cb.value);
-            const desc = checkedAmenities.length > 0 ? checkedAmenities.join(' • ') : "Hovuz • Manqal • İstirahət";
+            const desc = checkedAmenities.length > 0 ? checkedAmenities.join(' • ') : "İsti hovuz • Manqal • İstirahət";
 
             if (verifiedPhotosArray.length === 0) {
                 showToast(t.photoLowResError);
@@ -1248,14 +1580,15 @@
                 district,
                 price,
                 guests,
+                roomsInfo: "5 otaqlı • 210 m²",
                 ownerPhone,
                 desc,
                 plan,
                 oxyWater,
                 image: verifiedPhotosArray[0],
                 images: verifiedPhotosArray,
-                isTop: plan.includes("VIP"),
-                status: "pending",
+                isTop: plan.includes("Premium"),
+                status: "approved",
                 createdAt: Date.now()
             };
 
@@ -1267,10 +1600,11 @@
                 renderAllViews();
             }
 
-            showToast(`✅ ${autoGeneratedName} yoxlamaya göndərildi! (PIN: 7887)`);
+            showToast(`✅ ${autoGeneratedName} əlavə olundu!`);
             verifiedPhotosArray = [];
             document.getElementById('photo-preview-wrapper').classList.add('hidden');
             document.getElementById('photo-check-status').classList.add('hidden');
+            openCabinetSubtab('ads');
         };
 
         // Живое обновление цены владельцем виллы
@@ -1294,7 +1628,6 @@
             showToast(t.priceSavedToast);
         };
 
-        // Одобрение виллы Администратором
         window.approveVilla = async function(villaId) {
             if (currentUser && db) {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'villas', villaId);
@@ -1304,10 +1637,9 @@
                 if (cv) cv.status = 'approved';
                 renderAllViews();
             }
-            showToast("✅ Villa təsdiqləndi və kataloqa əlavə olundu!");
+            showToast("✅ Villa təsdiqləndi!");
         };
 
-        // Удаление/отклонение виллы Администратором
         window.deleteVilla = async function(villaId) {
             if (currentUser && db) {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'villas', villaId);
@@ -1319,7 +1651,6 @@
             showToast("🗑 Villa silindi.");
         };
 
-        // Вход в Админ-панель (PIN: 7887)
         window.unlockAdminPanel = function() {
             const pin = document.getElementById('admin-pin-input').value.trim();
             if (pin === "7887") {
@@ -1331,7 +1662,6 @@
             }
         };
 
-        // Выбор виллы по ID
         window.selectVillaById = function(id) {
             const all = getAllVillas();
             const found = all.find(v => v.id === id);
@@ -1342,7 +1672,6 @@
             }
         };
 
-        // Фильтрация по районам
         window.filterVillas = function(district, btnElement) {
             currentDistrictFilter = district;
             document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -1352,7 +1681,6 @@
             renderAllViews();
         };
 
-        // Горящая скидка -30%
         window.applyHotDeal = function() {
             hotDealActive = !hotDealActive;
             const t = translations[currentLang];
@@ -1367,7 +1695,6 @@
             renderAllViews();
         };
 
-        // Переключение VIP-услуг
         window.toggleService = function(element, code, price) {
             element.classList.toggle('service-active');
             const idx = selectedServices.findIndex(s => s.code === code);
@@ -1376,14 +1703,13 @@
             calculateTotal();
         };
 
-        // Подсчёт суммы, на человека и 15% задатка
         window.calculateTotal = function() {
             const t = translations[currentLang];
             const nights = parseInt(document.getElementById('nights-count').value) || 2;
             const guests = parseInt(document.getElementById('guests-range').value) || 6;
             document.getElementById('guests-label').innerText = `${guests} ${t.personUnit}`;
 
-            const basePrice = selectedVilla ? selectedVilla.price : 250;
+            const basePrice = selectedVilla ? selectedVilla.price : 150;
             const effectiveNightPrice = hotDealActive ? Math.round(basePrice * 0.7) : basePrice;
             document.getElementById('selected-villa-price').innerText = `${effectiveNightPrice} ${t.perDay}`;
 
@@ -1399,7 +1725,6 @@
             return { total, perPerson, deposit15, nights, guests, effectiveNightPrice };
         };
 
-        // Переключение языков (AZ / RU / EN)
         window.setLanguage = function(lang) {
             currentLang = lang;
             const t = translations[lang];
@@ -1418,9 +1743,9 @@
             document.getElementById('t-pwa-banner').innerText = t.pwaBanner;
             document.getElementById('t-pwa-btn').innerText = t.pwaBtn;
             document.getElementById('t-nav-catalog').innerText = t.navCatalog;
+            document.getElementById('t-nav-cabinet').innerText = t.navCabinet;
             document.getElementById('t-nav-add').innerText = t.navAdd;
             document.getElementById('t-nav-pool').innerText = t.navPool;
-            document.getElementById('t-nav-admin').innerText = t.navAdmin;
             document.getElementById('t-hot-badge').innerText = t.hotBadge;
             document.getElementById('t-hot-desc').innerText = t.hotDesc;
             document.getElementById('hot-deal-btn').innerText = hotDealActive ? t.hotBtnActive : t.hotBtn;
@@ -1445,50 +1770,20 @@
             document.getElementById('t-total-lbl').innerText = t.totalLbl;
             document.getElementById('t-book-btn').innerText = t.bookBtn;
 
-            // Owner section translations
-            document.getElementById('t-owner-banner-title').innerText = t.ownerBannerTitle;
-            document.getElementById('t-owner-banner-desc').innerText = t.ownerBannerDesc;
-            document.getElementById('t-form-header').innerText = t.formHeader;
-            document.getElementById('t-lbl-district').innerText = t.lblDistrict;
-            document.getElementById('t-lbl-price').innerText = t.lblPrice;
-            document.getElementById('t-lbl-guests').innerText = t.lblGuests;
-            document.getElementById('t-lbl-phone').innerText = t.lblPhone;
-            document.getElementById('t-lbl-desc').innerText = t.lblDesc;
-            document.getElementById('t-amen-pool').innerText = t.amenPool;
-            document.getElementById('t-amen-bbq').innerText = t.amenBbq;
-            document.getElementById('t-amen-sauna').innerText = t.amenSauna;
-            document.getElementById('t-amen-terrace').innerText = t.amenTerrace;
-            document.getElementById('t-lbl-plan').innerText = t.lblPlan;
-            document.getElementById('t-lbl-photo').innerText = t.lblPhoto;
-            document.getElementById('t-upload-btn-text').innerText = t.uploadBtnText;
-            document.getElementById('t-upload-hint').innerText = t.uploadHint;
-            document.getElementById('t-oxy-check-label').innerHTML = t.oxyCheckLabel;
-            document.getElementById('t-submit-villa-btn').innerText = t.submitVillaBtn;
-            document.getElementById('t-my-villas-title').innerText = t.myVillasTitle;
-            document.getElementById('t-my-villas-desc').innerText = t.myVillasDesc;
-
-            // OXY section translations
-            document.getElementById('t-oxy-badge').innerText = t.oxyBadge;
-            document.getElementById('t-oxy-free').innerText = t.oxyFree;
-            document.getElementById('t-oxy-title').innerText = t.oxyTitle;
-            document.getElementById('t-oxy-subtitle').innerText = t.oxySubtitle;
-            document.getElementById('t-oxy-prod').innerText = t.oxyProd;
-            document.getElementById('t-oxy-prod-desc').innerText = t.oxyProdDesc;
-            document.getElementById('t-oxy-qty-lbl').innerText = t.oxyQtyLbl;
-            document.getElementById('t-oxy-order-btn').innerText = t.oxyOrderBtn;
-
             renderAllViews();
         };
 
-        // Переключение вкладок
+        // Переключение основных вкладок
         window.switchTab = function(tab) {
             document.getElementById('section-guest').classList.add('hidden');
+            document.getElementById('section-cabinet').classList.add('hidden');
             document.getElementById('section-add-villa').classList.add('hidden');
             document.getElementById('section-owner').classList.add('hidden');
             document.getElementById('section-admin').classList.add('hidden');
             document.getElementById('bottom-bar').classList.add('hidden');
 
             document.getElementById('tab-guest').className = "py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1";
+            document.getElementById('tab-cabinet').className = "py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1";
             document.getElementById('tab-add').className = "py-1.5 rounded-lg text-slate-300 hover:text-white transition-all text-center truncate px-1";
             document.getElementById('tab-owner').className = "py-1.5 rounded-lg text-cyan-400 hover:text-cyan-300 transition-all text-center truncate px-1";
 
@@ -1496,6 +1791,9 @@
                 document.getElementById('section-guest').classList.remove('hidden');
                 document.getElementById('bottom-bar').classList.remove('hidden');
                 document.getElementById('tab-guest').className = "py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1";
+            } else if (tab === 'cabinet') {
+                document.getElementById('section-cabinet').classList.remove('hidden');
+                document.getElementById('tab-cabinet').className = "py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1";
             } else if (tab === 'add-villa') {
                 document.getElementById('section-add-villa').classList.remove('hidden');
                 document.getElementById('tab-add').className = "py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold transition-all shadow text-center truncate px-1";
@@ -1508,13 +1806,11 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // Количество упаковок OXY POOL
         window.changeOxyQty = function(delta) {
             oxyQty = Math.max(1, oxyQty + delta);
             document.getElementById('oxy-qty').innerText = `${oxyQty}`;
         };
 
-        // Модальные окна
         function showWhatsAppModal(rawText) {
             document.getElementById('modal-message-preview').innerText = rawText;
             const encoded = encodeURIComponent(rawText);
@@ -1530,14 +1826,13 @@
             document.getElementById('pwa-modal').classList.remove('hidden');
         };
 
-        function showToast(msg) {
+        window.showToast = function(msg) {
             const box = document.getElementById('toast-box');
             document.getElementById('toast-text').innerText = msg;
             box.classList.remove('hidden');
             setTimeout(() => box.classList.add('hidden'), 3500);
-        }
+        };
 
-        // Отправка брони с 15% задатком на ваш WhatsApp (055 350 78 87)
         window.sendWhatsAppBooking = function() {
             const t = translations[currentLang];
             const { total, perPerson, deposit15, nights, guests, effectiveNightPrice } = calculateTotal();
@@ -1558,18 +1853,16 @@
             showWhatsAppModal(message);
         };
 
-        // Заказ таблеток хлора OXY POOL
         window.orderPoolCare = function() {
             const message = `Salam! OXY POOL xlor tabletləri sifariş etmək istəyirəm.\n\n📦 Miqdar: ${oxyQty} qablaşdırma\n🚚 Çatdırılma: Bakı və ətrafına pulsuz çatdırılma\n📞 Əlaqə: 055 350 78 87`;
             showWhatsAppModal(message);
         };
 
-        // Запуск при загрузке
         window.addEventListener('DOMContentLoaded', () => {
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             document.getElementById('checkin-date').valueAsDate = tomorrow;
-            setLanguage('az'); // Азербайджанский язык по умолчанию
+            setLanguage('az');
             initFirebase();
         });
     </script>
