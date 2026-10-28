@@ -43,6 +43,70 @@
     #villaMap{height:430px;border-radius:18px;z-index:1}.detail-modal{width:min(900px,100%)}.detail-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:130px 130px;gap:8px}.detail-gallery img{width:100%;height:100%;object-fit:cover;border-radius:10px;background:#e7ece7}.detail-gallery img:first-child{grid-row:span 2}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.calendar-day{padding:9px 2px;text-align:center;border-radius:8px;font-size:12px;background:#e6f4e9;color:#245c38}.calendar-day.unavailable{background:#f8e1df;color:#9d2f2b;text-decoration:line-through}.calendar-day.past{background:#f0f0ed;color:#a0a59f}.amenity-chip{font-size:12px;background:#edf4ee;color:#245c38;border-radius:999px;padding:6px 10px}
     @media(max-width:640px){.villa-img{height:190px}.modal{padding:19px}.hero-title{font-size:35px!important}.detail-gallery{grid-template-columns:1fr 1fr;grid-template-rows:120px 120px}.detail-gallery img:first-child{grid-column:span 2;grid-row:span 1}}
   </style>
+<style>
+/* KİRAYƏVİLLA — дизайн-апгрейд. Подключается ПОСЛЕ основного <style>. */
+html{scroll-behavior:smooth}
+body{-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+:focus-visible{outline:3px solid #d8b56d;outline-offset:2px;border-radius:8px}
+
+/* Шапка */
+header.sticky{backdrop-filter:blur(12px);background:#123b2bee!important;transition:box-shadow .25s}
+header.sticky.scrolled{box-shadow:0 6px 24px #0a1f1544}
+
+/* Hero */
+#homeSection>section:first-child{background:
+  radial-gradient(900px 420px at 85% 10%,#d8b56d33,transparent 60%),
+  linear-gradient(110deg,#0c261bf5,#123b2bcc),
+  url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=70') center/cover!important}
+.hero-title{text-wrap:balance;text-shadow:0 2px 24px #0006}
+
+/* Кнопки */
+.btn{border-radius:14px;box-shadow:0 1px 0 #ffffff22 inset}
+.btn:active{transform:scale(.97)}
+.btn-gold{box-shadow:0 6px 18px #d8b56d55}
+.btn-gold:hover{filter:brightness(1.06);transform:translateY(-1px)}
+
+/* Карточки */
+.card{border-radius:20px;transition:transform .25s,box-shadow .25s}
+article.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px #12301f22}
+article.card .villa-img{transition:transform .5s}
+article.card>button{overflow:hidden;display:block;width:100%}
+article.card:hover .villa-img{transform:scale(1.05)}
+article.card>button::after{content:"";position:absolute;inset:auto 0 0 0;height:70px;background:linear-gradient(transparent,#0008);pointer-events:none}
+article.card>button>span{z-index:2}
+
+/* Поля и фильтры */
+.field{border-radius:12px;transition:border-color .15s,box-shadow .15s}
+.field:hover{border-color:#a9bdae}
+
+/* Модальные окна */
+.modal-backdrop{backdrop-filter:blur(4px)}
+.modal{border-radius:24px;animation:modalIn .22s ease-out}
+@keyframes modalIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+
+/* Календарь */
+.calendar-day{border-radius:10px;transition:transform .12s}
+.calendar-day[role=button]:hover{transform:scale(1.08)}
+
+/* Скелетоны загрузки */
+.skeleton{background:linear-gradient(90deg,#e8ece6 25%,#f4f6f2 50%,#e8ece6 75%);background-size:200% 100%;animation:shimmer 1.3s infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+.skeleton-card{height:380px;border-radius:20px}
+
+/* Тост */
+.toast{border-radius:14px;background:#123b2b;border:1px solid #d8b56d55}
+
+/* Мобильные */
+@media(max-width:640px){
+  #listings{padding-top:44px}
+  .btn{padding:13px 16px}
+}
+.detail-gallery{grid-auto-rows:130px}
+@media(max-width:640px){.detail-gallery{grid-auto-rows:120px}}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
 </head>
 <body>
 <noscript><div style="padding:16px;background:#fbf0d9;text-align:center;font-weight:600">Saytın işləməsi üçün JavaScript lazımdır. / Для работы сайта нужен JavaScript.</div></noscript>
@@ -58,9 +122,7 @@
       <button class="nav-link" data-nav="account" onclick="showSection('account')" data-i18n="navAccount">Şəxsi kabinet</button>
     </nav>
     <div class="flex items-center gap-2">
-      <select id="languageSelect" class="rounded-lg px-2 py-2 text-sm font-bold bg-white" aria-label="Dil" onchange="setLanguage(this.value)">
-        <option value="az">AZ</option><option value="ru">RU</option>
-      </select>
+      <div id="languageSelect" class="flex items-center gap-1" role="group" aria-label="Language"></div>
       <button id="authButton" class="btn btn-gold text-sm" onclick="openAuth()"><i class="fa-regular fa-user mr-1"></i><span data-i18n="login">Daxil ol</span></button>
     </div>
   </div>
@@ -139,7 +201,7 @@
       <div class="md:col-span-2"><label class="block text-sm font-bold mb-2" data-i18n="phoneOwner">WhatsApp nömrəsi (sorğular bura gələcək) *</label><input id="villaPhone" class="field" type="tel" required autocomplete="tel" placeholder="+994 55 000 00 00"></div>
       <div class="md:col-span-2"><label class="block text-sm font-bold mb-2" data-i18n="description">Təsvir</label><textarea id="villaDescription" class="field" rows="4" maxlength="1500" placeholder="..."></textarea></div>
       <div class="md:col-span-2"><label class="block text-sm font-bold mb-3" data-i18n="amenities">İmkanlar</label><div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm"><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="pool"> <i class="fa-solid fa-water"></i><span data-i18n="pool">Hovuz</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="wifi"> <i class="fa-solid fa-wifi"></i><span>Wi-Fi</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="bbq"> <i class="fa-solid fa-fire-burner"></i><span data-i18n="bbq">Manqal</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="parking"> <i class="fa-solid fa-car"></i><span data-i18n="parking">Parkinq</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="sea"> <i class="fa-solid fa-umbrella-beach"></i><span data-i18n="sea">Dənizə yaxın</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="ac"> <i class="fa-solid fa-snowflake"></i><span data-i18n="ac">Kondisioner</span></label></div></div>
-      <div class="md:col-span-2"><label class="block text-sm font-bold mb-2" data-i18n="photos">Şəkillər (maksimum 5, hər biri 5 MB-dək)</label><input id="villaPhotos" type="file" class="field" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="photoPreview" class="flex flex-wrap gap-2 mt-3"></div><p class="text-xs mt-2" style="color:var(--muted)" data-i18n="photoNote">Şəkillər ölçüsü azaldıldıqdan sonra Supabase Storage-a yüklənir.</p></div>
+      <div class="md:col-span-2"><label class="block text-sm font-bold mb-2" data-i18n="photos">Şəkillər (minimum 4, maksimum 20; hamısını birlikdə seçin, hər biri 5 MB-dək)</label><input id="villaPhotos" type="file" class="field" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="photoPreview" class="flex flex-wrap gap-2 mt-3"></div><p class="text-xs mt-2" style="color:var(--muted)" data-i18n="photoNote">Şəkillər ölçüsü azaldıldıqdan sonra Supabase Storage-a yüklənir.</p></div>
       <div class="md:col-span-2 rounded-xl p-4 text-sm leading-6" style="background:#f3f5f0;color:#58665b"><i class="fa-solid fa-circle-info mr-2"></i><span data-i18n="storageNotice">Elan yoxlanıldıqdan sonra saytda görünəcək.</span></div>
       <div class="md:col-span-2 flex flex-wrap gap-3"><button id="saveListingBtn" class="btn btn-primary" type="submit"><i class="fa-solid fa-check mr-2"></i><span data-i18n="saveListing">Elanı yadda saxla</span></button><button class="btn btn-outline" type="button" onclick="showSection('home')" data-i18n="cancel">Ləğv et</button></div>
     </form>
@@ -190,26 +252,28 @@ let sbClient = null, sbAuthListenerRegistered = false, cloudEnabled = false, las
 const $ = id => document.getElementById(id);
 let language = 'az', currentUserEmail = '', currentUserUid = '', villas = [], pendingPhotos = [], bookingVilla = null, toastTimer;
 
+const L=(ru,az,en)=>language==='ru'?ru:language==='en'?en:az;
+const LOC=()=>({ru:'ru-RU',az:'az-AZ',en:'en-GB'})[language]||'az-AZ';
 function supabaseStatus(connected, message = '') {
   lastStatus = { ok: connected, message };
   const el = $('supabaseConnectionStatus');
   if (!el) return;
   if (connected) {
-    el.textContent = language === 'ru' ? 'Supabase подключён: объявления загружаются из базы.' : 'Supabase qoşuldu: elanlar bazadan yüklənir.';
+    el.textContent = L('Supabase подключён: объявления загружаются из базы.','Supabase qoşuldu: elanlar bazadan yüklənir.','Supabase connected: listings are loaded from the database.');
     el.style.color = '#24623d';
   } else {
-    el.textContent = message || (language === 'ru' ? 'Supabase пока не подключён. Проверьте настройки и SQL.' : 'Supabase hələ qoşulmayıb. Sazlamaları və SQL-i yoxlayın.');
+    el.textContent = message || (L('Supabase пока не подключён. Проверьте настройки и SQL.','Supabase hələ qoşulmayıb. Sazlamaları və SQL-i yoxlayın.','Supabase is not connected yet. Check the settings and SQL.'));
     el.style.color = '#a52b26';
   }
 }
 
 const translations = {
-  az:{navHome:'Ana səhifə',navAdd:'Elan yerləşdir',navAccount:'Şəxsi kabinet',login:'Daxil ol',logout:'Çıxış',heroBadge:'Azərbaycanda villa kirayəsi',heroTitle:'Xəyalınızdakı istirahətə<br>bir addım daha yaxın.',heroText:'Ailəvi istirahət, hovuzlu villalar və rahat seçim — sizə uyğun evi asanlıqla tapın.',browse:'Villalara bax',district:'Rayon',period:'Kirayə müddəti',rooms:'Otaq sayı',maxPrice:'Maksimum qiymət (₼)',search:'Axtar',allDistricts:'Rayonlar',priceShort:'Qiymət',priceMin:'Min.',priceMax:'Maks.',clearPrice:'Təmizlə',all:'Müddət',anyRooms:'Otaq sayı',chooseDistrict:'Rayon seçin',mapLabel:'Xəritə',curated:'Seçilmiş təkliflər',listingTitle:'Kirayə üçün villalar',addVilla:'Villa əlavə et',noResults:'Axtarışa uyğun villa tapılmadı.',tryFilters:'Filtrləri dəyişib yenidən yoxlayın.',benefit1:'Rahat seçim',benefit1Text:'Əsas məlumatları müqayisə edib sizə uyğun villanı seçin.',benefit2:'Şəkilli elanlar',benefit2Text:'Villanızı şəkillərlə təqdim edin və elanınızı idarə edin.',benefit3:'Birbaşa əlaqə',benefit3Text:'Rezervasiya sorğusunu WhatsApp vasitəsilə göndərin.',yourSpace:'Sizin məkanınız',accountTitle:'Şəxsi kabinet',loginNeeded:'Elanlarınızı görmək üçün daxil olun',myListings:'Mənim elanlarım',accountEmail:'Hesab e-poçtu',accountStatus:'Hesab statusu',demoStatus:'Supabase hesabı',yourAds:'Yerləşdirdiyim elanlar',backHome:'Ana səhifəyə qayıt',publishLabel:'Elan yerləşdir',publishTitle:'Villanızı təqdim edin',publishHelp:'Məlumatları doldurun. Elan Supabase məlumat bazasında saxlanacaq.',villaName:'Elanın adı *',price:'Qiymət (₼) *',daily:'Günlük',monthly:'Aylıq',guests:'Qonaq sayı',phoneOwner:'WhatsApp nömrəsi (sorğular bura gələcək) *',description:'Təsvir',photos:'Şəkillər (maksimum 5, hər biri 5 MB-dək)',photoNote:'Şəkillər ölçüsü azaldıldıqdan sonra Supabase Storage-a yüklənir.',storageNotice:'Elan yoxlanıldıqdan sonra saytda görünəcək. Bu müddətdə onu yalnız siz kabinetdə görürsünüz.',saveListing:'Elanı yadda saxla',savingListing:'Yüklənir...',cancel:'Ləğv et',footerText:'Azərbaycanda rahat istirahət üçün villa axtarışı.',loginTitle:'Şəxsi kabinetə giriş',loginDesc:'E-poçtunuzu daxil edin.',email:'E-poçt',passwordLabel:'Şifrə',supabaseAuthNotice:'Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.',register:'Hesab yarat',continue:'Daxil ol',bookingRequest:'Rezervasiya sorğusu',booking:'Rezervasiya',checkIn:'Giriş tarixi',checkOut:'Çıxış tarixi',yourName:'Adınız',phone:'Telefon',estimatedTotal:'Təxmini məbləğ',bookingNote:'Bu, yalnız sorğudur; rezervasiya təsdiqi və ödəniş avtomatik həyata keçirilmir.',sendRequest:'WhatsApp-da sorğu göndər',dailyRate:'günlük',monthlyRate:'aylıq',perDay:'gün',perMonth:'ay',roomsLabel:'otaq',guestsLabel:'qonaq',details:'Ətraflı',reserve:'Sorğu göndər',delete:'Sil',pending:'Yoxlanılır',emptyMine:'Hələ elan yerləşdirməmisiniz.',saved:'Elan yadda saxlanıldı.',savedPending:'Elan göndərildi. Yoxlanıldıqdan sonra saytda görünəcək.',deleted:'Elan silindi.',needLogin:'Davam etmək üçün əvvəlcə e-poçtla daxil olun.',badDates:'Çıxış tarixi giriş tarixindən sonra olmalıdır.',badPhone:'WhatsApp nömrəsini düzgün daxil edin (məs. +994 55 000 00 00).',imageError:'Şəkil yüklənmədi. JPG, PNG, WEBP və ya GIF seçin (hər biri maksimum 5 MB).',loginToAdd:'Elan yerləşdirmək üçün e-poçtla daxil olun.',listingCount:'elan tapıldı',mapTitle:'Xəritədə villalar',mapText:'Novxanı, Mərdəkan, Bilgəh və digər ərazilərdə elanlara baxın.',mapNotice:'Xəritədəki nişanlar rayonun təxmini mərkəzini göstərir. Dəqiq ünvan elan sahibi tərəfindən əlavə edilməlidir.',amenities:'İmkanlar',pool:'Hovuz',bbq:'Manqal',parking:'Parkinq',sea:'Dənizə yaxın',ac:'Kondisioner',villaDetails:'Villa haqqında',availability:'Mövcudluq təqvimi',available:'Mövcuddur',unavailable:'Tutulub',priceNote:'Qiymət elan sahibinin göstərdiyi məbləğdir.',sortNewest:'Ən yenilər',sortPriceAsc:'Qiymət: ucuzdan bahaya',sortPriceDesc:'Qiymət: bahadan ucuza',noPhotos:'Şəkil əlavə edilməyib',showVillas:'Villaları göstər'},
-  ru:{navHome:'Главная',navAdd:'Разместить объявление',navAccount:'Личный кабинет',login:'Войти',logout:'Выйти',heroBadge:'Аренда вилл в Азербайджане',heroTitle:'Ваш идеальный отдых<br>стал ещё ближе.',heroText:'Семейный отдых, виллы с бассейном и удобный поиск — найдите подходящий дом.',browse:'Смотреть виллы',district:'Район',period:'Срок аренды',rooms:'Количество комнат',maxPrice:'Максимальная цена (₼)',search:'Найти',allDistricts:'Районы',priceShort:'Цена',priceMin:'От',priceMax:'До',clearPrice:'Сбросить',all:'Срок',anyRooms:'Комнаты',chooseDistrict:'Выберите район',mapLabel:'Карта',curated:'Подборка предложений',listingTitle:'Виллы в аренду',addVilla:'Добавить виллу',noResults:'Подходящих вилл не найдено.',tryFilters:'Измените фильтры и попробуйте снова.',benefit1:'Удобный выбор',benefit1Text:'Сравните основные данные и выберите подходящую виллу.',benefit2:'Объявления с фото',benefit2Text:'Добавьте фотографии виллы и управляйте объявлением.',benefit3:'Прямая связь',benefit3Text:'Отправьте запрос на бронирование через WhatsApp.',yourSpace:'Ваш профиль',accountTitle:'Личный кабинет',loginNeeded:'Войдите, чтобы увидеть свои объявления',myListings:'Мои объявления',accountEmail:'Электронная почта',accountStatus:'Статус аккаунта',demoStatus:'Аккаунт Supabase',yourAds:'Мои объявления',backHome:'Вернуться на главную',publishLabel:'Размещение объявления',publishTitle:'Расскажите о своей вилле',publishHelp:'Заполните данные. Объявление сохранится в Supabase.',villaName:'Название объявления *',price:'Цена (₼) *',daily:'Посуточно',monthly:'Помесячно',guests:'Количество гостей',phoneOwner:'Номер WhatsApp (сюда придут запросы) *',description:'Описание',photos:'Фотографии (до 5, каждая до 5 МБ)',photoNote:'Фотографии уменьшаются и загружаются в Supabase Storage.',storageNotice:'Объявление появится на сайте после проверки. Пока вы видите его только в личном кабинете.',saveListing:'Сохранить объявление',savingListing:'Загрузка...',cancel:'Отмена',footerText:'Поиск вилл для комфортного отдыха в Азербайджане.',loginTitle:'Вход в личный кабинет',loginDesc:'Введите адрес электронной почты.',email:'Электронная почта',passwordLabel:'Пароль',supabaseAuthNotice:'Безопасный вход через Supabase. Если вы впервые здесь, создайте аккаунт.',register:'Создать аккаунт',continue:'Войти',bookingRequest:'Запрос на бронирование',booking:'Бронирование',checkIn:'Дата заезда',checkOut:'Дата выезда',yourName:'Ваше имя',phone:'Телефон',estimatedTotal:'Примерная сумма',bookingNote:'Это только запрос; бронирование и оплата автоматически не подтверждаются.',sendRequest:'Отправить запрос в WhatsApp',dailyRate:'в сутки',monthlyRate:'в месяц',perDay:'сут.',perMonth:'мес.',roomsLabel:'комнат',guestsLabel:'гостей',details:'Подробнее',reserve:'Отправить запрос',delete:'Удалить',pending:'На проверке',emptyMine:'Вы ещё не размещали объявления.',saved:'Объявление сохранено.',savedPending:'Объявление отправлено. Оно появится на сайте после проверки.',deleted:'Объявление удалено.',needLogin:'Сначала войдите по электронной почте.',badDates:'Дата выезда должна быть позже даты заезда.',badPhone:'Введите корректный номер WhatsApp (например, +994 55 000 00 00).',imageError:'Не удалось загрузить фото. Выберите JPG, PNG, WEBP или GIF (до 5 МБ каждое).',loginToAdd:'Чтобы разместить объявление, войдите по электронной почте.',listingCount:'объявлений найдено',mapTitle:'Виллы на карте',mapText:'Смотрите объявления в Новханы, Мардакяне, Бильгя и других районах.',mapNotice:'Маркеры показывают примерный центр района. Точный адрес должен добавить владелец объявления.',amenities:'Удобства',pool:'Бассейн',bbq:'Мангал',parking:'Парковка',sea:'Рядом с морем',ac:'Кондиционер',villaDetails:'О вилле',availability:'Календарь доступности',available:'Свободно',unavailable:'Занято',priceNote:'Указана цена, установленная владельцем объявления.',sortNewest:'Сначала новые',sortPriceAsc:'Цена: сначала дешевле',sortPriceDesc:'Цена: сначала дороже',noPhotos:'Фотографии не добавлены',showVillas:'Показать виллы'}
+  az:{navHome:'Ana səhifə',navAdd:'Elan yerləşdir',navAccount:'Şəxsi kabinet',login:'Daxil ol',logout:'Çıxış',heroBadge:'Azərbaycanda villa kirayəsi',heroTitle:'Xəyalınızdakı istirahətə<br>bir addım daha yaxın.',heroText:'Ailəvi istirahət, hovuzlu villalar və rahat seçim — sizə uyğun evi asanlıqla tapın.',browse:'Villalara bax',district:'Rayon',period:'Kirayə müddəti',rooms:'Otaq sayı',maxPrice:'Maksimum qiymət (₼)',search:'Axtar',allDistricts:'Rayonlar',priceShort:'Qiymət',priceMin:'Min.',priceMax:'Maks.',clearPrice:'Təmizlə',all:'Müddət',anyRooms:'Otaq sayı',chooseDistrict:'Rayon seçin',mapLabel:'Xəritə',curated:'Seçilmiş təkliflər',listingTitle:'Kirayə üçün villalar',addVilla:'Villa əlavə et',noResults:'Axtarışa uyğun villa tapılmadı.',tryFilters:'Filtrləri dəyişib yenidən yoxlayın.',benefit1:'Rahat seçim',benefit1Text:'Əsas məlumatları müqayisə edib sizə uyğun villanı seçin.',benefit2:'Şəkilli elanlar',benefit2Text:'Villanızı şəkillərlə təqdim edin və elanınızı idarə edin.',benefit3:'Birbaşa əlaqə',benefit3Text:'Rezervasiya sorğusunu WhatsApp vasitəsilə göndərin.',yourSpace:'Sizin məkanınız',accountTitle:'Şəxsi kabinet',loginNeeded:'Elanlarınızı görmək üçün daxil olun',myListings:'Mənim elanlarım',accountEmail:'Hesab e-poçtu',accountStatus:'Hesab statusu',demoStatus:'Supabase hesabı',yourAds:'Yerləşdirdiyim elanlar',backHome:'Ana səhifəyə qayıt',publishLabel:'Elan yerləşdir',publishTitle:'Villanızı təqdim edin',publishHelp:'Məlumatları doldurun. Elan Supabase məlumat bazasında saxlanacaq.',villaName:'Elanın adı *',price:'Qiymət (₼) *',daily:'Günlük',monthly:'Aylıq',guests:'Qonaq sayı',phoneOwner:'WhatsApp nömrəsi (sorğular bura gələcək) *',description:'Təsvir',photos:'Şəkillər (minimum 4, maksimum 20; hamısını birlikdə seçin, hər biri 5 MB-dək)',photoNote:'Şəkillər ölçüsü azaldıldıqdan sonra Supabase Storage-a yüklənir.',storageNotice:'Elan yoxlanıldıqdan sonra saytda görünəcək. Bu müddətdə onu yalnız siz kabinetdə görürsünüz.',saveListing:'Elanı yadda saxla',savingListing:'Yüklənir...',cancel:'Ləğv et',footerText:'Azərbaycanda rahat istirahət üçün villa axtarışı.',loginTitle:'Şəxsi kabinetə giriş',loginDesc:'E-poçtunuzu daxil edin.',email:'E-poçt',passwordLabel:'Şifrə',supabaseAuthNotice:'Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.',register:'Hesab yarat',continue:'Daxil ol',bookingRequest:'Rezervasiya sorğusu',booking:'Rezervasiya',checkIn:'Giriş tarixi',checkOut:'Çıxış tarixi',yourName:'Adınız',phone:'Telefon',estimatedTotal:'Təxmini məbləğ',bookingNote:'Bu, yalnız sorğudur; rezervasiya təsdiqi və ödəniş avtomatik həyata keçirilmir.',sendRequest:'WhatsApp-da sorğu göndər',dailyRate:'günlük',monthlyRate:'aylıq',perDay:'gün',perMonth:'ay',roomsLabel:'otaq',guestsLabel:'qonaq',details:'Ətraflı',reserve:'Sorğu göndər',delete:'Sil',pending:'Yoxlanılır',emptyMine:'Hələ elan yerləşdirməmisiniz.',saved:'Elan yadda saxlanıldı.',savedPending:'Elan göndərildi. Yoxlanıldıqdan sonra saytda görünəcək.',deleted:'Elan silindi.',needLogin:'Davam etmək üçün əvvəlcə e-poçtla daxil olun.',badDates:'Çıxış tarixi giriş tarixindən sonra olmalıdır.',badPhone:'WhatsApp nömrəsini düzgün daxil edin (məs. +994 55 000 00 00).',imageError:'Şəkil yüklənmədi. JPG, PNG, WEBP və ya GIF seçin (hər biri maksimum 5 MB).',loginToAdd:'Elan yerləşdirmək üçün e-poçtla daxil olun.',listingCount:'elan tapıldı',mapTitle:'Xəritədə villalar',mapText:'Novxanı, Mərdəkan, Bilgəh və digər ərazilərdə elanlara baxın.',mapNotice:'Xəritədəki nişanlar rayonun təxmini mərkəzini göstərir. Dəqiq ünvan elan sahibi tərəfindən əlavə edilməlidir.',amenities:'İmkanlar',pool:'Hovuz',bbq:'Manqal',parking:'Parkinq',sea:'Dənizə yaxın',ac:'Kondisioner',villaDetails:'Villa haqqında',availability:'Mövcudluq təqvimi',available:'Mövcuddur',unavailable:'Tutulub',priceNote:'Qiymət elan sahibinin göstərdiyi məbləğdir.',sortNewest:'Ən yenilər',sortPriceAsc:'Qiymət: ucuzdan bahaya',sortPriceDesc:'Qiymət: bahadan ucuza',noPhotos:'Şəkil əlavə edilməyib',showVillas:'Villaları göstər'},
+  ru:{navHome:'Главная',navAdd:'Разместить объявление',navAccount:'Личный кабинет',login:'Войти',logout:'Выйти',heroBadge:'Аренда вилл в Азербайджане',heroTitle:'Ваш идеальный отдых<br>стал ещё ближе.',heroText:'Семейный отдых, виллы с бассейном и удобный поиск — найдите подходящий дом.',browse:'Смотреть виллы',district:'Район',period:'Срок аренды',rooms:'Количество комнат',maxPrice:'Максимальная цена (₼)',search:'Найти',allDistricts:'Районы',priceShort:'Цена',priceMin:'От',priceMax:'До',clearPrice:'Сбросить',all:'Срок',anyRooms:'Комнаты',chooseDistrict:'Выберите район',mapLabel:'Карта',curated:'Подборка предложений',listingTitle:'Виллы в аренду',addVilla:'Добавить виллу',noResults:'Подходящих вилл не найдено.',tryFilters:'Измените фильтры и попробуйте снова.',benefit1:'Удобный выбор',benefit1Text:'Сравните основные данные и выберите подходящую виллу.',benefit2:'Объявления с фото',benefit2Text:'Добавьте фотографии виллы и управляйте объявлением.',benefit3:'Прямая связь',benefit3Text:'Отправьте запрос на бронирование через WhatsApp.',yourSpace:'Ваш профиль',accountTitle:'Личный кабинет',loginNeeded:'Войдите, чтобы увидеть свои объявления',myListings:'Мои объявления',accountEmail:'Электронная почта',accountStatus:'Статус аккаунта',demoStatus:'Аккаунт Supabase',yourAds:'Мои объявления',backHome:'Вернуться на главную',publishLabel:'Размещение объявления',publishTitle:'Расскажите о своей вилле',publishHelp:'Заполните данные. Объявление сохранится в Supabase.',villaName:'Название объявления *',price:'Цена (₼) *',daily:'Посуточно',monthly:'Помесячно',guests:'Количество гостей',phoneOwner:'Номер WhatsApp (сюда придут запросы) *',description:'Описание',photos:'Фотографии (минимум 4, максимум 20; выберите все сразу, каждая до 5 МБ)',photoNote:'Фотографии уменьшаются и загружаются в Supabase Storage.',storageNotice:'Объявление появится на сайте после проверки. Пока вы видите его только в личном кабинете.',saveListing:'Сохранить объявление',savingListing:'Загрузка...',cancel:'Отмена',footerText:'Поиск вилл для комфортного отдыха в Азербайджане.',loginTitle:'Вход в личный кабинет',loginDesc:'Введите адрес электронной почты.',email:'Электронная почта',passwordLabel:'Пароль',supabaseAuthNotice:'Безопасный вход через Supabase. Если вы впервые здесь, создайте аккаунт.',register:'Создать аккаунт',continue:'Войти',bookingRequest:'Запрос на бронирование',booking:'Бронирование',checkIn:'Дата заезда',checkOut:'Дата выезда',yourName:'Ваше имя',phone:'Телефон',estimatedTotal:'Примерная сумма',bookingNote:'Это только запрос; бронирование и оплата автоматически не подтверждаются.',sendRequest:'Отправить запрос в WhatsApp',dailyRate:'в сутки',monthlyRate:'в месяц',perDay:'сут.',perMonth:'мес.',roomsLabel:'комнат',guestsLabel:'гостей',details:'Подробнее',reserve:'Отправить запрос',delete:'Удалить',pending:'На проверке',emptyMine:'Вы ещё не размещали объявления.',saved:'Объявление сохранено.',savedPending:'Объявление отправлено. Оно появится на сайте после проверки.',deleted:'Объявление удалено.',needLogin:'Сначала войдите по электронной почте.',badDates:'Дата выезда должна быть позже даты заезда.',badPhone:'Введите корректный номер WhatsApp (например, +994 55 000 00 00).',imageError:'Не удалось загрузить фото. Выберите JPG, PNG, WEBP или GIF (до 5 МБ каждое).',loginToAdd:'Чтобы разместить объявление, войдите по электронной почте.',listingCount:'объявлений найдено',mapTitle:'Виллы на карте',mapText:'Смотрите объявления в Новханы, Мардакяне, Бильгя и других районах.',mapNotice:'Маркеры показывают примерный центр района. Точный адрес должен добавить владелец объявления.',amenities:'Удобства',pool:'Бассейн',bbq:'Мангал',parking:'Парковка',sea:'Рядом с морем',ac:'Кондиционер',villaDetails:'О вилле',availability:'Календарь доступности',available:'Свободно',unavailable:'Занято',priceNote:'Указана цена, установленная владельцем объявления.',sortNewest:'Сначала новые',sortPriceAsc:'Цена: сначала дешевле',sortPriceDesc:'Цена: сначала дороже',noPhotos:'Фотографии не добавлены',showVillas:'Показать виллы'}
 };
 function t(key){return (translations[language]&&translations[language][key])||translations.az[key]||key}
 function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function money(value){return new Intl.NumberFormat(language==='ru'?'ru-RU':'az-AZ',{maximumFractionDigits:0}).format(Number(value)||0)+' ₼'}
+function money(value){return new Intl.NumberFormat(LOC(),{maximumFractionDigits:0}).format(Number(value)||0)+' ₼'}
 function perUnit(period){return period==='monthly'?t('perMonth'):t('perDay')}
 function waNumber(raw){
   let d=String(raw||'').replace(/\D/g,'');
@@ -261,11 +325,16 @@ window.addEventListener('popstate',e=>{
 });
 function openAuth(){$('authPassword').type='password';$('togglePassword').innerHTML='<i class="fa-regular fa-eye"></i>';openModal('authModal');setTimeout(()=>$('authEmail').focus(),100)}
 function setLanguage(value){
-  language=value==='ru'?'ru':'az';document.documentElement.lang=language;$('languageSelect').value=language;
+  language=['az','ru','en'].includes(value)?value:'az';document.documentElement.lang=language;renderLangButtons();
   document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(translations[language][key])el.innerHTML=translations[language][key]});
   const sort=$('sortListings');sort.options[0].text=t('sortNewest');sort.options[1].text=t('sortPriceAsc');sort.options[2].text=t('sortPriceDesc');
   updateAuthButton();if(lastStatus.ok!==null)supabaseStatus(lastStatus.ok,lastStatus.message);
   renderListings();renderAccount();if(bookingVilla)updateBookingInfo();if(detailVilla&&$('detailModal').classList.contains('show'))openVillaDetails(detailVilla.id,true);
+}
+function renderLangButtons(){
+  const box=$('languageSelect');
+  if(!box)return;
+  box.innerHTML=['az','ru','en'].filter(l=>l!==language).map(l=>`<button type="button" class="rounded-lg px-3 py-2 text-sm font-bold bg-white" style="color:var(--green)" onclick="setLanguage('${l}')" aria-label="${l.toUpperCase()}">${l.toUpperCase()}</button>`).join('');
 }
 function updateAuthButton(){
   const btn=$('authButton');
@@ -341,7 +410,7 @@ function openVillaDetails(id,keepMonth){
   $('detailLocation').innerHTML=`<i class="fa-solid fa-location-dot mr-1"></i>${escapeHTML(detailVilla.district)} · ${escapeHTML(detailVilla.rooms)} ${escapeHTML(t('roomsLabel'))} · ${escapeHTML(detailVilla.guests||'—')} ${escapeHTML(t('guestsLabel'))}`;
   $('detailDescription').textContent=detailVilla.description||'';
   $('detailPrice').textContent=money(detailVilla.price)+' / '+(detailVilla.period==='monthly'?t('monthlyRate'):t('dailyRate'));
-  const photos=(detailVilla.photos||[]).slice(0,5);
+  const photos=(detailVilla.photos||[]).slice(0,20);
   $('detailGallery').innerHTML=photos.length?photos.map((src,i)=>`<img src="${escapeHTML(src)}" alt="${escapeHTML(detailVilla.title)} — ${i+1}" loading="lazy">`).join(''):`<div class="flex items-center justify-center rounded-xl" style="grid-column:1/-1;grid-row:1/-1;background:#edf1ec;min-height:180px">${escapeHTML(t('noPhotos'))}</div>`;
   $('detailAmenities').innerHTML=(detailVilla.amenities||[]).length?detailVilla.amenities.map(a=>`<span class="amenity-chip"><i class="fa-solid fa-check mr-1"></i>${escapeHTML(amenityLabel(a))}</span>`).join(''):`<span class="text-sm" style="color:var(--muted)">—</span>`;
   if(!keepMonth)calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
@@ -352,15 +421,15 @@ function isOwner(v){return !!v&&!!currentUserUid&&v.ownerUid===currentUserUid}
 function renderAvailabilityCalendar(){
   if(!detailVilla)return;
   const y=calendarMonth.getFullYear(),m=calendarMonth.getMonth();
-  $('calendarMonthLabel').textContent=new Intl.DateTimeFormat(language==='ru'?'ru-RU':'az-AZ',{month:'long',year:'numeric'}).format(calendarMonth);
-  const weekdays=language==='ru'?['Пн','Вт','Ср','Чт','Пт','Сб','Вс']:['B.e.','Ç.a.','Ç.','C.a.','C.','Ş.','B.'];
+  $('calendarMonthLabel').textContent=new Intl.DateTimeFormat(LOC(),{month:'long',year:'numeric'}).format(calendarMonth);
+  const weekdays=({ru:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],az:['B.e.','Ç.a.','Ç.','C.a.','C.','Ş.','B.'],en:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']})[language]||['B.e.','Ç.a.','Ç.','C.a.','C.','Ş.','B.'];
   let html=weekdays.map(d=>`<div class="text-center text-xs font-bold py-2" style="color:var(--muted)">${d}</div>`).join('');
   const offset=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate(),today=new Date();today.setHours(0,0,0,0);
   const blocked=new Set(detailVilla.unavailableDates||[]);
   for(let i=0;i<offset;i++)html+='<div></div>';
   for(let d=1;d<=days;d++){
     const date=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,past=new Date(y,m,d)<today,unavailable=blocked.has(date),canEdit=isOwner(detailVilla)&&!past;
-    const title=canEdit?(language==='ru'?'Нажмите, чтобы изменить доступность':'Mövcudluğu dəyişmək üçün klikləyin'):(unavailable?t('unavailable'):past?'':t('available'));
+    const title=canEdit?(L('Нажмите, чтобы изменить доступность','Mövcudluğu dəyişmək üçün klikləyin','Click to change availability')):(unavailable?t('unavailable'):past?'':t('available'));
     html+=`<div class="calendar-day ${unavailable?'unavailable':past?'past':''}" title="${escapeHTML(title)}" ${canEdit?`role="button" tabindex="0" style="cursor:pointer" onclick="toggleUnavailableDate('${date}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleUnavailableDate('${date}')}"`:''}>${d}</div>`;
   }
   $('availabilityCalendar').innerHTML=`<div class="calendar-grid">${html}</div>`;
@@ -434,26 +503,26 @@ function compressImage(file){return new Promise((resolve,reject)=>{const reader=
 $('villaPhotos').addEventListener('change',async e=>{
   const files=Array.from(e.target.files||[]);
   pendingPhotos=[];$('photoPreview').innerHTML='';
-  if(files.length>5||files.some(f=>!f.type.startsWith('image/')||f.size>5*1024*1024)){e.target.value='';showToast(t('imageError'));return}
+  if(files.length>20||files.some(f=>!f.type.startsWith('image/')||f.size>5*1024*1024)){e.target.value='';showToast(t('imageError'));return}
   try{
-    pendingPhotos=await Promise.all(files.map(compressImage));
-    $('photoPreview').innerHTML=pendingPhotos.map((src,i)=>`<div class="relative"><img class="preview-thumb" src="${src}" alt="photo ${i+1}"><span class="absolute -top-1 -right-1 bg-white rounded-full px-1 text-xs">${i+1}</span></div>`).join('');
+    for(const f of files)pendingPhotos.push(await compressImage(f));
+    $('photoPreview').innerHTML=pendingPhotos.map((src,i)=>`<div class="relative"><img class="preview-thumb" src="${src}" alt="photo ${i+1}"><span class="absolute -top-1 -right-1 bg-white rounded-full px-1 text-xs">${i+1}</span></div>`).join('')+`<div class="w-full text-xs font-bold" style="color:${pendingPhotos.length<4?'#a52b26':'#24623d'}">${pendingPhotos.length} / 20</div>`;
   }catch(err){pendingPhotos=[];e.target.value='';showToast(t('imageError'))}
 });
 
 /* ===== Supabase ===== */
 function supabaseErrorText(err){
   const msg=String(err&&(err.message||err.details||err.hint)||err||'');
-  if(/row-level security|permission denied|not allowed/i.test(msg))return language==='ru'?'Доступ ограничен правилами Supabase. Выполните файл supabase_setup.sql в SQL Editor.':'Supabase giriş qaydaları məhdudlaşdırdı. supabase_setup.sql faylını SQL Editor-da icra edin.';
-  if(/column .* does not exist|schema cache|relation .* does not exist/i.test(msg))return language==='ru'?'Сначала выполните файл supabase_setup.sql в SQL Editor.':'Əvvəlcə supabase_setup.sql faylını SQL Editor-da icra edin.';
-  return (language==='ru'?'Ошибка Supabase: ':'Supabase xətası: ')+msg;
+  if(/row-level security|permission denied|not allowed/i.test(msg))return L('Доступ ограничен правилами Supabase. Выполните файл supabase_setup.sql в SQL Editor.','Supabase giriş qaydaları məhdudlaşdırdı. supabase_setup.sql faylını SQL Editor-da icra edin.','Access is restricted by Supabase rules. Run supabase_setup.sql in the SQL Editor.');
+  if(/column .* does not exist|schema cache|relation .* does not exist/i.test(msg))return L('Сначала выполните файл supabase_setup.sql в SQL Editor.','Əvvəlcə supabase_setup.sql faylını SQL Editor-da icra edin.','First run supabase_setup.sql in the SQL Editor.');
+  return (L('Ошибка Supabase: ','Supabase xətası: ','Supabase error: '))+msg;
 }
 function dateFromDb(v){return String(v||'').slice(0,10)}
 function normalizeRentType(v){const s=String(v||'').toLowerCase();return (s.includes('month')||s.includes('aylıq')||s.includes('ayliq')||s.includes('месяц'))?'monthly':'daily'}
 function mapVillaRow(row){
   const ownerUid=row.owner_id?String(row.owner_id):'';
   return {
-    id:String(row.id),title:String(row.title||row.location||(language==='ru'?'Вилла':'Villa')),district:String(row.district||row.location||'Digər'),
+    id:String(row.id),title:String(row.title||row.location||(L('Вилла','Villa','Villa'))),district:String(row.district||row.location||'Digər'),
     price:Number(row.price||0),period:normalizeRentType(row.rent_type),rooms:Number(row.rooms||1),guests:Number(row.guests||1),
     description:String(row.description||''),phone:String(row.phone||''),
     photos:Array.isArray(row.photos)?row.photos.filter(x=>typeof x==='string'&&x):[],
@@ -505,37 +574,37 @@ async function initSupabaseApp(){
     }
   }catch(err){
     console.error('Supabase initialization failed:',err);
-    supabaseStatus(false,language==='ru'?'Не удалось подключиться. Проверьте интернет и настройки Supabase.':'Qoşulmaq alınmadı. İnterneti və Supabase sazlamalarını yoxlayın.');
+    supabaseStatus(false,L('Не удалось подключиться. Проверьте интернет и настройки Supabase.','Qoşulmaq alınmadı. İnterneti və Supabase sazlamalarını yoxlayın.','Could not connect. Check your internet and Supabase settings.'));
     showToast(supabaseErrorText(err));
   }
 }
 
 $('authForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  if(!sbClient){showToast(language==='ru'?'Supabase ещё не подключён.':'Supabase hələ qoşulmayıb.');return}
+  if(!sbClient){showToast(L('Supabase ещё не подключён.','Supabase hələ qoşulmayıb.','Supabase is not connected yet.'));return}
   const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;
   try{
     const {error}=await sbClient.auth.signInWithPassword({email,password});
     if(error)throw error;
     closeModal('authModal');
-    showToast(language==='ru'?'Вход выполнен.':'Uğurla daxil oldunuz.');
+    showToast(L('Вход выполнен.','Uğurla daxil oldunuz.','Signed in.'));
   }catch(err){
     console.error('Sign in failed:',err);
-    showToast(language==='ru'?'Не удалось войти. Проверьте email и пароль (и подтверждение почты).':'Giriş alınmadı. E-poçt və şifrəni (və e-poçt təsdiqini) yoxlayın.');
+    showToast(L('Не удалось войти. Проверьте email и пароль (и подтверждение почты).','Giriş alınmadı. E-poçt və şifrəni (və e-poçt təsdiqini) yoxlayın.','Could not sign in. Check your email and password (and email confirmation).'));
   }
 });
 async function registerAccount(){
-  if(!sbClient){showToast(language==='ru'?'Supabase ещё не подключён.':'Supabase hələ qoşulmayıb.');return}
+  if(!sbClient){showToast(L('Supabase ещё не подключён.','Supabase hələ qoşulmayıb.','Supabase is not connected yet.'));return}
   const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;
-  if(!email||password.length<6){showToast(language==='ru'?'Введите email и пароль не короче 6 символов.':'E-poçt və ən azı 6 simvolluq şifrə daxil edin.');return}
+  if(!email||password.length<6){showToast(L('Введите email и пароль не короче 6 символов.','E-poçt və ən azı 6 simvolluq şifrə daxil edin.','Enter an email and a password of at least 6 characters.'));return}
   try{
     const {data,error}=await sbClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
     if(error)throw error;
-    if(data.session){closeModal('authModal');showToast(language==='ru'?'Аккаунт создан, вы вошли.':'Hesab yaradıldı və giriş edildi.')}
-    else showToast(language==='ru'?'Аккаунт создан. Проверьте почту и подтвердите адрес, затем войдите.':'Hesab yaradıldı. E-poçtunuzu təsdiqləyin, sonra daxil olun.');
+    if(data.session){closeModal('authModal');showToast(L('Аккаунт создан, вы вошли.','Hesab yaradıldı və giriş edildi.','Account created, you are signed in.'))}
+    else showToast(L('Аккаунт создан. Проверьте почту и подтвердите адрес, затем войдите.','Hesab yaradıldı. E-poçtunuzu təsdiqləyin, sonra daxil olun.','Account created. Check your email and confirm your address, then sign in.'));
   }catch(err){
     console.error('Sign up failed:',err);
-    showToast((language==='ru'?'Не удалось создать аккаунт: ':'Hesab yaratmaq olmadı: ')+(err.message||''));
+    showToast((L('Не удалось создать аккаунт: ','Hesab yaratmaq olmadı: ','Could not create account: '))+(err.message||''));
   }
 }
 async function logout(){
@@ -552,22 +621,22 @@ function openAddListing(){
   resetListingForm();showSection('add');
 }
 async function uploadPendingPhotos(userId){
-  const urls=[];
-  for(let i=0;i<pendingPhotos.length;i++){
-    const blob=await (await fetch(pendingPhotos[i])).blob();
-    const path=`${userId}/${Date.now()}-${i}-${Math.random().toString(36).slice(2,8)}.jpg`;
+  const stamp=Date.now();
+  return Promise.all(pendingPhotos.map(async(data,i)=>{
+    const blob=await (await fetch(data)).blob();
+    const path=`${userId}/${stamp}-${i}-${Math.random().toString(36).slice(2,8)}.jpg`;
     const {error}=await sbClient.storage.from('villa-photos').upload(path,blob,{contentType:'image/jpeg',upsert:false});
     if(error)throw error;
-    urls.push(sbClient.storage.from('villa-photos').getPublicUrl(path).data.publicUrl);
-  }
-  return urls;
+    return sbClient.storage.from('villa-photos').getPublicUrl(path).data.publicUrl;
+  }));
 }
 $('listingForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!sbClient||!currentUserUid){showToast(t('needLogin'));openAuth();return}
   const title=$('villaTitle').value.trim(),district=$('villaDistrict').value,price=Number($('villaPrice').value),rooms=Number($('villaRooms').value),phone=waNumber($('villaPhone').value);
-  if(!title||!district||!Number.isFinite(price)||price<=0||!rooms){showToast(language==='ru'?'Проверьте заполненные данные.':'Məlumatları yoxlayın.');return}
+  if(!title||!district||!Number.isFinite(price)||price<=0||!rooms){showToast(L('Проверьте заполненные данные.','Məlumatları yoxlayın.','Please check the entered data.'));return}
   if(!/^\d{11,15}$/.test(phone)){showToast(t('badPhone'));return}
+  if(pendingPhotos.length<4||pendingPhotos.length>20){showToast(t('photoCount'));return}
   const amenities=Array.from(document.querySelectorAll('input[name=amenity]:checked')).map(x=>x.value);
   const btn=$('saveListingBtn');
   btn.disabled=true;btn.innerHTML=`<i class="fa-solid fa-spinner fa-spin mr-2"></i><span>${escapeHTML(t('savingListing'))}</span>`;
@@ -589,13 +658,13 @@ $('listingForm').addEventListener('submit',async e=>{
 });
 async function deleteVilla(id){
   const v=villas.find(x=>x.id===String(id));
-  if(!isOwner(v)){showToast(language==='ru'?'Можно удалять только свои объявления.':'Yalnız öz elanınızı silə bilərsiniz.');return}
+  if(!isOwner(v)){showToast(L('Можно удалять только свои объявления.','Yalnız öz elanınızı silə bilərsiniz.','You can only delete your own listings.'));return}
   if(!confirm(t('confirmDelete')||'?'))return;
   try{
     const dbId=Number.isFinite(Number(id))?Number(id):id;
     const {data,error}=await sbClient.from('villas').delete().eq('id',dbId).select('id').maybeSingle();
     if(error)throw error;
-    if(!data)throw new Error(language==='ru'?'Объявление не найдено или удаление запрещено.':'Elan tapılmadı və ya silməyə icazə yoxdur.');
+    if(!data)throw new Error(L('Объявление не найдено или удаление запрещено.','Elan tapılmadı və ya silməyə icazə yoxdur.','Listing not found or deletion is not allowed.'));
     await refreshSupabaseVillas();showToast(t('deleted'));
   }catch(err){console.error('Delete failed:',err);showToast(supabaseErrorText(err))}
 }
@@ -614,18 +683,86 @@ async function toggleUnavailableDate(date){
     detailVilla.unavailableDates=Array.from(blocked).sort();
     const stored=villas.find(v=>v.id===String(detailVilla.id));if(stored)stored.unavailableDates=[...detailVilla.unavailableDates];
     renderAvailabilityCalendar();
-    showToast(language==='ru'?'Календарь обновлён.':'Təqvim yeniləndi.');
+    showToast(L('Календарь обновлён.','Təqvim yeniləndi.','Calendar updated.'));
   }catch(err){console.error('Calendar update failed:',err);showToast(supabaseErrorText(err))}
 }
 
 /* ===== Старт ===== */
+translations.en={navHome:'Home',navAdd:'Post a listing',navAccount:'My account',login:'Sign in',logout:'Sign out',heroBadge:'Villa rentals in Azerbaijan',heroTitle:'Your dream getaway<br>is one step closer.',heroText:'Family holidays, villas with pools and an easy search — find the home that suits you.',browse:'Browse villas',district:'District',period:'Rental period',rooms:'Rooms',maxPrice:'Maximum price (₼)',search:'Search',allDistricts:'Districts',priceShort:'Price',priceMin:'Min.',priceMax:'Max.',clearPrice:'Clear',all:'Period',anyRooms:'Rooms',chooseDistrict:'Choose a district',mapLabel:'Map',curated:'Selected offers',listingTitle:'Villas for rent',addVilla:'Add a villa',noResults:'No villas match your search.',tryFilters:'Change the filters and try again.',benefit1:'Easy choice',benefit1Text:'Compare the key details and pick the villa that suits you.',benefit2:'Listings with photos',benefit2Text:'Present your villa with photos and manage your listing.',benefit3:'Direct contact',benefit3Text:'Send a booking request via WhatsApp.',yourSpace:'Your space',accountTitle:'My account',loginNeeded:'Sign in to see your listings',myListings:'My listings',accountEmail:'Account email',accountStatus:'Account status',demoStatus:'Supabase account',yourAds:'My listings',backHome:'Back to home',publishLabel:'Post a listing',publishTitle:'Present your villa',publishHelp:'Fill in the details. The listing will be saved in the Supabase database.',villaName:'Listing title *',price:'Price (₼) *',daily:'Daily',monthly:'Monthly',guests:'Guests',phoneOwner:'WhatsApp number (requests will be sent here) *',description:'Description',photos:'Photos (minimum 4, maximum 20; select all at once, up to 5 MB each)',photoNote:'Photos are resized and uploaded to Supabase Storage.',storageNotice:'The listing will appear on the site after review. Until then only you can see it in your account.',saveListing:'Save listing',savingListing:'Uploading...',cancel:'Cancel',footerText:'Find a villa for a comfortable holiday in Azerbaijan.',loginTitle:'Sign in to your account',loginDesc:'Enter your email address.',email:'Email',passwordLabel:'Password',supabaseAuthNotice:'Secure sign-in with Supabase. If this is your first time, create an account.',register:'Create account',continue:'Sign in',bookingRequest:'Booking request',booking:'Booking',checkIn:'Check-in',checkOut:'Check-out',yourName:'Your name',phone:'Phone',estimatedTotal:'Estimated total',bookingNote:'This is only a request; booking confirmation and payment are not processed automatically.',sendRequest:'Send request on WhatsApp',dailyRate:'per day',monthlyRate:'per month',perDay:'day',perMonth:'month',roomsLabel:'rooms',guestsLabel:'guests',details:'Details',reserve:'Send request',delete:'Delete',pending:'Under review',emptyMine:'You have not posted any listings yet.',saved:'Listing saved.',savedPending:'Listing submitted. It will appear on the site after review.',deleted:'Listing deleted.',needLogin:'Please sign in with your email first.',badDates:'Check-out must be after check-in.',badPhone:'Enter a valid WhatsApp number (e.g. +994 55 000 00 00).',imageError:'Photo upload failed. Choose JPG, PNG, WEBP or GIF (max 5 MB each).',loginToAdd:'Sign in with your email to post a listing.',listingCount:'listings found',mapTitle:'Villas on the map',mapText:'Browse listings in Novkhani, Mardakan, Bilgah and other areas.',mapNotice:'Markers show the approximate centre of the district. The exact address must be added by the listing owner.',amenities:'Amenities',pool:'Pool',bbq:'BBQ',parking:'Parking',sea:'Near the sea',ac:'Air conditioning',villaDetails:'About the villa',availability:'Availability calendar',available:'Available',unavailable:'Booked',priceNote:'The price is set by the listing owner.',sortNewest:'Newest first',sortPriceAsc:'Price: low to high',sortPriceDesc:'Price: high to low',noPhotos:'No photos added',showVillas:'Show villas',confirmDelete:'Delete this listing?',photoCount:'Select between 4 and 20 photos.'};
 translations.az.confirmDelete='Bu elanı silmək istəyirsiniz?';
 translations.ru.confirmDelete='Удалить это объявление?';
+translations.az.photoCount='Ən azı 4, ən çox 20 şəkil seçin.';
+translations.ru.photoCount='Выберите от 4 до 20 фотографий.';
 $('year').textContent=new Date().getFullYear();
 history.replaceState({view:'home'},'');
 setLanguage('az');
 initMap();
 initSupabaseApp();
+</script>
+<script>
+/* KİRAYƏVİLLA — исправления и ускорение. Подключается ПОСЛЕ основного <script>. */
+(function(){
+  'use strict';
+
+  /* 1. БАГ: кнопка «показать пароль» вызывала несуществующую функцию */
+  window.togglePasswordVisibility=function(){
+    const input=document.getElementById('authPassword'),btn=document.getElementById('togglePassword');
+    const show=input.type==='password';
+    input.type=show?'text':'password';
+    btn.innerHTML='<i class="fa-regular '+(show?'fa-eye-slash':'fa-eye')+'"></i>';
+  };
+
+  /* 2. СКОРОСТЬ: фильтр цены перерисовывал список и карту на каждую цифру */
+  const debounce=(fn,ms)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}};
+  const slowRender=debounce(()=>renderListings(),250);
+  ['filterPrice','filterPriceMin'].forEach(id=>{const el=document.getElementById(id);if(el)el.oninput=slowRender});
+
+  /* 3. Скелетоны, пока объявления грузятся из Supabase */
+  const grid=document.getElementById('villaGrid');
+  if(grid&&!grid.children.length){
+    grid.innerHTML=Array(3).fill('<div class="card skeleton skeleton-card" aria-hidden="true"></div>').join('');
+    document.getElementById('listingCount').textContent='…';
+  }
+
+  /* 4. БАГ: прямая ссылка #villa-ID / #booking-ID не открывалась после перезагрузки */
+  let deepLinkDone=false;
+  const origRefresh=window.refreshSupabaseVillas;
+  window.refreshSupabaseVillas=async function(){
+    const r=await origRefresh.apply(this,arguments);
+    if(!deepLinkDone){
+      deepLinkDone=true;
+      const m=location.hash.match(/^#(villa|booking)-(.+)$/);
+      if(m&&villas.some(v=>v.id===m[2])){
+        history.replaceState({view:'home'},'',location.pathname+location.search);
+        m[1]==='villa'?openVillaDetails(m[2]):openBooking(m[2]);
+      }
+    }
+    return r;
+  };
+
+  /* 5. БАГ: карта серая/обрезанная, если контейнер изменил размер */
+  const fixMap=()=>{try{map&&map.invalidateSize()}catch(e){}};
+  window.addEventListener('load',fixMap);
+  window.addEventListener('resize',debounce(fixMap,200));
+
+  /* 6. СКОРОСТЬ: асинхронное декодирование картинок + заглушка для битых ссылок */
+  const placeholder='<div class="villa-img flex items-center justify-center"><i class="fa-solid fa-house text-5xl text-gray-400"></i></div>';
+  document.addEventListener('error',e=>{
+    const img=e.target;
+    if(img&&img.tagName==='IMG'&&img.classList.contains('villa-img'))img.outerHTML=placeholder;
+  },true);
+  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{
+    if(n.nodeType===1)n.querySelectorAll&&n.querySelectorAll('img:not([decoding])').forEach(i=>i.decoding='async');
+  }))).observe(document.body,{childList:true,subtree:true});
+
+  /* 7. Тень у шапки при прокрутке */
+  const header=document.querySelector('header.sticky');
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(ticking)return;ticking=true;
+    requestAnimationFrame(()=>{header.classList.toggle('scrolled',window.scrollY>8);ticking=false});
+  },{passive:true});
+})();
 </script>
 </body>
 </html>
