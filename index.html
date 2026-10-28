@@ -1,96 +1,659 @@
-# KİRAYƏVİLLA — checkpoint на продолжение
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123b2b">
+  <title>KİRAYƏ VİLLA — Azərbaycanda villa kirayəsi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <style>
+    :root{--green:#123b2b;--green2:#1f5b40;--gold:#d8b56d;--cream:#f7f6f1;--muted:#69756d}
+    *{box-sizing:border-box} body{font-family:Montserrat, sans-serif;background:var(--cream);color:#17251d;margin:0}
+    button,input,select,textarea{font:inherit} button{cursor:pointer}
+    .btn{border:0;border-radius:12px;padding:12px 17px;font-weight:700;transition:.18s}
+    .btn-primary{background:var(--green);color:white}.btn-primary:hover{background:var(--green2);transform:translateY(-1px)}
+    .btn-primary:disabled{opacity:.65;cursor:not-allowed;transform:none}
+    .btn-outline{border:1px solid #d8ded8;background:white;color:var(--green)}.btn-outline:hover{background:#edf2ed}
+    .btn-gold{background:var(--gold);color:#18261c}.field{width:100%;padding:12px 13px;border:1px solid #dce2dc;border-radius:11px;background:#fff;outline:none}
+    .field:focus{border-color:#56846a;box-shadow:0 0 0 3px #1f5b4018}
+    .card{background:white;border:1px solid #e7e9e3;border-radius:18px;overflow:hidden;box-shadow:0 5px 20px #1d39200a}
+    .villa-img{height:220px;width:100%;object-fit:cover;background:#e4e9e3}
+    .pill{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:6px 9px}
+    .pill-green{background:#e4f1e7;color:#24623d}.pill-gold{background:#fbf0d9;color:#78551a}
+    .nav-link{border:0;background:transparent;color:#dbe6dd;font-weight:600;padding:10px 12px;border-radius:10px;font-size:14px}
+    .nav-link:hover,.nav-link.active{background:#ffffff19;color:white}
+    .modal-backdrop{position:fixed;inset:0;background:#08170f99;display:none;align-items:center;justify-content:center;padding:18px;z-index:100}
+    .modal-backdrop.show{display:flex}.modal{width:min(540px,100%);max-height:90vh;overflow:auto;background:white;border-radius:20px;padding:24px;box-shadow:0 24px 80px #0003}
+    .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#173d2b;color:white;padding:13px 18px;border-radius:12px;z-index:200;box-shadow:0 8px 28px #0002;max-width:calc(100vw - 30px);display:none}
+    .toast.show{display:block;animation:pop .2s ease-out}@keyframes pop{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+    .section{display:none}.section.active{display:block}.preview-thumb{width:72px;height:60px;object-fit:cover;border-radius:8px;border:1px solid #ddd}
+    .stat{border:1px solid #e5e9e2;background:#fff;border-radius:14px;padding:16px}
+    #villaMap{height:430px;border-radius:18px;z-index:1}.detail-modal{width:min(900px,100%)}.detail-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:130px 130px;gap:8px}.detail-gallery img{width:100%;height:100%;object-fit:cover;border-radius:10px;background:#e7ece7}.detail-gallery img:first-child{grid-row:span 2}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.calendar-day{padding:9px 2px;text-align:center;border-radius:8px;font-size:12px;background:#e6f4e9;color:#245c38}.calendar-day.unavailable{background:#f8e1df;color:#9d2f2b;text-decoration:line-through}.calendar-day.past{background:#f0f0ed;color:#a0a59f}.amenity-chip{font-size:12px;background:#edf4ee;color:#245c38;border-radius:999px;padding:6px 10px}
+    @media(max-width:640px){.villa-img{height:190px}.modal{padding:19px}.hero-title{font-size:35px!important}}
+  </style>
+</head>
+<body>
+<header class="sticky top-0 z-40" style="background:var(--green)">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <button class="flex items-center gap-3 text-left" onclick="showSection('home')" aria-label="Ana səhifə">
+      <span class="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style="background:var(--gold);color:var(--green)"><i class="fa-solid fa-house-chimney"></i></span>
+      <span><span class="block text-white font-extrabold tracking-wide">KİRAYƏ<span style="color:var(--gold)">VİLLA</span></span><span class="block text-xs" style="color:#c5d6ca">Rahatlığınız üçün doğru seçim</span></span>
+    </button>
+    <nav class="hidden md:flex items-center gap-1">
+      <button class="nav-link active" data-nav="home" onclick="showSection('home')" data-i18n="navHome">Ana səhifə</button>
+      <button class="nav-link" data-nav="add" onclick="openAddListing()" data-i18n="navAdd">Elan yerləşdir</button>
+      <button class="nav-link" data-nav="account" onclick="showSection('account')" data-i18n="navAccount">Şəxsi kabinet</button>
+    </nav>
+    <div class="flex items-center gap-2">
+      <select id="languageSelect" class="rounded-lg px-2 py-2 text-sm font-bold bg-white" aria-label="Dil" onchange="setLanguage(this.value)">
+        <option value="az">AZ</option><option value="ru">RU</option>
+      </select>
+      <button id="authButton" class="btn btn-gold text-sm" onclick="openAuth()"><i class="fa-regular fa-user mr-1"></i><span data-i18n="login">Daxil ol</span></button>
+    </div>
+  </div>
+  <!-- Мобильная навигация для смартфонов -->
+  <nav class="md:hidden flex items-center justify-around border-t border-white/10 px-2 py-1.5">
+    <button class="nav-link active flex-1 text-center text-xs py-2" data-nav="home" onclick="showSection('home')" data-i18n="navHome">Ana səhifə</button>
+    <button class="nav-link flex-1 text-center text-xs py-2" data-nav="add" onclick="openAddListing()" data-i18n="navAdd">Elan yerləşdir</button>
+    <button class="nav-link flex-1 text-center text-xs py-2" data-nav="account" onclick="showSection('account')" data-i18n="navAccount">Şəxsi kabinet</button>
+  </nav>
+</header>
 
-Дата фиксации: 28 октября 2026
+<main id="homeSection" class="section active">
+  <section class="relative overflow-hidden" style="background:linear-gradient(110deg,#102f23f2,#123b2bd9),url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=85') center/cover">
+    <div class="max-w-7xl mx-auto px-5 py-20 md:py-28">
+      <div class="max-w-2xl">
+        <span class="pill pill-gold mb-5 inline-block" data-i18n="heroBadge">Azərbaycanda villa kirayəsi</span>
+        <h1 class="hero-title text-white text-4xl md:text-6xl font-extrabold leading-tight mb-5" data-i18n="heroTitle">Xəyalınızdakı istirahətə<br>bir addım daha yaxın.</h1>
+        <p class="text-lg leading-8 mb-8" style="color:#dce7de" data-i18n="heroText">Ailəvi istirahət, hovuzlu villalar və rahat seçim — sizə uyğun evi asanlıqla tapın.</p>
+        <button class="btn btn-gold" onclick="document.getElementById('listings').scrollIntoView({behavior:'smooth'})"><span data-i18n="browse">Villalara bax</span> <i class="fa-solid fa-arrow-right ml-2"></i></button>
+      </div>
+    </div>
+  </section>
 
-Этот файл сохраняет, на каком этапе остановились. Его можно оставить себе и завтра прикрепить к новому чату, чтобы продолжить без повторения всех шагов.
+  <section class="max-w-7xl mx-auto px-4 -mt-7 relative z-10">
+    <div class="card p-4 md:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      <div><label class="text-xs font-bold block mb-2" data-i18n="district">Rayon</label><select id="filterDistrict" class="field" onchange="renderListings()"><option value="">Bütün rayonlar</option><option>Novxanı</option><option>Bilgəh</option><option>Şüvəlan</option><option>Mərdəkan</option><option>Qəbələ</option><option>Quba</option><option>Şamaxı</option></select></div>
+      <div><label class="text-xs font-bold block mb-2" data-i18n="period">Kirayə müddəti</label><select id="filterPeriod" class="field" onchange="renderListings()"><option value="">Hamısı</option><option value="daily">Günlük</option><option value="monthly">Aylıq</option></select></div>
+      <div><label class="text-xs font-bold block mb-2" data-i18n="rooms">Otaq sayı</label><select id="filterRooms" class="field" onchange="renderListings()"><option value="">Fərq etmir</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option><option value="5">5+</option></select></div>
+      <div><label class="text-xs font-bold block mb-2" data-i18n="maxPrice">Maksimum qiymət (₼)</label><input id="filterPrice" type="number" min="0" class="field" placeholder="Məs. 300" oninput="renderListings()"></div>
+      <div class="flex items-end"><button class="btn btn-primary w-full" onclick="renderListings()"><i class="fa-solid fa-magnifying-glass mr-2"></i><span data-i18n="search">Axtar</span></button></div>
+    </div>
+  </section>
 
-## Цель проекта
+  <section id="listings" class="max-w-7xl mx-auto px-4 py-14">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-7">
+      <div><p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)" data-i18n="curated">Seçilmiş təkliflər</p><h2 class="text-3xl font-extrabold" data-i18n="listingTitle">Kirayə üçün villalar</h2><p class="text-sm mt-2" style="color:var(--muted)" id="listingCount">—</p><p id="supabaseConnectionStatus" class="text-xs mt-2" style="color:#69756d">Supabase: bağlantı yoxlanılır…</p></div>
+      <div class="flex flex-wrap gap-2 items-center"><label class="sr-only" for="sortListings">Sort</label><select id="sortListings" class="field" style="min-width:205px" onchange="renderListings()"><option value="newest">Ən yenilər</option><option value="priceAsc">Qiymət: ucuzdan bahaya</option><option value="priceDesc">Qiymət: bahadan ucuza</option></select><button class="btn btn-outline" onclick="openAddListing()"><i class="fa-solid fa-plus mr-2"></i><span data-i18n="addVilla">Villa əlavə et</span></button></div>
+    </div>
+    <div id="villaGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+    <div id="emptyListings" class="hidden text-center py-16 card"><i class="fa-solid fa-house-circle-xmark text-4xl mb-4" style="color:#9aa89d"></i><p class="font-bold text-lg" data-i18n="noResults">Axtarışa uyğun villa tapılmadı.</p><p class="text-sm mt-2" style="color:var(--muted)" data-i18n="tryFilters">Filtrləri dəyişib yenidən yoxlayın.</p></div>
+  </section>
+  <section class="max-w-7xl mx-auto px-4 pb-14" id="mapSection">
+    <div class="mb-5"><p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)">Xəritə</p><h2 class="text-3xl font-extrabold" data-i18n="mapTitle">Xəritədə villalar</h2><p class="text-sm mt-2" style="color:var(--muted)" data-i18n="mapText">Novxanı, Mərdəkan, Bilgəh və digər ərazilərdə elanlara baxın.</p></div>
+    <div id="villaMap" class="card" aria-label="Azərbaycan xəritəsində villa elanları"></div>
+    <p class="text-xs mt-3" style="color:var(--muted)" data-i18n="mapNotice">Xəritədəki nişanlar rayonun təxmini mərkəzini göstərir. Dəqiq ünvan elan sahibi tərəfindən əlavə edilməlidir.</p>
+  </section>
+  <section class="py-14" style="background:#e9eee7">
+    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-7">
+      <div class="flex gap-4"><span class="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center text-xl" style="background:white;color:var(--green)"><i class="fa-solid fa-shield-halved"></i></span><div><h3 class="font-extrabold mb-2" data-i18n="benefit1">Rahat seçim</h3><p class="text-sm leading-6" style="color:var(--muted)" data-i18n="benefit1Text">Əsas məlumatları müqayisə edib sizə uyğun villanı seçin.</p></div></div>
+      <div class="flex gap-4"><span class="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center text-xl" style="background:white;color:var(--green)"><i class="fa-solid fa-camera"></i></span><div><h3 class="font-extrabold mb-2" data-i18n="benefit2">Şəkilli elanlar</h3><p class="text-sm leading-6" style="color:var(--muted)" data-i18n="benefit2Text">Villanızı şəkillərlə təqdim edin və elanınızı idarə edin.</p></div></div>
+      <div class="flex gap-4"><span class="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center text-xl" style="background:white;color:var(--green)"><i class="fa-brands fa-whatsapp"></i></span><div><h3 class="font-extrabold mb-2" data-i18n="benefit3">Birbaşa əlaqə</h3><p class="text-sm leading-6" style="color:var(--muted)" data-i18n="benefit3Text">Rezervasiya sorğusunu WhatsApp vasitəsilə göndərin.</p></div></div>
+    </div>
+  </section>
+</main>
 
-Подключить сайт KİRAYƏVİLLA на GitHub Pages к Supabase, чтобы данные были общими для всех устройств, а не только сохранялись в браузере.
+<section id="accountSection" class="section max-w-7xl mx-auto px-4 py-12 min-h-[70vh]">
+  <div class="mb-8"><p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)" data-i18n="yourSpace">Sizin məkanınız</p><h1 class="text-3xl font-extrabold" data-i18n="accountTitle">Şəxsi kabinet</h1><p class="mt-2 text-sm" style="color:var(--muted)" id="accountSubtitle"></p></div>
+  <div id="accountLoggedOut" class="card p-8 text-center"><i class="fa-regular fa-circle-user text-5xl mb-4" style="color:var(--green2)"></i><h2 class="text-xl font-bold mb-3" data-i18n="loginNeeded">Elanlarınızı görmək üçün daxil olun</h2><button class="btn btn-primary" onclick="openAuth()" data-i18n="login">Daxil ol</button></div>
+  <div id="accountContent" class="hidden">
+    <div class="grid sm:grid-cols-3 gap-4 mb-8"><div class="stat"><p class="text-sm" style="color:var(--muted)" data-i18n="myListings">Mənim elanlarım</p><p id="myListingCount" class="text-3xl font-extrabold mt-2">0</p></div><div class="stat"><p class="text-sm" style="color:var(--muted)" data-i18n="accountEmail">Hesab e-poçtu</p><p id="accountEmail" class="font-bold mt-2 break-all">—</p></div><div class="stat flex items-center justify-between gap-2"><div><p class="text-sm" style="color:var(--muted)" data-i18n="accountStatus">Hesab statusu</p><p class="font-bold mt-2" data-i18n="demoStatus">Supabase hesabı</p></div><button class="btn btn-outline text-sm" onclick="logout()" data-i18n="logout">Çıxış</button></div></div>
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-5"><h2 class="text-xl font-extrabold" data-i18n="yourAds">Yerləşdirdiyim elanlar</h2><button class="btn btn-primary" onclick="openAddListing()"><i class="fa-solid fa-plus mr-2"></i><span data-i18n="addVilla">Villa əlavə et</span></button></div>
+    <div id="myListingsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+  </div>
+</section>
 
-Ожидаемое поведение:
-- Все посетители могут смотреть опубликованные виллы без регистрации.
-- Размещать объявления могут только пользователи с настоящей регистрацией и входом.
-- Редактировать и удалять объявление может только его владелец.
-- Календарь занятых дат может изменять только владелец соответствующей виллы.
-- Фотографии, объявления и даты должны сохраняться в Supabase.
-- Сохранить существующий дизайн сайта и уже имеющееся объявление.
+<section id="addSection" class="section max-w-4xl mx-auto px-4 py-12 min-h-[70vh]">
+  <button class="text-sm font-bold mb-5" style="color:var(--green2)" onclick="showSection('home')"><i class="fa-solid fa-arrow-left mr-2"></i><span data-i18n="backHome">Ana səhifəyə qayıt</span></button>
+  <div class="card p-5 md:p-8">
+    <p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)" data-i18n="publishLabel">Elan yerləşdir</p><h1 class="text-3xl font-extrabold mb-2" data-i18n="publishTitle">Villanızı təqdim edin</h1><p class="text-sm mb-7" style="color:var(--muted)" data-i18n="publishHelp">Məlumatları doldurun. Elan Supabase məlumat bazasında saxlanacaq.</p>
+    <form id="listingForm" class="grid md:grid-cols-2 gap-5">
+      <div><label class="block text-sm font-bold mb-2" data-i18n="villaName">Elanın adı *</label><input id="villaTitle" class="field" required maxlength="90" placeholder="Məs. Hovuzlu ailəvi villa"></div>
+      <div><label class="block text-sm font-bold mb-2" data-i18n="district">Rayon *</label><select id="villaDistrict" class="field" required><option value="">Rayon seçin</option><option>Novxanı</option><option>Bilgəh</option><option>Şüvəlan</option><option>Mərdəkan</option><option>Qəbələ</option><option>Quba</option><option>Şamaxı</option><option>Digər</option></select></div>
+      <div><label class="block text-sm font-bold mb-2" data-i18n="price">Qiymət (₼) *</label><input id="villaPrice" class="field" type="number" min="1" max="1000000" required placeholder="150"></div>
+      <div><label class="block text-sm font-bold mb-2" data-i18n="period">Kirayə müddəti *</label><select id="villaPeriod" class="field" required><option value="daily" data-i18n="daily">Günlük</option><option value="monthly" data-i18n="monthly">Aylıq</option></select></div>
+      <div><label class="block text-sm font-bold mb-2" data-i18n="rooms">Otaq sayı *</label><select id="villaRooms" class="field" required><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6+</option></select></div>
+      <div><label class="block text-sm font-bold mb-2" data-i18n="guests">Qonaq sayı</label><input id="villaGuests" class="field" type="number" min="1" max="100" value="8"></div>
+      <div class="md:col-span-2"><label class="block text-sm font-bold mb-2" data-i18n="description">Təsvir</label><textarea id="villaDescription" class="field" rows="4" maxlength="1500" placeholder="Villa haqqında məlumat, imkanlar, qaydalar..."></textarea></div>
+      <div class="md:col-span-2"><label class="block text-sm font-bold mb-3" data-i18n="amenities">İmkanlar</label><div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm"><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="pool"> <i class="fa-solid fa-water"></i><span data-i18n="pool">Hovuz</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="wifi"> <i class="fa-solid fa-wifi"></i><span>Wi-Fi</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="bbq"> <i class="fa-solid fa-fire-burner"></i><span data-i18n="bbq">Manqal</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="parking"> <i class="fa-solid fa-car"></i><span data-i18n="parking">Parkinq</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="sea"> <i class="fa-solid fa-umbrella-beach"></i><span data-i18n="sea">Dənizə yaxın</span></label><label class="flex items-center gap-2"><input type="checkbox" name="amenity" value="ac"> <i class="fa-solid fa-snowflake"></i><span data-i18n="ac">Kondisioner</span></label></div></div>
+      <div class="md:col-span-2"><label class="block text-sm font-bold mb-2" data-i18n="photos">Şəkillər (maksimum 5, hər biri 5 MB-dək)</label><input id="villaPhotos" type="file" class="field" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="photoPreview" class="flex flex-wrap gap-2 mt-3"></div><p class="text-xs mt-2" style="color:var(--muted)" data-i18n="photoNote">Şəkillər ölçüsü azaldıldıqdan sonra Supabase Storage-a yüklənir.</p></div>
+      <div class="md:col-span-2 rounded-xl p-4 text-sm leading-6" style="background:#f3f5f0;color:#58665b"><i class="fa-solid fa-circle-info mr-2"></i><span data-i18n="storageNotice">Qeyd: Elanlar Supabase-də saxlanılır.</span></div>
+      <div class="md:col-span-2 flex flex-wrap gap-3"><button id="saveListingBtn" class="btn btn-primary" type="submit"><i class="fa-solid fa-check mr-2"></i><span data-i18n="saveListing">Elanı yadda saxla</span></button><button class="btn btn-outline" type="button" onclick="showSection('home')" data-i18n="cancel">Ləğv et</button></div>
+    </form>
+  </div>
+</section>
 
-## Что уже сделано в Supabase
+<footer class="py-8" style="background:#0d2b1e;color:#c5d6ca">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+    <div><p class="font-extrabold text-white">KİRAYƏ<span style="color:var(--gold)">VİLLA</span></p><p class="text-xs mt-2" data-i18n="footerText">Azərbaycanda rahat istirahət üçün villa axtarışı.</p></div>
+    <p class="text-xs">© <span id="year"></span> KİRAYƏVİLLA</p>
+  </div>
+</footer>
 
-- Проект Supabase существует: `kirayevilla`.
-- Таблица `public.villas` уже существовала, поэтому её не создавали заново.
-- В таблицу `public.villas` добавлены поля `is_published` и `owner_id`.
-- Создана таблица `public.villa_unavailable_dates` и индекс для поиска дат по вилле.
-- RLS включён для `villas` и `villa_unavailable_dates`.
-- Старое правило `Public access` для `villas`, которое разрешало всем все операции, было удалено.
-- Созданы политики: публичный просмотр опубликованных вилл; вставка, изменение и удаление вилл владельцем; просмотр календаря и управление датами владельцем.
-- SQL-команды выполнялись с сообщением `Success. No rows returned`.
-- Проверка данных показала: всего вилл — 1, опубликованных — 1, вилл без владельца — 1.
-- Значит, существующая запись не пропала, но `owner_id` у неё пока пустой. Не назначать владельца наугад.
+<div id="authModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="authTitle" onclick="if(event.target===this)closeModal('authModal')">
+  <div class="modal"><div class="flex justify-between items-start gap-4 mb-5"><div><h2 id="authTitle" class="text-2xl font-extrabold" data-i18n="loginTitle">Şəxsi kabinetə giriş</h2><p class="text-sm mt-2" style="color:var(--muted)" data-i18n="loginDesc">E-poçtunuzu daxil edin.</p></div><button class="text-xl" aria-label="Bağla" onclick="closeModal('authModal')"><i class="fa-solid fa-xmark"></i></button></div>
+    <form id="authForm"><label class="block text-sm font-bold mb-2" data-i18n="email">E-poçt</label><input id="authEmail" type="email" autocomplete="email" class="field mb-3" required placeholder="name@example.com"><label class="block text-sm font-bold mb-2" data-i18n="passwordLabel">Şifrə</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" class="field mb-4" required placeholder="Ən azı 6 simvol"><div class="rounded-xl p-3 text-xs leading-5 mb-5" style="background:#eaf4ec;color:#245c38" data-i18n="supabaseAuthNotice">Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="submit" class="btn btn-primary w-full" data-i18n="continue">Daxil ol</button><button type="button" class="btn btn-outline w-full" onclick="registerAccount()" data-i18n="register">Hesab yarat</button></div></form>
+  </div>
+</div>
 
-## Важное про безопасность
+<div id="detailModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="detailTitle" onclick="if(event.target===this)closeModal('detailModal')">
+  <div class="modal detail-modal"><div class="flex justify-between items-start gap-4 mb-5"><div><p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)" data-i18n="villaDetails">Villa haqqında</p><h2 id="detailTitle" class="text-2xl font-extrabold">Villa</h2></div><button class="text-xl" onclick="closeModal('detailModal')" aria-label="Bağla"><i class="fa-solid fa-xmark"></i></button></div>
+    <div id="detailGallery" class="detail-gallery mb-5"></div><div class="grid md:grid-cols-3 gap-5"><div class="md:col-span-2"><p id="detailLocation" class="font-semibold mb-3" style="color:var(--muted)"></p><p id="detailDescription" class="text-sm leading-7 mb-4"></p><h3 class="font-extrabold mb-3" data-i18n="amenities">İmkanlar</h3><div id="detailAmenities" class="flex flex-wrap gap-2 mb-6"></div><h3 class="font-extrabold mb-3" data-i18n="availability">Mövcudluq təqvimi</h3><div class="card p-4"><div class="flex items-center justify-between gap-2 mb-4"><button class="btn btn-outline" onclick="changeCalendarMonth(-1)" aria-label="Əvvəlki ay"><i class="fa-solid fa-chevron-left"></i></button><strong id="calendarMonthLabel"></strong><button class="btn btn-outline" onclick="changeCalendarMonth(1)" aria-label="Növbəti ay"><i class="fa-solid fa-chevron-right"></i></button></div><div id="availabilityCalendar"></div><div class="flex flex-wrap gap-3 text-xs mt-4"><span><i class="fa-solid fa-circle text-green-600 mr-1"></i><span data-i18n="available">Mövcuddur</span></span><span><i class="fa-solid fa-circle text-red-500 mr-1"></i><span data-i18n="unavailable">Tutulub</span></span></div></div></div><aside class="card p-4 h-fit"><p id="detailPrice" class="text-2xl font-extrabold mb-1" style="color:var(--green2)"></p><p class="text-xs mb-5" style="color:var(--muted)" data-i18n="priceNote">Qiymət elan sahibinin göstərdiyi məbləğdir.</p><button id="detailReserveBtn" class="btn btn-primary w-full" onclick="reserveFromDetails()"><i class="fa-brands fa-whatsapp mr-2"></i><span data-i18n="reserve">Sorğu göndər</span></button></aside></div>
+  </div>
+</div>
+<div id="bookingModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="bookingTitle" onclick="if(event.target===this)closeModal('bookingModal')">
+  <div class="modal"><div class="flex justify-between items-start gap-4 mb-5"><div><p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)" data-i18n="bookingRequest">Rezervasiya sorğusu</p><h2 id="bookingTitle" class="text-2xl font-extrabold" data-i18n="booking">Rezervasiya</h2></div><button class="text-xl" onclick="closeModal('bookingModal')" aria-label="Bağla"><i class="fa-solid fa-xmark"></i></button></div>
+    <form id="bookingForm" class="space-y-4"><input id="bookingVillaId" type="hidden"><div id="bookingVillaInfo" class="rounded-xl p-4" style="background:#f3f5f0"></div>
+      <div class="grid grid-cols-2 gap-3"><div><label class="block text-sm font-bold mb-2" data-i18n="checkIn">Giriş tarixi</label><input id="bookingStart" type="date" class="field" required></div><div><label class="block text-sm font-bold mb-2" data-i18n="checkOut">Çıxış tarixi</label><input id="bookingEnd" type="date" class="field" required></div></div>
+      <div><label class="block text-sm font-bold mb-2" data-i18n="yourName">Adınız</label><input id="bookingName" class="field" required maxlength="80"></div><div><label class="block text-sm font-bold mb-2" data-i18n="phone">Telefon</label><input id="bookingPhone" class="field" type="tel" required placeholder="+994 ..."></div>
+      <div class="flex justify-between items-center rounded-xl p-4"><span class="text-sm font-bold" data-i18n="estimatedTotal">Təxmini məbləğ</span><strong id="bookingTotal" class="text-xl">—</strong></div>
+      <p class="text-xs leading-5" style="color:var(--muted)" data-i18n="bookingNote">Bu, yalnız sorğudur; rezervasiya təsdiqi və ödəniş avtomatik həyata keçirilmir.</p>
+      <button class="btn btn-primary w-full" type="submit"><i class="fa-brands fa-whatsapp mr-2"></i><span data-i18n="sendRequest">WhatsApp-da sorğu göndər</span></button>
+    </form>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-Владелец должен проверяться по `owner_id = auth.uid()`. Просто роль `authenticated` недостаточна.
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const ADMIN_WHATSAPP = '994553507887';
+const SUPABASE_URL = 'https://xzlzadslnhpfpqgfmwio.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_hy04N5QwYrvdkzX8nxfyvQ_UAcqm8eq';
+let sbClient = null;
+let sbAuthListenerRegistered = false;
+let cloudEnabled = false;
+function supabaseStatus(connected, message = '') {
+  const el = $('supabaseConnectionStatus');
+  if (!el) return;
+  if (connected) {
+    el.textContent = language === 'ru'
+      ? 'Supabase подключён: объявления загружаются из базы.'
+      : 'Supabase qoşuldu: elanlar bazadan yüklənir.';
+    el.style.color = '#24623d';
+  } else {
+    el.textContent = message || (language === 'ru'
+      ? 'Supabase пока не подключён. Проверьте настройки и SQL.'
+      : 'Supabase hələ qoşulmayıb. Sazlamaları və SQL-i yoxlayın.');
+    el.style.color = '#a52b26';
+  }
+}
+const DEFAULT_VILLAS = [{
+  id:'demo-novkhani-001',title:'Novxanıda hovuzlu villa',district:'Novxanı',price:150,period:'daily',rooms:5,guests:10,
+  description:'Ailəvi istirahət üçün geniş həyət və hovuz. Əlavə məlumat üçün əlaqə saxlayın.',
+  photos:['https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],amenities:['pool','wifi','bbq','parking'],unavailableDates:[],
+  ownerEmail:'',status:'approved',createdAt:'2025-01-01T00:00:00.000Z',demo:true
+}];
+const translations = {
+  az:{navHome:'Ana səhifə',navAdd:'Elan yerləşdir',navAccount:'Şəxsi kabinet',login:'Daxil ol',logout:'Çıxış',heroBadge:'Azərbaycanda villa kirayəsi',heroTitle:'Xəyalınızdakı istirahətə<br>bir addım daha yaxın.',heroText:'Ailəvi istirahət, hovuzlu villalar və rahat seçim — sizə uyğun evi asanlıqla tapın.',browse:'Villalara bax',district:'Rayon',period:'Kirayə müddəti',rooms:'Otaq sayı',maxPrice:'Maksimum qiymət (₼)',search:'Axtar',curated:'Seçilmiş təkliflər',listingTitle:'Kirayə üçün villalar',addVilla:'Villa əlavə et',noResults:'Axtarışa uyğun villa tapılmadı.',tryFilters:'Filtrləri dəyişib yenidən yoxlayın.',benefit1:'Rahat seçim',benefit1Text:'Əsas məlumatları müqayisə edib sizə uyğun villanı seçin.',benefit2:'Şəkilli elanlar',benefit2Text:'Villanızı şəkillərlə təqdim edin və elanınızı idarə edin.',benefit3:'Birbaşa əlaqə',benefit3Text:'Rezervasiya sorğusunu WhatsApp vasitəsilə göndərin.',yourSpace:'Sizin məkanınız',accountTitle:'Şəxsi kabinet',loginNeeded:'Elanlarınızı görmək üçün daxil olun',myListings:'Mənim elanlarım',accountEmail:'Hesab e-poçtu',accountStatus:'Hesab statusu',demoStatus:'Supabase hesabı',yourAds:'Yerləşdirdiyim elanlar',backHome:'Ana səhifəyə qayıt',publishLabel:'Elan yerləşdir',publishTitle:'Villanızı təqdim edin',publishHelp:'Məlumatları doldurun. Elan Supabase məlumat bazasında saxlanacaq.',villaName:'Elanın adı *',price:'Qiymət (₼) *',daily:'Günlük',monthly:'Aylıq',guests:'Qonaq sayı',description:'Təsvir',photos:'Şəkillər (maksimum 5, hər biri 5 MB-dək)',photoNote:'Şəkillər ölçüsü azaldıldıqdan sonra Supabase Storage-a yüklənir.',storageNotice:'Qeyd: Elanlar Supabase-də saxlanılır.',saveListing:'Elanı yadda saxla',savingListing:'Yüklənir...',cancel:'Ləğv et',footerText:'Azərbaycanda rahat istirahət üçün villa axtarışı.',loginTitle:'Şəxsi kabinetə giriş',loginDesc:'E-poçtunuzu daxil edin.',email:'E-poçt',passwordLabel:'Şifrə',supabaseAuthNotice:'Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.',register:'Hesab yarat',demoAuthNotice:'Supabase ilə təhlükəsiz giriş.',continue:'Daxil ol',bookingRequest:'Rezervasiya sorğusu',booking:'Rezervasiya',checkIn:'Giriş tarixi',checkOut:'Çıxış tarixi',yourName:'Adınız',phone:'Telefon',estimatedTotal:'Təxmini məbləğ',bookingNote:'Bu, yalnız sorğudur; rezervasiya təsdiqi və ödəniş avtomatik həyata keçirilmir.',sendRequest:'WhatsApp-da sorğu göndər',dailyRate:'günlük',monthlyRate:'aylıq',roomsLabel:'otaq',guestsLabel:'qonaq',details:'Ətraflı',reserve:'Sorğu göndər',delete:'Sil',editNotice:'Elanlar Supabase-də saxlanılır.',emptyMine:'Hələ elan yerləşdirməmisiniz.',saved:'Elan yadda saxlanıldı.',deleted:'Elan silindi.',needLogin:'Davam etmək üçün əvvəlcə e-poçtla daxil olun.',badDates:'Çıxış tarixi giriş tarixindən sonra olmalıdır.',imageError:'Şəkil yüklənmədi. JPG, PNG, WEBP və ya GIF seçin (hər biri maksimum 5 MB).',quotaError:'Brauzerin yaddaşı dolmuş ola bilər. Daha az və ya kiçik şəkil seçin.',loginSuccess:'Giriş uğurla tamamlandı.',confirmDelete:'Bu elanı silmək istəyirsiniz?',loginToAdd:'Elan yerləşdirmək üçün e-poçtla daxil olun.',listingCount:'elan tapıldı',noImage:'Şəkil yoxdur',from:'Başlayır',periodDaily:'Günlük',periodMonthly:'Aylıq',mapTitle:'Xəritədə villalar',mapText:'Novxanı, Mərdəkan, Bilgəh və digər ərazilərdə elanlara baxın.',mapNotice:'Xəritədəki nişanlar rayonun təxmini mərkəzini göstərir. Dəqiq ünvan elan sahibi tərəfindən əlavə edilməlidir.',amenities:'İmkanlar',pool:'Hovuz',bbq:'Manqal',parking:'Parkinq',sea:'Dənizə yaxın',ac:'Kondisioner',villaDetails:'Villa haqqında',availability:'Mövcudluq təqvimi',available:'Mövcuddur',unavailable:'Tutulub',priceNote:'Qiymət elan sahibinin göstərdiyi məbləğdir.',sortNewest:'Ən yenilər',sortPriceAsc:'Qiymət: ucuzdan bahaya',sortPriceDesc:'Qiymət: bahadan ucuza',noPhotos:'Şəkil əlavə edilməyib'},
+  ru:{navHome:'Главная',navAdd:'Разместить объявление',navAccount:'Личный кабинет',login:'Войти',logout:'Выйти',heroBadge:'Аренда вилл в Азербайджане',heroTitle:'Ваш идеальный отдых<br>стал ещё ближе.',heroText:'Семейный отдых, виллы с бассейном и удобный поиск — найдите подходящий дом.',browse:'Смотреть виллы',district:'Район',period:'Срок аренды',rooms:'Количество комнат',maxPrice:'Максимальная цена (₼)',search:'Найти',curated:'Подборка предложений',listingTitle:'Виллы в аренду',addVilla:'Добавить виллу',noResults:'Подходящих вилл не найдено.',tryFilters:'Измените фильтры и попробуйте снова.',benefit1:'Удобный выбор',benefit1Text:'Сравните основные данные и выберите подходящую виллу.',benefit2:'Объявления с фото',benefit2Text:'Добавьте фотографии виллы и управляйте объявлением.',benefit3:'Прямая связь',benefit3Text:'Отправьте запрос на бронирование через WhatsApp.',yourSpace:'Ваш профиль',accountTitle:'Личный кабинет',loginNeeded:'Войдите, чтобы увидеть свои объявления',myListings:'Мои объявления',accountEmail:'Электронная почта',accountStatus:'Статус аккаунта',demoStatus:'Аккаунт Supabase',yourAds:'Мои объявления',backHome:'Вернуться на главную',publishLabel:'Размещение объявления',publishTitle:'Расскажите о своей вилле',publishHelp:'Заполните данные. Объявление сохранится в Supabase.',villaName:'Название объявления *',price:'Цена (₼) *',daily:'Посуточно',monthly:'Помесячно',guests:'Количество гостей',description:'Описание',photos:'Фотографии (до 5, каждая до 5 МБ)',photoNote:'Фотографии уменьшаются и загружаются в Supabase Storage.',storageNotice:'Объявления хранятся в облачной базе Supabase.',saveListing:'Сохранить объявление',savingListing:'Загрузка...',cancel:'Отмена',footerText:'Поиск вилл для комфортного отдыха в Азербайджане.',loginTitle:'Вход в личный кабинет',loginDesc:'Введите адрес электронной почты.',email:'Электронная почта',passwordLabel:'Пароль',supabaseAuthNotice:'Безопасный вход через Supabase. Если вы впервые здесь, создайте аккаунт.',register:'Создать аккаунт',demoAuthNotice:'Безопасный вход через Supabase.',continue:'Войти',bookingRequest:'Запрос на бронирование',booking:'Бронирование',checkIn:'Дата заезда',checkOut:'Дата выезда',yourName:'Ваше имя',phone:'Телефон',estimatedTotal:'Примерная сумма',bookingNote:'Это только запрос; бронирование и оплата автоматически не подтверждаются.',sendRequest:'Отправить запрос в WhatsApp',dailyRate:'в сутки',monthlyRate:'в месяц',roomsLabel:'комнат',guestsLabel:'гостей',details:'Подробнее',reserve:'Отправить запрос',delete:'Удалить',editNotice:'Объявления хранятся в Supabase.',emptyMine:'Вы ещё не размещали объявления.',saved:'Объявление сохранено.',deleted:'Объявление удалено.',needLogin:'Сначала войдите по электронной почте.',badDates:'Дата выезда должна быть позже даты заезда.',imageError:'Не удалось загрузить фото. Выберите JPG, PNG, WEBP или GIF (до 5 МБ каждое).',quotaError:'Возможно, память браузера заполнена. Выберите меньше фотографий или файлы меньшего размера.',loginSuccess:'Вход выполнен.',confirmDelete:'Удалить это объявление?',loginToAdd:'Чтобы разместить объявление, войдите по электронной почте.',listingCount:'объявлений найдено',noImage:'Нет фото',from:'От',periodDaily:'Посуточно',periodMonthly:'Помесячно',mapTitle:'Виллы на карте',mapText:'Смотрите объявления в Новханы, Мардакяне, Бильгя и других районах.',mapNotice:'Маркеры показывают примерный центр района. Точный адрес должен добавить владелец объявления.',amenities:'Удобства',pool:'Бассейн',bbq:'Мангал',parking:'Парковка',sea:'Рядом с морем',ac:'Кондиционер',villaDetails:'О вилле',availability:'Календарь доступности',available:'Свободно',unavailable:'Занято',priceNote:'Указана цена, установленная владельцем объявления.',sortNewest:'Сначала новые',sortPriceAsc:'Цена: сначала дешевле',sortPriceDesc:'Цена: сначала дороже',noPhotos:'Фотографии не добавлены'}
+};
+let language='az', currentUserEmail='', currentUserUid='', villas=[], pendingPhotos=[], bookingVilla=null, toastTimer;
+const $ = id => document.getElementById(id);
+function t(key){return (translations[language]&&translations[language][key])||translations.az[key]||key}
+function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function money(value){return new Intl.NumberFormat(language==='ru'?'ru-RU':'az-AZ',{maximumFractionDigits:0}).format(Number(value)||0)+' ₼'}
+function periodLabel(period){return period==='monthly'?t('monthlyRate'):t('dailyRate')}
+function showToast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
+function closeModal(id){$(id).classList.remove('show')}
+function openModal(id){$(id).classList.add('show')}
+function showSection(name){
+  ['home','account','add'].forEach(s=>$(s+'Section').classList.toggle('active',s===name));
+  document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===name));
+  if(name==='account')renderAccount();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function openAuth(){openModal('authModal');setTimeout(()=>$('authEmail').focus(),100)}
+function setLanguage(value){language=value==='ru'?'ru':'az';document.documentElement.lang=language;$('languageSelect').value=language;document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(translations[language][key])el.innerHTML=translations[language][key]});const sort=$('sortListings');if(sort){sort.options[0].text=t('sortNewest');sort.options[1].text=t('sortPriceAsc');sort.options[2].text=t('sortPriceDesc')}renderListings();renderAccount();if(bookingVilla)updateBookingTotal();if(detailVilla)renderAvailabilityCalendar()}
+function updateAuthButton(){const btn=$('authButton');if(currentUserEmail){btn.innerHTML='<i class="fa-regular fa-user mr-1"></i>'+escapeHTML(currentUserEmail.split('@')[0]);btn.title=currentUserEmail;btn.onclick=()=>showSection('account')}else{btn.innerHTML='<i class="fa-regular fa-user mr-1"></i><span data-i18n="login">'+t('login')+'</span>';btn.onclick=openAuth}}
+const DISTRICT_COORDS={
+  'Novxanı':[40.545,49.775],'Bilgəh':[40.566,50.045],'Şüvəlan':[40.477,50.17],
+  'Mərdəkan':[40.493,50.142],'Qəbələ':[40.981,47.845],'Quba':[41.361,48.513],
+  'Şamaxı':[40.631,48.641],'Digər':[40.409,49.867]
+};
+let map=null,mapMarkers=[],detailVilla=null,calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+function renderListings(){
+  const district=$('filterDistrict').value, period=$('filterPeriod').value, rooms=Number($('filterRooms').value||0), max=Number($('filterPrice').value||0);
+  let list=villas.filter(v=>v.status==='approved'&&(!district||v.district===district)&&(!period||v.period===period)&&(!rooms||Number(v.rooms)>=rooms)&&(!max||Number(v.price)<=max));
+  const sort=$('sortListings')?.value||'newest';
+  if(sort==='priceAsc')list.sort((a,b)=>Number(a.price)-Number(b.price));else if(sort==='priceDesc')list.sort((a,b)=>Number(b.price)-Number(a.price));else list.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+  $('listingCount').textContent=list.length+' '+t('listingCount');$('emptyListings').classList.toggle('hidden',list.length>0);$('villaGrid').innerHTML=list.map(v=>villaCard(v,false)).join('');
+  renderMapMarkers(list);
+}
+function amenityLabel(key){return ({pool:t('pool'),wifi:'Wi-Fi',bbq:t('bbq'),parking:t('parking'),sea:t('sea'),ac:t('ac')})[key]||key}
+function villaCard(v,owner){
+  const img=(v.photos&&v.photos[0])||'';
+  const imgHtml=img?`<img class="villa-img" loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(v.title)}">`:`<div class="villa-img flex items-center justify-center"><i class="fa-solid fa-house text-5xl text-gray-400"></i></div>`;
+  const amenities=(v.amenities||[]).slice(0,3).map(a=>`<span class="amenity-chip">${escapeHTML(amenityLabel(a))}</span>`).join('');
+  return `<article class="card flex flex-col"><button class="relative text-left" onclick="openVillaDetails('${escapeHTML(v.id)}')" aria-label="${escapeHTML(t('details'))}: ${escapeHTML(v.title)}">${imgHtml}<span class="pill pill-green absolute top-3 left-3">${v.period==='monthly'?t('periodMonthly'):t('periodDaily')}</span><span class="absolute bottom-3 right-3 rounded-lg px-3 py-2 text-xs font-bold" style="background:#ffffffed;color:#123b2b">${escapeHTML(t('details'))} <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></span></button><div class="p-5 flex flex-col flex-1"><div class="flex items-start justify-between gap-3 mb-2"><h3 class="font-extrabold text-lg leading-6">${escapeHTML(v.title)}</h3><strong class="whitespace-nowrap text-lg" style="color:var(--green2)">${money(v.price)}<span class="block text-right text-xs font-medium" style="color:var(--muted)">/${v.period==='monthly'?'ay':'gün'}</span></strong></div><p class="text-sm mb-3" style="color:var(--muted)"><i class="fa-solid fa-location-dot mr-1"></i>${escapeHTML(v.district)}</p><div class="flex gap-4 text-xs font-semibold mb-3" style="color:#536158"><span><i class="fa-solid fa-door-open mr-1"></i>${escapeHTML(v.rooms)} ${t('roomsLabel')}</span><span><i class="fa-solid fa-users mr-1"></i>${escapeHTML(v.guests||'—')} ${t('guestsLabel')}</span></div>${amenities?`<div class="flex flex-wrap gap-1 mb-3">${amenities}</div>`:''}<p class="text-sm leading-6 mb-5 flex-1">${escapeHTML(v.description||'')}</p><div class="flex gap-2 mt-auto"><button class="btn btn-primary flex-1" onclick="openBooking('${escapeHTML(v.id)}')"><i class="fa-brands fa-whatsapp mr-1"></i>${t('reserve')}</button>${owner?`<button class="btn btn-outline" onclick="deleteVilla('${escapeHTML(v.id)}')" title="${t('delete')}"><i class="fa-solid fa-trash"></i></button>`:''}</div></div></article>`;
+}
+function initMap(){
+  if(map||!window.L||!$('villaMap'))return;
+  map=L.map('villaMap').setView([40.45,49.95],8);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+  Object.entries(DISTRICT_COORDS).forEach(([district,coords])=>{const marker=L.marker(coords).addTo(map);marker.bindPopup(`<strong>${escapeHTML(district)}</strong><br><button class="btn btn-primary" onclick="filterByDistrict('${escapeHTML(district)}')">${escapeHTML(language==='ru'?'Показать виллы':'Villaları göstər')}</button>`);mapMarkers.push(marker)});
+  renderMapMarkers(villas.filter(v=>v.status==='approved'));
+}
+function renderMapMarkers(list){
+  if(!map||!window.L)return;
+  mapMarkers.forEach(m=>{if(m._villaMarker)map.removeLayer(m)});mapMarkers=mapMarkers.filter(m=>!m._villaMarker);
+  list.forEach(v=>{const coords=DISTRICT_COORDS[v.district]||DISTRICT_COORDS['Digər'];const marker=L.marker(coords).addTo(map);marker._villaMarker=true;marker.bindPopup(`<strong>${escapeHTML(v.title)}</strong><br>${escapeHTML(v.district)} · ${money(v.price)}<br><button class="btn btn-primary" onclick="openVillaDetails('${escapeHTML(v.id)}')">${escapeHTML(t('details'))}</button>`);mapMarkers.push(marker)});
+}
+function filterByDistrict(district){$('filterDistrict').value=district;renderListings();$('listings').scrollIntoView({behavior:'smooth'})}
+function openVillaDetails(id){
+  detailVilla=villas.find(v=>v.id===id);if(!detailVilla)return;
+  $('detailTitle').textContent=detailVilla.title;$('detailLocation').innerHTML=`<i class="fa-solid fa-location-dot mr-1"></i>${escapeHTML(detailVilla.district)} · ${escapeHTML(detailVilla.rooms)} ${escapeHTML(t('roomsLabel'))} · ${escapeHTML(detailVilla.guests||'—')} ${escapeHTML(t('guestsLabel'))}`;
+  $('detailDescription').textContent=detailVilla.description||'';$('detailPrice').textContent=money(detailVilla.price)+' / '+(detailVilla.period==='monthly'?t('monthlyRate'):t('dailyRate'));
+  const photos=(detailVilla.photos||[]).slice(0,5);$('detailGallery').innerHTML=photos.length?photos.map((src,i)=>`<img src="${escapeHTML(src)}" alt="${escapeHTML(detailVilla.title)} — ${i+1}" loading="lazy">`).join(''):`<div class="flex items-center justify-center rounded-xl" style="grid-column:1/-1;background:#edf1ec;min-height:180px">${escapeHTML(t('noPhotos'))}</div>`;
+  $('detailAmenities').innerHTML=(detailVilla.amenities||[]).length?detailVilla.amenities.map(a=>`<span class="amenity-chip"><i class="fa-solid fa-check mr-1"></i>${escapeHTML(amenityLabel(a))}</span>`).join(''):`<span class="text-sm" style="color:var(--muted)">—</span>`;
+  calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);renderAvailabilityCalendar();openModal('detailModal');
+}
+function changeCalendarMonth(delta){calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+delta,1);renderAvailabilityCalendar()}
+function renderAvailabilityCalendar(){
+  if(!detailVilla)return;const y=calendarMonth.getFullYear(),m=calendarMonth.getMonth();
+  $('calendarMonthLabel').textContent=new Intl.DateTimeFormat(language==='ru'?'ru-RU':'az-AZ',{month:'long',year:'numeric'}).format(calendarMonth);
+  const weekdays=language==='ru'?['Пн','Вт','Ср','Чт','Пт','Сб','Вс']:['B.e.','Ç.a.','Ç.','C.a.','C.','Ş.','B.'];
+  let html=weekdays.map(d=>`<div class="text-center text-xs font-bold py-2" style="color:var(--muted)">${d}</div>`).join('');
+  const offset=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate(),today=new Date();today.setHours(0,0,0,0);const blocked=new Set(detailVilla.unavailableDates||[]);
+  for(let i=0;i<offset;i++)html+='<div></div>';
+  for(let d=1;d<=days;d++){const date=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,past=new Date(y,m,d)<today,unavailable=blocked.has(date),ownerCanEdit=!!currentUserEmail&&(detailVilla.ownerUid?detailVilla.ownerUid===currentUserUid:detailVilla.ownerEmail===currentUserEmail)&&!past;html+=`<div class="calendar-day ${unavailable?'unavailable':past?'past':''}" title="${ownerCanEdit?(language==='ru'?'Нажмите, чтобы изменить доступность':'Mövcudluğu dəyişmək üçün klikləyin'):(unavailable?t('unavailable'):past?'':t('available'))}" ${ownerCanEdit?`role="button" tabindex="0" onclick="toggleUnavailableDate('${date}')"`:''}>${d}</div>`}
+  $('availabilityCalendar').innerHTML=`<div class="calendar-grid">${html}</div>`;
+}
+function openBooking(id) {
+  bookingVilla = villas.find(v => String(v.id) === String(id));
+  if (!bookingVilla) return;
+  $('bookingVillaId').value = String(id);
+  $('bookingVillaInfo').innerHTML = `<p class="font-extrabold">${escapeHTML(bookingVilla.title)}</p><p class="text-sm mt-1">${escapeHTML(bookingVilla.district)} · ${money(bookingVilla.price)} / ${bookingVilla.period === 'monthly' ? 'ay' : 'gün'}</p>`;
+  const localDate = d => {
+    const copy = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+    return copy.toISOString().slice(0, 10);
+  };
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  $('bookingStart').min = localDate(today);
+  $('bookingStart').value = localDate(today);
+  $('bookingEnd').min = localDate(tomorrow);
+  $('bookingEnd').value = localDate(tomorrow);
+  updateBookingTotal();
+  openModal('bookingModal');
+}
+function updateBookingTotal() {
+  if (!bookingVilla) return;
+  const startValue = $('bookingStart').value;
+  const endValue = $('bookingEnd').value;
+  if (!startValue || !endValue) { $('bookingTotal').textContent = '—'; return; }
+  const start = new Date(startValue + 'T12:00:00');
+  const end = new Date(endValue + 'T12:00:00');
+  const days = Math.max(0, Math.round((end - start) / 86400000));
+  const units = bookingVilla.period === 'monthly' ? Math.max(1, Math.ceil(days / 30)) : days;
+  $('bookingTotal').textContent = units > 0 ? money(units * Number(bookingVilla.price)) : '—';
+}
+$('bookingStart').addEventListener('change', () => {
+  const value = $('bookingStart').value;
+  if (value) {
+    const minDate = new Date(value + 'T12:00:00');
+    minDate.setDate(minDate.getDate() + 1);
+    const isoMin = `${minDate.getFullYear()}-${String(minDate.getMonth() + 1).padStart(2, '0')}-${String(minDate.getDate()).padStart(2, '0')}`;
+    $('bookingEnd').min = isoMin;
+    if (!$('bookingEnd').value || $('bookingEnd').value < isoMin) $('bookingEnd').value = isoMin;
+  }
+  updateBookingTotal();
+});
+$('bookingEnd').addEventListener('change', updateBookingTotal);
+$('bookingForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if (!bookingVilla) return;
+  const start = $('bookingStart').value;
+  const end = $('bookingEnd').value;
+  if (!start || !end || end <= start) { showToast(t('badDates')); return; }
+  const blocked = bookingVilla.unavailableDates || [];
+  for (let d = new Date(start + 'T12:00:00'); d < new Date(end + 'T12:00:00'); d.setDate(d.getDate() + 1)) {
+    const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    if (blocked.includes(dateKey)) { showToast(t('unavailable')); return; }
+  }
+  const message = `Salam! Kirayə villası üçün sorğu:\nVilla: ${bookingVilla.title}\nRayon: ${bookingVilla.district}\nGiriş: ${start}\nÇıxış: ${end}\nTəxmini məbləğ: ${$('bookingTotal').textContent}\nAd: ${$('bookingName').value.trim()}\nTelefon: ${$('bookingPhone').value.trim()}`;
+  window.open('https://wa.me/' + ADMIN_WHATSAPP + '?text=' + encodeURIComponent(message), '_blank', 'noopener');
+  closeModal('bookingModal');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') ['authModal', 'bookingModal', 'detailModal'].forEach(closeModal);
+});
 
-В браузерный HTML можно помещать только Supabase URL и publishable key. Нельзя помещать `service_role` или secret key.
+function reserveFromDetails(){if(detailVilla){const id=detailVilla.id;closeModal('detailModal');openBooking(id)}}
+function renderAccount(){
+  const logged=!!currentUserEmail;$('accountLoggedOut').classList.toggle('hidden',logged);$('accountContent').classList.toggle('hidden',!logged);
+  if(!logged){$('accountSubtitle').textContent='';return}
+  $('accountSubtitle').textContent=currentUserEmail;$('accountEmail').textContent=currentUserEmail;
+  const mine=villas.filter(v=>v.ownerUid?v.ownerUid===currentUserUid:v.ownerEmail===currentUserEmail);$('myListingCount').textContent=mine.length;
+  $('myListingsGrid').innerHTML=mine.length?mine.map(v=>villaCard(v,true)).join():`<div class="card p-8 text-center sm:col-span-2 xl:col-span-3"><p class="font-bold">${t('emptyMine')}</p><button class="btn btn-primary mt-4" onclick="openAddListing()">${t('addVilla')}</button></div>`;
+}
+function resetListingForm(){$('listingForm').reset();pendingPhotos=[];$('photoPreview').innerHTML='';$('villaGuests').value=8}
+function compressImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=reject;reader.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',.78))};img.src=reader.result};reader.readAsDataURL(file)})}
 
-Не удалять таблицы и не запускать старые большие SQL-скрипты повторно.
+$('villaPhotos').addEventListener('change', async e => {
+  const files = Array.from(e.target.files || []);
+  pendingPhotos = [];
+  $('photoPreview').innerHTML = '';
+  if (files.length > 5 || files.some(file => !file.type.startsWith('image/') || file.size > 5 * 1024 * 1024)) {
+    e.target.value = '';
+    showToast(t('imageError'));
+    return;
+  }
+  try {
+    pendingPhotos = await Promise.all(files.map(compressImage));
+    $('photoPreview').innerHTML = pendingPhotos.map((src, i) =>
+      `<div class="relative"><img class="preview-thumb" src="${src}" alt="photo ${i + 1}"><span class="absolute -top-1 -right-1 bg-white rounded-full px-1 text-xs">${i + 1}</span></div>`
+    ).join('');
+  } catch (err) {
+    pendingPhotos = [];
+    e.target.value = '';
+    showToast(t('imageError'));
+  }
+});
+function supabaseErrorText(err) {
+  const msg = String(err && (err.message || err.details || err.hint) || err || '');
+  if (/row-level security|permission denied|not allowed/i.test(msg)) {
+    return language === 'ru'
+      ? 'Доступ ограничен правилами Supabase. Выполните файл supabase_setup.sql из архива.'
+      : 'Supabase giriş qaydaları məhdudlaşdırdı. Arxivdəki supabase_setup.sql faylını icra edin.';
+  }
+  if (/column .* does not exist|schema cache/i.test(msg)) {
+    return language === 'ru'
+      ? 'Сначала выполните SQL-файл настройки Supabase из архива.'
+      : 'Əvvəlcə arxivdəki Supabase SQL sazlama faylını icra edin.';
+  }
+  return language === 'ru' ? 'Ошибка Supabase: ' + msg : 'Supabase xətası: ' + msg;
+}
+function dateFromDb(value) { return String(value || '').slice(0, 10); }
+function normalizeRentType(value) {
+  const s = String(value || '').toLowerCase();
+  return (s.includes('month') || s.includes('aylıq') || s.includes('ayliq') || s.includes('месяц')) ? 'monthly' : 'daily';
+}
+function mapVillaRow(row) {
+  const ownerUid = row.owner_id ? String(row.owner_id) : '';
+  return {
+    id: String(row.id),
+    title: String(row.title || row.location || (language === 'ru' ? 'Вилла' : 'Villa')),
+    district: String(row.district || row.location || 'Digər'),
+    price: Number(row.price || 0),
+    period: normalizeRentType(row.rent_type),
+    rooms: Number(row.rooms || 1),
+    guests: Number(row.guests || 1),
+    description: String(row.description || ''),
+    photos: Array.isArray(row.photos) ? row.photos.filter(x => typeof x === 'string' && x) : [],
+    amenities: Array.isArray(row.amenities) ? row.amenities : [],
+    unavailableDates: [],
+    ownerEmail: ownerUid && ownerUid === currentUserUid ? currentUserEmail : '',
+    ownerUid,
+    status: row.is_published === false ? 'pending' : 'approved',
+    createdAt: row.created_at || new Date().toISOString(),
+    dbRow: row
+  };
+}
+async function refreshSupabaseVillas() {
+  if (!sbClient) throw new Error('Supabase client is not initialized');
+  const { data, error } = await sbClient.from('villas').select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  const next = (data || []).map(mapVillaRow);
+  if (next.length) {
+    try {
+      const ids = next.map(v => Number(v.id)).filter(Number.isFinite);
+      if (ids.length) {
+        const { data: dateRows, error: dateError } = await sbClient
+          .from('villa_unavailable_dates')
+          .select('villa_id, unavailable_date')
+          .in('villa_id', ids);
+        if (dateError) throw dateError;
+        const byVilla = new Map();
+        (dateRows || []).forEach(r => {
+          const key = String(r.villa_id);
+          if (!byVilla.has(key)) byVilla.set(key, []);
+          byVilla.get(key).push(dateFromDb(r.unavailable_date));
+        });
+        next.forEach(v => v.unavailableDates = byVilla.get(v.id) || []);
+      }
+    } catch (dateErr) {
+      console.warn('Could not load unavailable dates:', dateErr);
+    }
+  }
+  villas = next;
+  if (detailVilla) detailVilla = villas.find(v => v.id === String(detailVilla.id)) || detailVilla;
+  renderListings();
+  renderAccount();
+  if (detailVilla) renderAvailabilityCalendar();
+  supabaseStatus(true);
+}
+async function initSupabaseApp() {
+  try {
+    if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+      throw new Error('Supabase SDK did not load. Check internet connection.');
+    }
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    const { data, error } = await sbClient.auth.getSession();
+    if (error) throw error;
+    const user = data && data.session ? data.session.user : null;
+    currentUserUid = user ? user.id : '';
+    currentUserEmail = user ? (user.email || '') : '';
+    cloudEnabled = true;
+    updateAuthButton();
+    try {
+      await refreshSupabaseVillas();
+    } catch (loadErr) {
+      console.error('Supabase listing load failed:', loadErr);
+      supabaseStatus(false, supabaseErrorText(loadErr));
+      showToast(supabaseErrorText(loadErr));
+    }
+    if (!sbAuthListenerRegistered) {
+      sbAuthListenerRegistered = true;
+      sbClient.auth.onAuthStateChange((_event, session) => {
+        const userNow = session ? session.user : null;
+        currentUserUid = userNow ? userNow.id : '';
+        currentUserEmail = userNow ? (userNow.email || '') : '';
+        updateAuthButton();
+        renderAccount();
+        if (detailVilla) renderAvailabilityCalendar();
+        setTimeout(() => refreshSupabaseVillas().catch(err => {
+          console.error('Supabase refresh failed:', err);
+          supabaseStatus(false, supabaseErrorText(err));
+        }), 0);
+      });
+    }
+  } catch (err) {
+    console.error('Supabase initialization failed:', err);
+    supabaseStatus(false, language === 'ru'
+      ? 'Не удалось подключиться. Проверьте интернет и настройки Supabase.'
+      : 'Qoşulmaq alınmadı. İnterneti və Supabase sazlamalarını yoxlayın.');
+    showToast(supabaseErrorText(err));
+  }
+}
 
-## Что пока НЕ сделано
+$('authForm').addEventListener('submit', async e => {
+  e.preventDefault(); e.stopImmediatePropagation();
+  if (!sbClient) { showToast(language === 'ru' ? 'Supabase ещё не подключён.' : 'Supabase hələ qoşulmayıb.'); return; }
+  const email = $('authEmail').value.trim().toLowerCase();
+  const password = $('authPassword').value;
+  try {
+    const { error } = await sbClient.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    closeModal('authModal');
+    showToast(language === 'ru' ? 'Вход выполнен.' : 'Uğurla daxil oldunuz.');
+    await refreshSupabaseVillas();
+  } catch (err) {
+    console.error('Supabase sign in failed:', err);
+    showToast(language === 'ru' ? 'Не удалось войти. Проверьте email и пароль.' : 'Giriş alınmadı. E-poçt və şifrəni yoxlayın.');
+  }
+}, true);
 
-- Сайт пока не подключён к Supabase.
-- В текущем HTML объявления загружаются из `localStorage` через функции `loadVillas()` и `saveVillas()`.
-- Вход сейчас демонстрационный: пользователь вводит email без реальной проверки пароля/ссылки; сессия хранится в `sessionStorage`.
-- Форма объявления также сохраняет данные только в браузере.
-- Столбцы Supabase и поля сайта пока не согласованы. В HTML есть `title`, `district`, `description`, `amenities`, `period`, `unavailableDates`, а в исходной таблице известны, среди прочего, `location`, `price`, `guests`, `rooms`, `phone`, `pets`, `status`, `photos`, `rent_type`, `area`. Полный список столбцов нужно проверить перед изменением кода. Дополнительный столбец в старой таблице ранее не удалось прочитать по скриншотам.
-- Не проверено, какие именно условия сохранены в политиках после их создания.
-- Пока нельзя считать, что фронтенд и Supabase уже работают вместе.
+async function registerAccount() {
+  if (!sbClient) { showToast(language === 'ru' ? 'Supabase ещё не подключён.' : 'Supabase hələ qoşulmayıb.'); return; }
+  const email = $('authEmail').value.trim().toLowerCase();
+  const password = $('authPassword').value;
+  if (!email || password.length < 6) {
+    showToast(language === 'ru' ? 'Введите email и пароль не короче 6 символов.' : 'E-poçt və ən azı 6 simvolluq şifrə daxil edin.');
+    return;
+  }
+  try {
+    const { data, error } = await sbClient.auth.signUp({ email, password });
+    if (error) throw error;
+    if (data.session) {
+      closeModal('authModal');
+      showToast(language === 'ru' ? 'Аккаунт создан, вы вошли.' : 'Hesab yaradıldı və giriş edildi.');
+    } else {
+      showToast(language === 'ru'
+        ? 'Аккаунт создан. Проверьте почту и подтвердите адрес, затем войдите.'
+        : 'Hesab yaradıldı. E-poçtunuzu təsdiqləyin, sonra daxil olun.');
+    }
+  } catch (err) {
+    console.error('Supabase sign up failed:', err);
+    showToast(language === 'ru' ? 'Не удалось создать аккаунт: ' + (err.message || '') : 'Hesab yaratmaq olmadı: ' + (err.message || ''));
+  }
+}
+async function logout() {
+  if (!sbClient) return;
+  const { error } = await sbClient.auth.signOut();
+  if (error) { showToast(supabaseErrorText(error)); return; }
+  currentUserEmail = ''; currentUserUid = '';
+  updateAuthButton(); renderAccount();
+  await refreshSupabaseVillas().catch(err => { console.error(err); supabaseStatus(false, supabaseErrorText(err)); });
+  showToast(t('logout'));
+}
+function openAddListing() {
+  if (!currentUserUid) { showToast(t('loginToAdd')); openAuth(); return; }
+  resetListingForm(); showSection('add');
+}
+async function uploadPendingPhotos(userId) {
+  const urls = [];
+  for (let i = 0; i < pendingPhotos.length; i++) {
+    const dataUrl = pendingPhotos[i];
+    const blob = await (await fetch(dataUrl)).blob();
+    const path = `${userId}/${Date.now()}-${i}-${Math.random().toString(36).slice(2,8)}.jpg`;
+    const { error } = await sbClient.storage.from('villa-photos').upload(path, blob, { contentType: 'image/jpeg', upsert: false });
+    if (error) throw error;
+    const { data } = sbClient.storage.from('villa-photos').getPublicUrl(path);
+    urls.push(data.publicUrl);
+  }
+  return urls;
+}
+$('listingForm').addEventListener('submit', async e => {
+  e.preventDefault(); e.stopImmediatePropagation();
+  if (!sbClient || !currentUserUid) { showToast(t('needLogin')); openAuth(); return; }
+  const title = $('villaTitle').value.trim();
+  const district = $('villaDistrict').value;
+  const price = Number($('villaPrice').value);
+  const rooms = Number($('villaRooms').value);
+  if (!title || !district || !Number.isFinite(price) || price <= 0 || !rooms) { showToast(language === 'ru' ? 'Проверьте заполненные данные.' : 'Məlumatları yoxlayın.'); return; }
+  const amenities = Array.from(document.querySelectorAll('input[name=amenity]:checked')).map(x => x.value);
+  const submitBtn = $('saveListingBtn');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i><span>${escapeHTML(t('savingListing'))}</span>`;
+  }
+  try {
+    const photoUrls = await uploadPendingPhotos(currentUserUid);
+    const row = {
+      owner_id: currentUserUid,
+      title,
+      district,
+      location: district,
+      description: $('villaDescription').value.trim(),
+      price,
+      rent_type: $('villaPeriod').value,
+      rooms,
+      guests: Number($('villaGuests').value) || 1,
+      amenities,
+      photos: photoUrls,
+      status: 'approved',
+      is_published: true
+    };
+    const { error } = await sbClient.from('villas').insert(row);
+    if (error) throw error;
+    pendingPhotos = [];
+    await refreshSupabaseVillas();
+    showToast(t('saved'));
+    showSection('account');
+  } catch (err) {
+    console.error('Supabase save failed:', err);
+    showToast(supabaseErrorText(err));
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<i class="fa-solid fa-check mr-2"></i><span data-i18n="saveListing">${escapeHTML(t('saveListing'))}</span>`;
+    }
+  }
+}, true);
 
-## Что сделать следующим — пошагово, без спешки
+async function deleteVilla(id) {
+  const v = villas.find(item => item.id === String(id));
+  if (!v || !currentUserUid || v.ownerUid !== currentUserUid) {
+    showToast(language === 'ru' ? 'Можно удалять только свои объявления.' : 'Yalnız öz elanınızı silə bilərsiniz.');
+    return;
+  }
+  if (!confirm(t('confirmDelete'))) return;
+  try {
+    const dbId = Number.isFinite(Number(id)) ? Number(id) : id;
+    const { data, error } = await sbClient.from('villas').delete().eq('id', dbId).select('id').maybeSingle();
+    if (error) throw error;
+    if (!data) throw new Error(language === 'ru' ? 'Объявление не найдено или удаление запрещено.' : 'Elan tapılmadı və ya silməyə icazə yoxdur.');
+    await refreshSupabaseVillas();
+    showToast(t('deleted'));
+  } catch (err) {
+    console.error('Supabase delete failed:', err);
+    showToast(supabaseErrorText(err));
+  }
+}
+async function toggleUnavailableDate(date) {
+  if (!detailVilla || !sbClient || !currentUserUid || detailVilla.ownerUid !== currentUserUid) return;
+  const blocked = new Set(detailVilla.unavailableDates || []);
+  const dbVillaId = Number.isFinite(Number(detailVilla.id)) ? Number(detailVilla.id) : detailVilla.id;
+  try {
+    if (blocked.has(date)) {
+      const { error } = await sbClient.from('villa_unavailable_dates').delete()
+        .eq('villa_id', dbVillaId).eq('unavailable_date', date);
+      if (error) throw error;
+      blocked.delete(date);
+    } else {
+      const { error } = await sbClient.from('villa_unavailable_dates').insert({
+        villa_id: dbVillaId, unavailable_date: date, created_by: currentUserUid
+      });
+      if (error) throw error;
+      blocked.add(date);
+    }
+    detailVilla.unavailableDates = Array.from(blocked).sort();
+    const stored = villas.find(v => v.id === String(detailVilla.id));
+    if (stored) stored.unavailableDates = [...detailVilla.unavailableDates];
+    renderAvailabilityCalendar();
+    showToast(language === 'ru' ? 'Календарь обновлён.' : 'Təqvim yeniləndi.');
+  } catch (err) {
+    console.error('Supabase calendar update failed:', err);
+    showToast(supabaseErrorText(err));
+  }
+}
 
-1. Сначала проверить полный список столбцов `public.villas`, затем — текущие политики RLS. Ничего не удалять и не менять на этом этапе.
-2. На основании фактической схемы выбрать безопасное соответствие полей сайта и базы. Не создавать вторую таблицу `villas` и не терять старую запись.
-3. Подключить Supabase JS в HTML с URL и publishable key.
-4. Заменить демо-вход на Supabase Auth (например, email magic link или подтверждение по email) и убедиться, что вставка объявления записывает `owner_id = user.id`.
-5. Подключить загрузку опубликованных объявлений из базы и запись новых объявлений. Для фото предпочтительно использовать Supabase Storage, после настройки безопасных Storage policies; не хранить большие Base64-фотографии в таблице.
-6. Подключить календарь к `villa_unavailable_dates` и запретить менять занятые даты не владельцу.
-7. Проверить результат на сайте GitHub Pages: анонимный просмотр, вход, создание объявления владельцем, запрет изменения чужого объявления.
+$('year').textContent = new Date().getFullYear();
+updateAuthButton();
+renderListings();
+renderAccount();
+initMap();
+initSupabaseApp();
+</script>
 
-## Первый запрос для продолжения
-
-Когда продолжим, начать с безопасной проверки полной схемы таблицы, ничего не меняющей:
-
-```sql
-SELECT
-  column_name,
-  data_type,
-  udt_name,
-  is_nullable
-FROM information_schema.columns
-WHERE table_schema = 'public'
-  AND table_name = 'villas'
-ORDER BY ordinal_position;
-```
-
-Потом проверить политики:
-
-```sql
-SELECT
-  tablename,
-  policyname,
-  cmd,
-  roles,
-  qual,
-  with_check
-FROM pg_policies
-WHERE schemaname = 'public'
-  AND tablename IN ('villas', 'villa_unavailable_dates')
-ORDER BY tablename, policyname;
-```
-
-Если трудно копировать результат из Supabase, можно попросить помощника провести дальше более простыми шагами. Не обязательно отправлять скриншоты: можно скопировать текст из результата, когда это получится.
-
-## Текст для нового чата
-
-«Продолжаем проект KİRAYƏVİLLA. Пожалуйста, прочитай приложенный checkpoint и продолжи с указанного этапа. Я новичок и мне нужны простые пошаговые инструкции, без лишних SQL-команд и без риска потерять существующее объявление. Supabase создан, RLS-политики добавлены, но сайт пока не подключён: HTML всё ещё использует localStorage и демо-вход. Сначала нужно проверить схему и политики, потом аккуратно подключить Supabase Auth, каталог, форму объявления и календарь. Не повторяй старые большие SQL-скрипты и не удаляй существующие таблицы.»
+</body>
+</html>
