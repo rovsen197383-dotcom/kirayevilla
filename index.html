@@ -155,7 +155,7 @@
 
 <div id="authModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="authTitle" onclick="if(event.target===this)closeModal('authModal')">
   <div class="modal"><div class="flex justify-between items-start gap-4 mb-5"><div><h2 id="authTitle" class="text-2xl font-extrabold" data-i18n="loginTitle">Şəxsi kabinetə giriş</h2><p class="text-sm mt-2" style="color:var(--muted)" data-i18n="loginDesc">E-poçtunuzu daxil edin.</p></div><button class="text-xl" aria-label="Bağla" onclick="closeModal('authModal')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form id="authForm"><label class="block text-sm font-bold mb-2" data-i18n="email">E-poçt</label><input id="authEmail" type="email" autocomplete="email" class="field mb-3" required placeholder="name@example.com"><label class="block text-sm font-bold mb-2" data-i18n="passwordLabel">Şifrə</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" class="field mb-4" required placeholder="min. 6"><div class="rounded-xl p-3 text-xs leading-5 mb-5" style="background:#eaf4ec;color:#245c38" data-i18n="supabaseAuthNotice">Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="submit" class="btn btn-primary w-full" data-i18n="continue">Daxil ol</button><button type="button" class="btn btn-outline w-full" onclick="registerAccount()" data-i18n="register">Hesab yarat</button></div></form>
+    <form id="authForm"><label class="block text-sm font-bold mb-2" data-i18n="email">E-poçt</label><input id="authEmail" type="email" autocomplete="email" class="field mb-3" required placeholder="name@example.com"><label class="block text-sm font-bold mb-2" data-i18n="passwordLabel">Şifrə</label><div class="relative mb-4"><input id="authPassword" type="password" autocomplete="current-password" minlength="6" class="field" style="padding-right:48px" required placeholder="min. 6"><button type="button" id="togglePassword" onclick="togglePassword()" class="absolute top-0 bottom-0 right-0 px-4" style="background:transparent;border:0;color:#69756d" aria-label="Göstər / Показать" title="Göstər / Показать"><i class="fa-regular fa-eye"></i></button></div><div class="rounded-xl p-3 text-xs leading-5 mb-5" style="background:#eaf4ec;color:#245c38" data-i18n="supabaseAuthNotice">Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="submit" class="btn btn-primary w-full" data-i18n="continue">Daxil ol</button><button type="button" class="btn btn-outline w-full" onclick="registerAccount()" data-i18n="register">Hesab yarat</button></div></form>
   </div>
 </div>
 
@@ -228,7 +228,15 @@ function showSection(name){
   if(name==='account')renderAccount();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function openAuth(){openModal('authModal');setTimeout(()=>$('authEmail').focus(),100)}
+function togglePassword(){
+  const i=$('authPassword'),show=i.type==='password';
+  i.type=show?'text':'password';
+  const b=$('togglePassword');
+  b.innerHTML='<i class="fa-regular '+(show?'fa-eye-slash':'fa-eye')+'"></i>';
+  const label=show?(language==='ru'?'Скрыть':'Gizlət'):(language==='ru'?'Показать':'Göstər');
+  b.title=label;b.setAttribute('aria-label',label);
+}
+function openAuth(){$('authPassword').type='password';$('togglePassword').innerHTML='<i class="fa-regular fa-eye"></i>';openModal('authModal');setTimeout(()=>$('authEmail').focus(),100)}
 function setLanguage(value){
   language=value==='ru'?'ru':'az';document.documentElement.lang=language;$('languageSelect').value=language;
   document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(translations[language][key])el.innerHTML=translations[language][key]});
