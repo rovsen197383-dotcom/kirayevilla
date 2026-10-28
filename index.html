@@ -220,29 +220,52 @@ function waNumber(raw){
   return d.length===9?'994'+d:d;
 }
 function showToast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3600)}
-function closeModal(id){$(id).classList.remove('show')}
-function openModal(id){$(id).classList.add('show')}
-function showSection(name){
+function curState(){return history.state||{view:'home'}}
+function hashFor(st){
+  if(st.modal==='detailModal'&&st.villa)return '#villa-'+st.villa;
+  if(st.modal==='bookingModal'&&st.villa)return '#booking-'+st.villa;
+  if(st.modal==='authModal')return '#login';
+  return st.view&&st.view!=='home'?'#'+st.view:location.pathname+location.search;
+}
+function closeModal(id){
+  const st=curState();
+  if(st.modal===id)history.back(); // popstate сам скроет окно
+  else $(id).classList.remove('show');
+}
+function openModal(id,mode){
+  $(id).classList.add('show');
+  mode=mode||'push';
+  if(mode==='none')return;
+  const st={view:curState().view||'home',modal:id};
+  if(id==='detailModal'&&detailVilla)st.villa=detailVilla.id;
+  if(id==='bookingModal'&&bookingVilla)st.villa=bookingVilla.id;
+  if(mode==='replace')history.replaceState(st,'',hashFor(st));
+  else history.pushState(st,'',hashFor(st));
+}
+function showSection(name,mode){
   ['home','account','add'].forEach(s=>$(s+'Section').classList.toggle('active',s===name));
   document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===name));
   if(name==='account')renderAccount();
+  if(mode==='pop')return;
+  const st=curState();
+  if(st.view!==name||st.modal){const ns={view:name};history.pushState(ns,'',hashFor(ns))}
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function togglePasswordVisibility(){
-  const i=$('authPassword'),show=i.type==='password';
-  i.type=show?'text':'password';
-  const b=$('togglePassword');
-  b.innerHTML='<i class="fa-regular '+(show?'fa-eye-slash':'fa-eye')+'"></i>';
-  const label=show?(language==='ru'?'Скрыть':'Gizlət'):(language==='ru'?'Показать':'Göstər');
-  b.title=label;b.setAttribute('aria-label',label);
-}
+window.addEventListener('popstate',e=>{
+  const st=e.state||{view:'home'};
+  ['authModal','bookingModal','detailModal'].forEach(m=>$(m).classList.remove('show'));
+  showSection(st.view||'home','pop');
+  if(st.modal==='detailModal'&&st.villa&&villas.some(v=>v.id===String(st.villa)))openVillaDetails(st.villa,true);
+  else if(st.modal==='bookingModal'&&st.villa&&villas.some(v=>v.id===String(st.villa)))openBooking(st.villa,'none');
+  else if(st.modal==='authModal')openModal('authModal','none');
+});
 function openAuth(){$('authPassword').type='password';$('togglePassword').innerHTML='<i class="fa-regular fa-eye"></i>';openModal('authModal');setTimeout(()=>$('authEmail').focus(),100)}
 function setLanguage(value){
   language=value==='ru'?'ru':'az';document.documentElement.lang=language;$('languageSelect').value=language;
   document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(translations[language][key])el.innerHTML=translations[language][key]});
   const sort=$('sortListings');sort.options[0].text=t('sortNewest');sort.options[1].text=t('sortPriceAsc');sort.options[2].text=t('sortPriceDesc');
   updateAuthButton();if(lastStatus.ok!==null)supabaseStatus(lastStatus.ok,lastStatus.message);
-  renderListings();renderAccount();if(bookingVilla)updateBookingInfo();if(detailVilla)openVillaDetails(detailVilla.id,true);
+  renderListings();renderAccount();if(bookingVilla)updateBookingInfo();if(detailVilla&&$('detailModal').classList.contains('show'))openVillaDetails(detailVilla.id,true);
 }
 function updateAuthButton(){
   const btn=$('authButton');
@@ -322,7 +345,7 @@ function openVillaDetails(id,keepMonth){
   $('detailGallery').innerHTML=photos.length?photos.map((src,i)=>`<img src="${escapeHTML(src)}" alt="${escapeHTML(detailVilla.title)} — ${i+1}" loading="lazy">`).join(''):`<div class="flex items-center justify-center rounded-xl" style="grid-column:1/-1;grid-row:1/-1;background:#edf1ec;min-height:180px">${escapeHTML(t('noPhotos'))}</div>`;
   $('detailAmenities').innerHTML=(detailVilla.amenities||[]).length?detailVilla.amenities.map(a=>`<span class="amenity-chip"><i class="fa-solid fa-check mr-1"></i>${escapeHTML(amenityLabel(a))}</span>`).join(''):`<span class="text-sm" style="color:var(--muted)">—</span>`;
   if(!keepMonth)calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
-  renderAvailabilityCalendar();openModal('detailModal');
+  renderAvailabilityCalendar();openModal('detailModal',keepMonth?'none':'push');
 }
 function changeCalendarMonth(delta){calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+delta,1);renderAvailabilityCalendar()}
 function isOwner(v){return !!v&&!!currentUserUid&&v.ownerUid===currentUserUid}
@@ -350,13 +373,13 @@ function updateBookingInfo(){
   updateBookingTotal();
 }
 function localDate(d){const c=new Date(d.getTime()-d.getTimezoneOffset()*60000);return c.toISOString().slice(0,10)}
-function openBooking(id){
+function openBooking(id,mode){
   bookingVilla=villas.find(v=>String(v.id)===String(id));if(!bookingVilla)return;
   $('bookingVillaId').value=String(id);
   const today=new Date(),tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);
   $('bookingStart').min=localDate(today);$('bookingStart').value=localDate(today);
   $('bookingEnd').min=localDate(tomorrow);$('bookingEnd').value=localDate(tomorrow);
-  updateBookingInfo();openModal('bookingModal');
+  updateBookingInfo();openModal('bookingModal',mode||'push');
 }
 function updateBookingTotal(){
   if(!bookingVilla)return;
@@ -392,7 +415,7 @@ $('bookingForm').addEventListener('submit',e=>{
   closeModal('bookingModal');
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')['authModal','bookingModal','detailModal'].forEach(closeModal)});
-function reserveFromDetails(){if(detailVilla){const id=detailVilla.id;closeModal('detailModal');openBooking(id)}}
+function reserveFromDetails(){if(detailVilla){const id=detailVilla.id;$('detailModal').classList.remove('show');openBooking(id,'replace')}}
 
 /* ===== Личный кабинет ===== */
 function renderAccount(){
@@ -599,6 +622,7 @@ async function toggleUnavailableDate(date){
 translations.az.confirmDelete='Bu elanı silmək istəyirsiniz?';
 translations.ru.confirmDelete='Удалить это объявление?';
 $('year').textContent=new Date().getFullYear();
+history.replaceState({view:'home'},'');
 setLanguage('az');
 initMap();
 initSupabaseApp();
