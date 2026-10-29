@@ -42,6 +42,20 @@
     .stat{border:1px solid #e5e9e2;background:#fff;border-radius:14px;padding:16px}
     #villaMap{height:430px;border-radius:18px;z-index:1}.detail-modal{width:min(900px,100%)}.detail-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:130px 130px;gap:8px}.detail-gallery img{width:100%;height:100%;object-fit:cover;border-radius:10px;background:#e7ece7}.detail-gallery img:first-child{grid-row:span 2}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.calendar-day{padding:9px 2px;text-align:center;border-radius:8px;font-size:12px;background:#e6f4e9;color:#245c38}.calendar-day.unavailable{background:#f8e1df;color:#9d2f2b;text-decoration:line-through}.calendar-day.past{background:#f0f0ed;color:#a0a59f}.amenity-chip{font-size:12px;background:#edf4ee;color:#245c38;border-radius:999px;padding:6px 10px}
     @media(max-width:640px){.villa-img{height:190px}.modal{padding:19px}.hero-title{font-size:35px!important}.detail-gallery{grid-template-columns:1fr 1fr;grid-template-rows:120px 120px}.detail-gallery img:first-child{grid-column:span 2;grid-row:span 1}}
+
+    #authModal #authTitle{font-size:30px;line-height:1.2}
+    #authModal #authChoice .btn{padding:18px 16px;border-radius:12px;font-size:16px;font-weight:500}
+    #authModal #authChoice .btn-primary{background:#4361ff}#authModal #authChoice .btn-primary:hover{background:#3550e6}
+    #authModal #authChoice .btn-outline{border:1px solid #4361ff;color:#4361ff;background:#fff}
+    #authModal .auth-field{display:block;width:100%;padding:17px 20px;border:1px solid #e4e4e4;border-radius:16px;background:#fafafa;font-size:16px;margin-bottom:16px;outline:none}
+    #authModal .auth-field:focus{border-color:#4361ff;background:#fff}
+    #authModal .auth-btn{display:block;width:100%;padding:17px;border:0;border-radius:16px;background:#4361ff;color:#fff;font-size:16px;font-weight:500;cursor:pointer;transition:.18s}
+    #authModal .auth-btn:hover:not(:disabled){background:#3550e6}
+    #authModal .auth-btn:disabled{background:#a6c4ff;cursor:not-allowed}
+    #authModal .auth-forgot{background:none;border:0;color:#222;text-decoration:underline;font-size:15px;margin:-4px 0 16px;cursor:pointer}
+    #authModal .auth-links{text-align:center;margin-top:20px}
+    #authModal .auth-link{background:none;border:0;color:#4361ff;font-size:15px;cursor:pointer}
+    #authModal .auth-link2{background:none;border:0;color:#69756d;font-size:14px;cursor:pointer}
   </style>
 <style>
 /* KİRAYƏVİLLA — дизайн-апгрейд. Подключается ПОСЛЕ основного <style>. */
@@ -103,9 +117,100 @@ article.card>button>span{z-index:2}
 }
 .detail-gallery{grid-auto-rows:130px}
 @media(max-width:640px){.detail-gallery{grid-auto-rows:120px}}
+.menu-item{display:block;width:100%;text-align:left;padding:12px 14px;border:0;background:transparent;border-radius:12px;font-weight:600;font-size:14px;color:#17251d}
+.menu-item:hover{background:#f3f5f0}
+#profileMenu{animation:modalIn .15s ease-out}
+.acc-link{display:flex;align-items:center;gap:16px;width:100%;text-align:left;padding:14px 16px;border:0;background:transparent;border-radius:16px;font-weight:400;font-size:17px;color:#1c1c1e;transition:background .15s}
+.acc-link i{width:26px;text-align:center;font-size:21px;color:#1c1c1e}
+.acc-link:hover{background:#eeeeef}
+.acc-link.active{background:#e9e9ea;color:#4262f5}.acc-link.active i{color:#4262f5}
+.acc-sep{height:1px;background:#e0e0e2;margin:14px 4px}
+#accStats,#accAds{scroll-margin-top:90px}
+.tx-table{width:100%;min-width:640px;border-collapse:collapse;font-size:15px}
+.tx-table th{text-align:left;font-weight:500;padding:12px 10px;border-bottom:1px solid #e0e0e2;color:#1c1c1e}
+.tx-table td{padding:16px 10px;border-bottom:1px solid #eeeeef;vertical-align:middle}
+.tx-table tr:last-child td{border-bottom:0}
+.tx-table a{color:#4262f5;text-decoration:underline}
+.tx-row:hover{background:#fafafa}
+.pay-card{display:flex;align-items:center;gap:14px;background:#f4f5f6;border:1px solid #e6e7e9;border-radius:22px;padding:16px 18px}
+.card-logo{width:46px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.visa-logo{font-style:italic;font-weight:800;font-size:19px;color:#1a1f71;letter-spacing:-.02em}
+.mc-logo i{display:block;width:24px;height:24px;border-radius:50%;background:#eb001b}
+.mc-logo i+i{background:#f79e1b;margin-left:-9px;opacity:.95}
+.pay-dots{border:0;background:transparent;color:#b0b3b6;font-size:18px;padding:6px 8px;border-radius:10px}
+.pay-dots:hover{background:#e9eaec;color:#4b5550}
+.pill-btn{border:0;background:#dfe6ff;color:#4262f5;font-weight:500;font-size:16px;padding:12px 20px;border-radius:16px;transition:background .15s}
+.pill-btn:hover{background:#d0dbff}
+.tx-pill{border:0;background:#f4f5f6;color:#1c1c1e;font-size:16px;padding:15px 20px;border-radius:24px;transition:background .15s}
+.tx-pill:hover{background:#eceef0}
+.tx-pill.active{color:#4262f5}
+.tx-table td{font-size:17px}
+.pv-label{font-size:16px;color:#8a938d}
+.pv-value{font-size:19px;color:#1c1c1e;margin-top:2px}
+.pf-label{display:block;font-size:16px;color:#8a938d}
+.pf-input{width:100%;border:0;border-bottom:1px solid #e6e7e9;padding:6px 0 10px;font-size:19px;color:#1c1c1e;background:transparent;outline:none;transition:border-color .15s}
+.pf-input:focus{border-bottom-color:#4262f5}
+.pf-input:disabled{color:#4b5550}
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* VIP-карточки */
+.vip-card{display:block;cursor:pointer;color:#1c1c1e}
+.vip-img{position:relative;aspect-ratio:290/215;border-radius:18px;overflow:hidden;background:#e4e9e3}
+.vip-img .villa-img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.vip-card:hover .vip-img .villa-img{transform:scale(1.04)}
+.vip-heart{position:absolute;top:8px;right:8px;width:36px;height:36px;border:0;background:transparent;font-size:26px;color:#0000006b;-webkit-text-stroke:1.5px #fff}
+.vip-heart.on{color:#ef4444}
+.vip-badge{position:absolute;left:10px;bottom:10px;background:#4262f5;color:#fff;font-size:13px;padding:4px 9px;border-radius:7px}
+.vip-price{font-size:clamp(18px,2vw,22px);font-weight:700;margin-top:10px}
+.vip-title{font-size:17px;margin-top:8px}
+.vip-sub{font-size:16px;margin-top:4px}
+.vip-meta{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#9a9ea3;margin-top:8px}
+.vip-meta i{color:#f5a623}
+
+/* Страница villa (детали) */
+.dt-icon{width:52px;height:52px;border:0;border-radius:16px;background:#f4f4f4;font-size:22px;color:#1c1c1e}
+.dt-icon.on i{font-weight:900;color:#ef4444}
+.dt-main{position:relative;aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:#e4e9e3}
+.dt-bg{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(28px)}
+.dt-main>img{position:relative;width:100%;height:100%;object-fit:contain}
+.dt-count{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:#0009;color:#fff;border-radius:10px;padding:6px 14px;font-size:14px}
+.dt-all{position:absolute;right:14px;bottom:14px;background:#ffffffd9;border:0;border-radius:10px;padding:8px 14px;font-size:14px}
+.dt-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:0;background:#ffffffd9;font-size:16px}
+.dt-thumbs{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:10px}
+.dt-thumb{position:relative;aspect-ratio:100/62;border-radius:10px;overflow:hidden;border:2px solid transparent;padding:0;background:#e7ece7}
+.dt-thumb.on{border-color:#123b2b}
+.dt-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.dt-more{position:absolute;inset:0;background:#000a;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;text-align:center}
+.dt-side{background:#f8f8f8;border-radius:20px;padding:24px}
+.dt-avatar{width:60px;height:60px;border-radius:50%;background:#fff;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center;color:#c4c6c9;font-size:26px;flex-shrink:0}
+.dt-green{background:#3bb35f;color:#fff;border:0;border-radius:16px;padding:14px;width:100%;text-align:center;font-weight:500}
+.dt-green:hover{background:#34a557}
+.dt-more-btn{width:100%;margin-top:18px;background:#fff;border:1px solid #e3e3e3;border-radius:16px;padding:16px;color:#4262f5;font-size:16px}
+@media(max-width:640px){.dt-thumbs{grid-template-columns:repeat(4,minmax(0,1fr))}.dt-side{padding:18px}}
+
+/* Elanlarım */
+.ad-pill{border:0;background:#f4f5f6;color:#1c1c1e;font-size:16px;padding:15px 20px;border-radius:24px;transition:background .15s}
+.ad-pill:hover{background:#eceef0}
+.ad-pill.active{background:#eef1ff;color:#4262f5}
+.ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,314px));gap:12px;justify-content:start}
+.ad-status{position:absolute;left:10px;bottom:10px;background:#38b25f;color:#fff;font-size:14px;padding:3px 8px;border-radius:7px}
+.ad-status.gold{background:#d8b56d;color:#18261c}
+.ad-actions{display:flex;gap:12px;margin-top:10px;position:relative}
+.ad-promote{flex:1;border:0;background:#dfe6ff;color:#4262f5;font-size:16px;height:50px;border-radius:16px;transition:background .15s}
+.ad-promote:hover{background:#d0dbff}
+.ad-dots{width:50px;height:50px;border:0;background:#f4f5f6;border-radius:16px;font-size:18px;color:#1c1c1e}
+.ad-dots:hover{background:#eceef0}
+.ad-menu{position:absolute;right:0;bottom:58px;min-width:170px;background:#fff;border-radius:16px;box-shadow:0 10px 34px #0003;padding:6px;z-index:20}
+@media(max-width:640px){.ads-grid{grid-template-columns:1fr 1fr}#accAds{padding:22px 16px!important}.ad-pill{padding:11px 15px;font-size:14px}}
+
+.ads-filters{display:flex;flex-wrap:nowrap;gap:8px;margin-bottom:32px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.ads-filters::-webkit-scrollbar{display:none}
+.ad-pill{white-space:nowrap;flex-shrink:0;font-size:15px;padding:13px 17px}
+
+.ads-filters{gap:6px!important}
+.ad-pill{font-size:clamp(12px,1.05vw,15px)!important;padding:12px clamp(9px,1vw,16px)!important;flex-shrink:1!important}
 </style>
 </head>
 <body>
@@ -118,26 +223,19 @@ article.card>button>span{z-index:2}
     </button>
     <nav class="hidden md:flex items-center gap-1">
       <button class="nav-link active" data-nav="home" onclick="showSection('home')" data-i18n="navHome">Ana səhifə</button>
-      <button class="nav-link" data-nav="add" onclick="openAddListing()" data-i18n="navAdd">Elan yerləşdir</button>
-      <button class="nav-link" data-nav="account" onclick="showSection('account')" data-i18n="navAccount">Şəxsi kabinet</button>
     </nav>
     <div class="flex items-center gap-2">
       <div id="languageSelect" class="flex items-center gap-1" role="group" aria-label="Language"></div>
-      <button id="authButton" class="btn btn-gold text-sm" onclick="openAuth()"><i class="fa-regular fa-user mr-1"></i><span data-i18n="login">Daxil ol</span></button>
+      <button class="btn text-sm" style="background:#38b25f;color:#fff" onclick="openAddListing()" aria-label="Yeni elan"><i class="fa-solid fa-circle-plus sm:mr-2"></i><span class="hidden sm:inline" data-i18n="newListing">Yeni elan</span></button>
+      <div class="relative"><button id="authButton" class="btn btn-gold text-sm" onclick="openAuth()"><i class="fa-regular fa-user mr-1"></i><span data-i18n="login">Daxil ol</span></button><div id="profileMenu" class="card hidden absolute right-0 top-full mt-2 p-2" style="width:250px;z-index:60;overflow:visible" role="menu"></div></div>
     </div>
   </div>
-  <nav class="md:hidden flex items-center justify-around border-t border-white/10 px-2 py-1.5">
-    <button class="nav-link active flex-1 text-center text-xs py-2" data-nav="home" onclick="showSection('home')" data-i18n="navHome">Ana səhifə</button>
-    <button class="nav-link flex-1 text-center text-xs py-2" data-nav="add" onclick="openAddListing()" data-i18n="navAdd">Elan yerləşdir</button>
-    <button class="nav-link flex-1 text-center text-xs py-2" data-nav="account" onclick="showSection('account')" data-i18n="navAccount">Şəxsi kabinet</button>
-  </nav>
 </header>
 
 <main id="homeSection" class="section active">
   <section class="relative overflow-hidden" style="background:linear-gradient(110deg,#102f23f2,#123b2bd9),url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=85') center/cover">
     <div class="max-w-7xl mx-auto px-5 py-20 md:py-28">
       <div class="max-w-2xl">
-        <span class="pill pill-gold mb-5 inline-block" data-i18n="heroBadge">Azərbaycanda villa kirayəsi</span>
         <h1 class="hero-title text-white text-4xl md:text-6xl font-extrabold leading-tight mb-5" data-i18n="heroTitle">Xəyalınızdakı istirahətə<br>bir addım daha yaxın.</h1>
         <p class="text-lg leading-8 mb-8" style="color:#dce7de" data-i18n="heroText">Ailəvi istirahət, hovuzlu villalar və rahat seçim — sizə uyğun evi asanlıqla tapın.</p>
         <button class="btn btn-gold" onclick="document.getElementById('listings').scrollIntoView({behavior:'smooth'})"><span data-i18n="browse">Villalara bax</span> <i class="fa-solid fa-arrow-right ml-2"></i></button>
@@ -157,10 +255,12 @@ article.card>button>span{z-index:2}
 
   <section id="listings" class="max-w-7xl mx-auto px-4 py-14">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-7">
-      <div><p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)" data-i18n="curated">Seçilmiş təkliflər</p><h2 class="text-3xl font-extrabold" data-i18n="listingTitle">Kirayə üçün villalar</h2><p class="text-sm mt-2" style="color:var(--muted)" id="listingCount">—</p><p id="supabaseConnectionStatus" class="text-xs mt-2" style="color:#69756d">Supabase: bağlantı yoxlanılır…</p></div>
-      <div class="flex flex-wrap gap-2 items-center"><label class="sr-only" for="sortListings">Sort</label><select id="sortListings" class="field" style="min-width:205px" onchange="renderListings()"><option value="newest">Ən yenilər</option><option value="priceAsc">Qiymət: ucuzdan bahaya</option><option value="priceDesc">Qiymət: bahadan ucuza</option></select><button class="btn btn-outline" onclick="openAddListing()"><i class="fa-solid fa-plus mr-2"></i><span data-i18n="addVilla">Villa əlavə et</span></button></div>
+      <div><h2 id="vipTitle" class="text-xl font-medium">VIP Elanlar</h2><p class="text-sm mt-2" style="color:var(--muted)" id="listingCount">—</p><p id="supabaseConnectionStatus" class="text-xs mt-2" style="color:#69756d">Supabase: bağlantı yoxlanılır…</p></div>
+      <div class="flex flex-wrap gap-2 items-center"><a id="vipMore" href="javascript:void(0)" onclick="showAllListings()" style="font-size:18px;text-decoration:underline;color:#1c1c1e;margin-right:8px">Daha çox</a><label class="sr-only" for="sortListings">Sort</label><select id="sortListings" class="field" style="min-width:205px" onchange="renderListings()"><option value="newest">Ən yenilər</option><option value="priceAsc">Qiymət: ucuzdan bahaya</option><option value="priceDesc">Qiymət: bahadan ucuza</option></select><button class="btn btn-outline" onclick="openAddListing()"><i class="fa-solid fa-plus mr-2"></i><span data-i18n="addVilla">Villa əlavə et</span></button></div>
     </div>
-    <div id="villaGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+    <div id="mineBanner" class="hidden flex flex-wrap items-center justify-between gap-3 rounded-2xl p-4 mb-5" style="background:#e4f1e7;color:#24623d"><span class="font-semibold text-sm" data-i18n="mineOnly">Yalnız sizin elanlarınız göstərilir.</span><button type="button" class="btn btn-outline text-sm" onclick="showAllListings()" data-i18n="allListingsBtn">Bütün elanlar</button></div>
+    <div id="villaGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+    <div id="regularBlock" class="hidden mt-12"><h2 class="text-xl font-medium mb-5">Elanlar</h2><div id="regularGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div></div>
     <div id="emptyListings" class="hidden text-center py-16 card"><i class="fa-solid fa-house-circle-xmark text-4xl mb-4" style="color:#9aa89d"></i><p class="font-bold text-lg" data-i18n="noResults">Axtarışa uyğun villa tapılmadı.</p><p class="text-sm mt-2" style="color:var(--muted)" data-i18n="tryFilters">Filtrləri dəyişib yenidən yoxlayın.</p></div>
   </section>
   <section class="max-w-7xl mx-auto px-4 pb-14" id="mapSection">
@@ -178,12 +278,94 @@ article.card>button>span{z-index:2}
 </main>
 
 <section id="accountSection" class="section max-w-7xl mx-auto px-4 py-12 min-h-[70vh]">
-  <div class="mb-8"><p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)" data-i18n="yourSpace">Sizin məkanınız</p><h1 class="text-3xl font-extrabold" data-i18n="accountTitle">Şəxsi kabinet</h1><p class="mt-2 text-sm" style="color:var(--muted)" id="accountSubtitle"></p></div>
+  <div class="mb-8"><h1 class="text-3xl font-extrabold" data-i18n="cabinet">Kabinet</h1><p class="hidden" id="accountSubtitle"></p></div>
   <div id="accountLoggedOut" class="card p-8 text-center"><i class="fa-regular fa-circle-user text-5xl mb-4" style="color:var(--green2)"></i><h2 class="text-xl font-bold mb-3" data-i18n="loginNeeded">Elanlarınızı görmək üçün daxil olun</h2><button class="btn btn-primary" onclick="openAuth()" data-i18n="login">Daxil ol</button></div>
   <div id="accountContent" class="hidden">
-    <div class="grid sm:grid-cols-3 gap-4 mb-8"><div class="stat"><p class="text-sm" style="color:var(--muted)" data-i18n="myListings">Mənim elanlarım</p><p id="myListingCount" class="text-3xl font-extrabold mt-2">0</p></div><div class="stat"><p class="text-sm" style="color:var(--muted)" data-i18n="accountEmail">Hesab e-poçtu</p><p id="accountEmail" class="font-bold mt-2 break-all">—</p></div><div class="stat flex items-center justify-between gap-2"><div><p class="text-sm" style="color:var(--muted)" data-i18n="accountStatus">Hesab statusu</p><p class="font-bold mt-2" data-i18n="demoStatus">Supabase hesabı</p></div><button class="btn btn-outline text-sm" onclick="logout()" data-i18n="logout">Çıxış</button></div></div>
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-5"><h2 class="text-xl font-extrabold" data-i18n="yourAds">Yerləşdirdiyim elanlar</h2><button class="btn btn-primary" onclick="openAddListing()"><i class="fa-solid fa-plus mr-2"></i><span data-i18n="addVilla">Villa əlavə et</span></button></div>
-    <div id="myListingsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+    <div class="grid lg:grid-cols-[290px_minmax(0,1fr)] gap-8 items-start">
+      <aside class="lg:sticky lg:top-24">
+        <div class="mb-8">
+          <i class="fa-solid fa-circle-user" style="font-size:76px;color:#bdbec1;display:block;line-height:1"></i>
+          <p id="accName" class="mt-3" style="font-size:20px;font-weight:500"></p>
+          <p id="accSub" class="mt-1 break-all" style="font-size:16px;color:#4b5550" onclick="if(!(currentUserMeta&&currentUserMeta.phone))accountGo('profile')">—</p>
+        </div>
+        <p class="mb-3 px-1" style="font-size:14px;color:#8a938d" data-i18n="sectionMain">Əsas</p>
+        <nav class="flex flex-col gap-2" aria-label="Kabinet">
+          <button type="button" class="acc-link active" data-acc="top" onclick="accountGo('top')"><i class="fa-regular fa-chart-bar"></i><span data-i18n="accountTitle">Şəxsi kabinet</span></button>
+          <button type="button" class="acc-link" data-acc="ads" onclick="accountGo('ads')"><i class="fa-regular fa-square-plus"></i><span data-i18n="navMyAds">Elanlarım</span></button>
+          <button type="button" class="acc-link" data-acc="payment" onclick="accountGo('payment')"><i class="fa-solid fa-wallet"></i><span data-i18n="navPayment">Ödəniş üsulu</span></button>
+          <button type="button" class="acc-link" data-acc="history" onclick="accountGo('history')"><i class="fa-regular fa-file-lines"></i><span data-i18n="navHistory">Əməliyyat tarixçəsi</span></button>
+          <button type="button" class="acc-link" data-acc="profile" onclick="accountGo('profile')"><i class="fa-regular fa-user"></i><span data-i18n="navProfile">Profil</span></button>
+          <div class="acc-sep"></div>
+          <button type="button" class="acc-link" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i><span data-i18n="logout">Çıxış</span></button>
+        </nav>
+      </aside>
+      <div class="min-w-0">
+        <div id="accView-top">
+          <div id="accStats" class="card p-6 mb-6" style="overflow:visible">
+            <h2 class="text-xl font-extrabold mb-5" data-i18n="statsTitle">Statistika</h2>
+            <div class="grid sm:grid-cols-3 gap-4">
+              <div class="stat"><p class="text-sm" style="color:var(--muted)" data-i18n="myListings">Mənim elanlarım</p><p id="myListingCount" class="text-3xl font-extrabold mt-2">0</p></div>
+              <div class="stat"><p class="text-sm" style="color:var(--muted)" data-i18n="statLive">Saytda</p><p id="myLiveCount" class="text-3xl font-extrabold mt-2">0</p></div>
+              <div class="stat"><p class="text-sm" style="color:var(--muted)" data-i18n="pending">Yoxlanılır</p><p id="myPendingCount" class="text-3xl font-extrabold mt-2">0</p></div>
+            </div>
+          </div>
+        </div>
+        <div id="accView-ads" class="hidden">
+          <div id="accAds" class="card" style="overflow:visible;padding:32px 24px">
+            <h2 class="font-extrabold" style="font-size:32px;margin-bottom:28px" data-i18n="navMyAds">Elanlarım</h2>
+            <div id="adsFilters" class="ads-filters" role="group"></div>
+            <div id="myListingsGrid" class="ads-grid"></div>
+          </div>
+        </div>
+        <div id="accView-payment" class="hidden">
+          <div class="card p-6 mb-6" style="overflow:visible">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-6"><h2 class="text-2xl font-extrabold" data-i18n="myCards">Kartlarım</h2><button type="button" class="pill-btn" onclick="addCard()" data-i18n="addCard">Yeni kart əlavə et</button></div>
+            <div id="cardsList" class="grid sm:grid-cols-2 gap-4"></div>
+            <p class="text-xs mt-6 text-center" style="color:#8a938d" data-i18n="cardsNote">Kartlar ödəniş zamanı avtomatik burada görünəcək. Kartın tam nömrəsi saxlanılmır.</p>
+          </div>
+          <div class="card p-6" style="overflow:visible">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-6"><h2 class="text-2xl font-extrabold" data-i18n="personalAccount">Şəxsi hesab</h2><button type="button" class="pill-btn" onclick="topUp()" data-i18n="topUp">Hesabı artır</button></div>
+            <div style="background:#f4f5f6;border-radius:22px;padding:22px 26px;display:inline-block;min-width:260px">
+              <p class="text-sm" style="color:#8a938d" data-i18n="personalAccount">Şəxsi hesab</p>
+              <p id="accBalance" class="mt-2" style="font-size:30px;font-weight:500">0 ₼</p>
+            </div>
+          </div>
+        </div>
+        <div id="accView-history" class="hidden card p-6" style="overflow:visible">
+          <h2 class="text-2xl font-extrabold mb-6" data-i18n="navHistory">Əməliyyat tarixçəsi</h2>
+          <div class="flex flex-wrap gap-3 mb-6" role="group">
+            <button type="button" class="tx-pill active" data-f="all" onclick="setTxFilter('all')" data-i18n="txAllOps">Bütün əməliyyatlar</button>
+            <button type="button" class="tx-pill" data-f="account" onclick="setTxFilter('account')" data-i18n="personalAccount">Şəxsi hesab</button>
+            <button type="button" class="tx-pill" data-f="packages" onclick="setTxFilter('packages')" data-i18n="txPackages">Paketlər və yerləşdirmələr</button>
+          </div>
+          <div id="txAll"></div>
+        </div>
+        <div id="accView-profile" class="hidden card p-6" style="overflow:visible">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-8">
+            <h2 class="text-2xl font-extrabold" data-i18n="navProfile">Profil</h2>
+            <button type="button" id="profEditBtn" class="pill-btn" style="min-width:170px" onclick="editProfile()" data-i18n="editBtn">Redaktə et</button>
+            <button type="submit" form="profileForm" id="profSaveBtn" class="pill-btn hidden" style="min-width:170px" data-i18n="profileSave">Yadda saxla</button>
+          </div>
+          <div id="profView" class="grid gap-7">
+            <div><p class="pv-label" data-i18n="profAd">Ad</p><p id="pvName" class="pv-value">—</p></div>
+            <div><p class="pv-label" data-i18n="email">E-poçt</p><p id="pvEmail" class="pv-value break-all">—</p></div>
+            <div><p class="pv-label" data-i18n="phone">Telefon</p><p id="pvPhone" class="pv-value">—</p></div>
+            <div><p class="pv-label" data-i18n="passwordLabel">Şifrə</p><p class="pv-value">**************</p></div>
+          </div>
+          <div id="profEdit" class="hidden">
+            <form id="profileForm" class="grid gap-7" style="max-width:520px">
+              <div><label class="pf-label" for="profName"><span data-i18n="profAd">Ad</span> *</label><input id="profName" class="pf-input" maxlength="80" autocomplete="name" required></div>
+              <div><label class="pf-label" for="profEmail"><span data-i18n="email">E-poçt</span> *</label><input id="profEmail" class="pf-input" type="email" disabled></div>
+              <div><label class="pf-label" for="profPhone" data-i18n="phone">Telefon</label><input id="profPhone" class="pf-input" type="tel" autocomplete="tel" placeholder="+994 55 000 00 00"></div>
+              <div><label class="pf-label" for="profCur" data-i18n="profCur">Mövcud şifrə</label><input id="profCur" class="pf-input" type="password" autocomplete="current-password"></div>
+              <div><label class="pf-label" for="profPass" data-i18n="newPass">Yeni şifrə</label><input id="profPass" class="pf-input" type="password" autocomplete="new-password"></div>
+              <div><label class="pf-label" for="profPass2" data-i18n="profPass2">Şifrənin təsdiqi</label><input id="profPass2" class="pf-input" type="password" autocomplete="new-password"></div>
+              <div><button type="button" class="font-semibold text-sm" style="color:#4262f5;background:none;border:0;padding:0" onclick="cancelProfileEdit()" data-i18n="cancel">Ləğv et</button></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -216,14 +398,45 @@ article.card>button>span{z-index:2}
 </footer>
 
 <div id="authModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="authTitle" onclick="if(event.target===this)closeModal('authModal')">
-  <div class="modal"><div class="flex justify-between items-start gap-4 mb-5"><div><h2 id="authTitle" class="text-2xl font-extrabold" data-i18n="loginTitle">Şəxsi kabinetə giriş</h2><p class="text-sm mt-2" style="color:var(--muted)" data-i18n="loginDesc">E-poçtunuzu daxil edin.</p></div><button class="text-xl" aria-label="Bağla" onclick="closeModal('authModal')"><i class="fa-solid fa-xmark"></i></button></div>
-    <form id="authForm"><label class="block text-sm font-bold mb-2" data-i18n="email">E-poçt</label><input id="authEmail" type="email" autocomplete="email" class="field mb-3" required placeholder="name@example.com"><label class="block text-sm font-bold mb-2" data-i18n="passwordLabel">Şifrə</label><div class="relative mb-4"><input id="authPassword" type="password" autocomplete="current-password" minlength="6" class="field" style="padding-right:48px" required placeholder="min. 6"><button type="button" id="togglePassword" onclick="togglePasswordVisibility()" class="absolute top-0 bottom-0 right-0 px-4" style="background:transparent;border:0;color:#69756d" aria-label="Göstər / Показать" title="Göstər / Показать"><i class="fa-regular fa-eye"></i></button></div><div class="rounded-xl p-3 text-xs leading-5 mb-5" style="background:#eaf4ec;color:#245c38" data-i18n="supabaseAuthNotice">Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="submit" class="btn btn-primary w-full" data-i18n="continue">Daxil ol</button><button type="button" class="btn btn-outline w-full" onclick="registerAccount()" data-i18n="register">Hesab yarat</button></div></form>
+  <div class="modal"><div class="flex justify-between items-start gap-4 mb-5"><div><h2 id="authTitle" class="text-2xl font-extrabold" data-i18n="loginTitle">Şəxsi kabinetə giriş</h2><p id="authDesc" class="text-sm mt-2" style="color:var(--muted)" data-i18n="authChoose">E-poçtunuzu daxil edin.</p></div><button class="text-xl" aria-label="Bağla" onclick="closeModal('authModal')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div id="authChoice" class="grid gap-3"><button type="button" class="btn btn-primary w-full" onclick="authStep('phone')" data-i18n="authByPhone">Telefon nömrəsi ilə giriş</button><button type="button" class="btn btn-outline w-full" onclick="authStep('email')" data-i18n="authByEmail">E-mail ilə giriş</button></div>
+    <form id="phoneForm" style="display:none"><input id="loginPhone" type="tel" autocomplete="tel" class="auth-field" required placeholder="+994 55 000 00 00"><div id="otpRow" style="display:none"><input id="loginOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" class="auth-field" placeholder="SMS"></div><button type="submit" id="phoneSubmit" class="auth-btn" data-i18n="sendCode">Kod göndər</button><div class="auth-links"><button type="button" class="auth-link" onclick="authStep('email')" data-i18n="authByEmail">E-mail ilə giriş</button></div></form>
+    <form id="forgotForm" style="display:none" novalidate><input id="forgotEmail" name="email" type="email" inputmode="email" autocapitalize="off" spellcheck="false" autocomplete="email" class="auth-field" placeholder="Email"><button type="submit" id="forgotSubmit" class="auth-btn" disabled data-i18n="sendReset">Göndərmək</button><div class="auth-links"><button type="button" class="auth-link" onclick="authStep('email')"><i class="fa-solid fa-chevron-left" style="font-size:12px;margin-right:6px"></i><span data-i18n="backLogin">Geriyə qayıt</span></button></div></form>
+    <form id="authForm" style="display:none" novalidate><input id="authEmail" name="email" type="email" inputmode="email" autocapitalize="off" spellcheck="false" autocomplete="email" class="auth-field" placeholder="Email"><div class="relative" style="margin-bottom:16px"><input id="authPassword" name="password" type="password" autocomplete="current-password" class="auth-field" style="padding-right:52px;margin-bottom:0" placeholder="Şifrə"><button type="button" id="togglePassword" onclick="togglePasswordVisibility()" class="absolute top-0 bottom-0 right-0 px-4" style="background:transparent;border:0;color:#69756d" aria-label="Göstər / Показать" title="Göstər / Показать"><i class="fa-regular fa-eye"></i></button></div><div id="authPhoneRow" style="display:none"><input id="authPhone" type="tel" autocomplete="tel" class="auth-field" placeholder="+994 55 000 00 00"></div><div style="text-align:right"><button type="button" class="auth-forgot" onclick="authStep('forgot')" data-i18n="forgotPass">Şifrəni unutdum</button></div><button type="submit" id="authSubmit" class="auth-btn" disabled data-i18n="loginBtn">Giriş</button><div class="auth-links"><button type="button" class="auth-link" onclick="authStep('phone')" data-i18n="authByPhone">Telefon nömrəsi ilə giriş</button></div><div class="auth-links" style="margin-top:10px"><button type="button" id="authModeBtn" class="auth-link2" onclick="toggleAuthMode()" data-i18n="register">Hesab yarat</button></div></form>
   </div>
 </div>
 
 <div id="detailModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="detailTitle" onclick="if(event.target===this)closeModal('detailModal')">
-  <div class="modal detail-modal"><div class="flex justify-between items-start gap-4 mb-5"><div><p class="text-xs font-extrabold tracking-widest uppercase mb-2" style="color:var(--green2)" data-i18n="villaDetails">Villa haqqında</p><h2 id="detailTitle" class="text-2xl font-extrabold">Villa</h2></div><button class="text-xl" onclick="closeModal('detailModal')" aria-label="Bağla"><i class="fa-solid fa-xmark"></i></button></div>
-    <div id="detailGallery" class="detail-gallery mb-5"></div><div class="grid md:grid-cols-3 gap-5"><div class="md:col-span-2"><p id="detailLocation" class="font-semibold mb-3" style="color:var(--muted)"></p><p id="detailDescription" class="text-sm leading-7 mb-4"></p><h3 class="font-extrabold mb-3" data-i18n="amenities">İmkanlar</h3><div id="detailAmenities" class="flex flex-wrap gap-2 mb-6"></div><h3 class="font-extrabold mb-3" data-i18n="availability">Mövcudluq təqvimi</h3><div class="card p-4"><div class="flex items-center justify-between gap-2 mb-4"><button class="btn btn-outline" onclick="changeCalendarMonth(-1)" aria-label="Əvvəlki ay"><i class="fa-solid fa-chevron-left"></i></button><strong id="calendarMonthLabel"></strong><button class="btn btn-outline" onclick="changeCalendarMonth(1)" aria-label="Növbəti ay"><i class="fa-solid fa-chevron-right"></i></button></div><div id="availabilityCalendar"></div><div class="flex flex-wrap gap-3 text-xs mt-4"><span><i class="fa-solid fa-circle text-green-600 mr-1"></i><span data-i18n="available">Mövcuddur</span></span><span><i class="fa-solid fa-circle text-red-500 mr-1"></i><span data-i18n="unavailable">Tutulub</span></span></div></div></div><aside class="card p-4 h-fit"><p id="detailPrice" class="text-2xl font-extrabold mb-1" style="color:var(--green2)"></p><p class="text-xs mb-5" style="color:var(--muted)" data-i18n="priceNote">Qiymət elan sahibinin göstərdiyi məbləğdir.</p><button id="detailReserveBtn" class="btn btn-primary w-full" onclick="reserveFromDetails()"><i class="fa-brands fa-whatsapp mr-2"></i><span data-i18n="reserve">Sorğu göndər</span></button></aside></div>
+  <div class="modal detail-modal" style="width:min(1120px,100%);padding:20px 24px">
+    <div class="flex justify-between items-start gap-4 mb-4">
+      <h2 id="detailTitle" class="text-xl md:text-2xl font-medium leading-snug">Villa</h2>
+      <div class="flex gap-2 flex-shrink-0">
+        <button type="button" class="dt-icon" onclick="this.classList.toggle('on')" aria-label="Favorit"><i class="fa-regular fa-heart"></i></button>
+        <button type="button" class="dt-icon" onclick="closeModal('detailModal')" aria-label="Bağla"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-start">
+      <div class="min-w-0">
+        <div id="dtMain" class="dt-main"></div>
+        <div id="dtThumbs" class="dt-thumbs"></div>
+        <div id="dtAll" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3"></div>
+        <p id="detailDescription" class="text-base leading-7 mt-6" style="white-space:pre-line"></p>
+        <h3 class="font-extrabold mt-6 mb-3" data-i18n="amenities">İmkanlar</h3>
+        <div id="detailAmenities" class="flex flex-wrap gap-2 mb-6"></div>
+        <h3 class="font-extrabold mb-3" data-i18n="availability">Mövcudluq təqvimi</h3>
+        <div class="card p-4"><div class="flex items-center justify-between gap-2 mb-4"><button class="btn btn-outline" onclick="changeCalendarMonth(-1)" aria-label="Əvvəlki ay"><i class="fa-solid fa-chevron-left"></i></button><strong id="calendarMonthLabel"></strong><button class="btn btn-outline" onclick="changeCalendarMonth(1)" aria-label="Növbəti ay"><i class="fa-solid fa-chevron-right"></i></button></div><div id="availabilityCalendar"></div><div class="flex flex-wrap gap-3 text-xs mt-4"><span><i class="fa-solid fa-circle text-green-600 mr-1"></i><span data-i18n="available">Mövcuddur</span></span><span><i class="fa-solid fa-circle text-red-500 mr-1"></i><span data-i18n="unavailable">Tutulub</span></span></div></div>
+      </div>
+      <aside class="dt-side">
+        <p id="detailPrice" class="text-2xl font-bold"></p>
+        <div id="dtStats" class="grid grid-cols-3 gap-3 mt-5"></div>
+        <hr class="my-5" style="border-color:#e3e3e3">
+        <div class="flex items-center justify-between gap-3 mb-4"><div><p id="dtOwner" class="text-lg"></p><p class="text-sm" style="color:#9a9ea3" id="dtOwnerSub"></p></div><span class="dt-avatar"><i class="fa-solid fa-user"></i></span></div>
+        <button type="button" id="dtPhoneBtn" class="dt-green" onclick="revealPhone()"></button>
+        <button id="detailReserveBtn" class="btn btn-outline w-full mt-3" onclick="reserveFromDetails()"><i class="fa-brands fa-whatsapp mr-2"></i><span data-i18n="reserve">Sorğu göndər</span></button>
+        <p id="detailLocation" class="mt-5 text-base flex items-center gap-2"></p>
+        <button type="button" id="dtMoreBtn" class="dt-more-btn" onclick="showDistrictOffers()"></button>
+      </aside>
+    </div>
   </div>
 </div>
 <div id="bookingModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="bookingTitle" onclick="if(event.target===this)closeModal('bookingModal')">
@@ -243,6 +456,8 @@ article.card>button>span{z-index:2}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ===== Настройки ===== */
+const TOPUP_URL = '';                     // ссылка на страницу пополнения счёта у платёжного сервиса; пока пусто = кнопка показывает «пока недоступно»
+const ADD_CARD_URL = '';                  // ссылка на страницу привязки карты у вашего платёжного сервиса; пока пусто = кнопка показывает «пока недоступно»
 const ADMIN_WHATSAPP = '994553507887';   // запасной номер, если у объявления нет своего
 const REQUIRE_MODERATION = true;          // true: новые объявления видны только владельцу, пока вы не поставите is_published = true в Supabase
 const SUPABASE_URL = 'https://xzlzadslnhpfpqgfmwio.supabase.co';
@@ -250,25 +465,25 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_hy04N5QwYrvdkzX8nxfyvQ_UAcqm8eq
 
 let sbClient = null, sbAuthListenerRegistered = false, cloudEnabled = false, lastStatus = { ok: null, message: '' };
 const $ = id => document.getElementById(id);
+let currentUserMeta = {}, onlyMine = false, transactions = [], cards = [], txFilter = 'all';
 let language = 'az', currentUserEmail = '', currentUserUid = '', villas = [], pendingPhotos = [], bookingVilla = null, toastTimer;
 
-const L=(ru,az,en)=>language==='ru'?ru:language==='en'?en:az;
+const tr3=(ru,az,en)=>language==='ru'?ru:language==='en'?en:az;
 const LOC=()=>({ru:'ru-RU',az:'az-AZ',en:'en-GB'})[language]||'az-AZ';
 function supabaseStatus(connected, message = '') {
   lastStatus = { ok: connected, message };
   const el = $('supabaseConnectionStatus');
   if (!el) return;
   if (connected) {
-    el.textContent = L('Supabase подключён: объявления загружаются из базы.','Supabase qoşuldu: elanlar bazadan yüklənir.','Supabase connected: listings are loaded from the database.');
-    el.style.color = '#24623d';
+    el.textContent = '';
   } else {
-    el.textContent = message || (L('Supabase пока не подключён. Проверьте настройки и SQL.','Supabase hələ qoşulmayıb. Sazlamaları və SQL-i yoxlayın.','Supabase is not connected yet. Check the settings and SQL.'));
+    el.textContent = message || (tr3('Supabase пока не подключён. Проверьте настройки и SQL.','Supabase hələ qoşulmayıb. Sazlamaları və SQL-i yoxlayın.','Supabase is not connected yet. Check the settings and SQL.'));
     el.style.color = '#a52b26';
   }
 }
 
 const translations = {
-  az:{navHome:'Ana səhifə',navAdd:'Elan yerləşdir',navAccount:'Şəxsi kabinet',login:'Daxil ol',logout:'Çıxış',heroBadge:'Azərbaycanda villa kirayəsi',heroTitle:'Xəyalınızdakı istirahətə<br>bir addım daha yaxın.',heroText:'Ailəvi istirahət, hovuzlu villalar və rahat seçim — sizə uyğun evi asanlıqla tapın.',browse:'Villalara bax',district:'Rayon',period:'Kirayə müddəti',rooms:'Otaq sayı',maxPrice:'Maksimum qiymət (₼)',search:'Axtar',allDistricts:'Rayonlar',priceShort:'Qiymət',priceMin:'Min.',priceMax:'Maks.',clearPrice:'Təmizlə',all:'Müddət',anyRooms:'Otaq sayı',chooseDistrict:'Rayon seçin',mapLabel:'Xəritə',curated:'Seçilmiş təkliflər',listingTitle:'Kirayə üçün villalar',addVilla:'Villa əlavə et',noResults:'Axtarışa uyğun villa tapılmadı.',tryFilters:'Filtrləri dəyişib yenidən yoxlayın.',benefit1:'Rahat seçim',benefit1Text:'Əsas məlumatları müqayisə edib sizə uyğun villanı seçin.',benefit2:'Şəkilli elanlar',benefit2Text:'Villanızı şəkillərlə təqdim edin və elanınızı idarə edin.',benefit3:'Birbaşa əlaqə',benefit3Text:'Rezervasiya sorğusunu WhatsApp vasitəsilə göndərin.',yourSpace:'Sizin məkanınız',accountTitle:'Şəxsi kabinet',loginNeeded:'Elanlarınızı görmək üçün daxil olun',myListings:'Mənim elanlarım',accountEmail:'Hesab e-poçtu',accountStatus:'Hesab statusu',demoStatus:'Supabase hesabı',yourAds:'Yerləşdirdiyim elanlar',backHome:'Ana səhifəyə qayıt',publishLabel:'Elan yerləşdir',publishTitle:'Villanızı təqdim edin',publishHelp:'Məlumatları doldurun. Elan Supabase məlumat bazasında saxlanacaq.',villaName:'Elanın adı *',price:'Qiymət (₼) *',daily:'Günlük',monthly:'Aylıq',guests:'Qonaq sayı',phoneOwner:'WhatsApp nömrəsi (sorğular bura gələcək) *',description:'Təsvir',photos:'Şəkillər (minimum 4, maksimum 20; hamısını birlikdə seçin, hər biri 5 MB-dək)',photoNote:'Şəkillər ölçüsü azaldıldıqdan sonra Supabase Storage-a yüklənir.',storageNotice:'Elan yoxlanıldıqdan sonra saytda görünəcək. Bu müddətdə onu yalnız siz kabinetdə görürsünüz.',saveListing:'Elanı yadda saxla',savingListing:'Yüklənir...',cancel:'Ləğv et',footerText:'Azərbaycanda rahat istirahət üçün villa axtarışı.',loginTitle:'Şəxsi kabinetə giriş',loginDesc:'E-poçtunuzu daxil edin.',email:'E-poçt',passwordLabel:'Şifrə',supabaseAuthNotice:'Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.',register:'Hesab yarat',continue:'Daxil ol',bookingRequest:'Rezervasiya sorğusu',booking:'Rezervasiya',checkIn:'Giriş tarixi',checkOut:'Çıxış tarixi',yourName:'Adınız',phone:'Telefon',estimatedTotal:'Təxmini məbləğ',bookingNote:'Bu, yalnız sorğudur; rezervasiya təsdiqi və ödəniş avtomatik həyata keçirilmir.',sendRequest:'WhatsApp-da sorğu göndər',dailyRate:'günlük',monthlyRate:'aylıq',perDay:'gün',perMonth:'ay',roomsLabel:'otaq',guestsLabel:'qonaq',details:'Ətraflı',reserve:'Sorğu göndər',delete:'Sil',pending:'Yoxlanılır',emptyMine:'Hələ elan yerləşdirməmisiniz.',saved:'Elan yadda saxlanıldı.',savedPending:'Elan göndərildi. Yoxlanıldıqdan sonra saytda görünəcək.',deleted:'Elan silindi.',needLogin:'Davam etmək üçün əvvəlcə e-poçtla daxil olun.',badDates:'Çıxış tarixi giriş tarixindən sonra olmalıdır.',badPhone:'WhatsApp nömrəsini düzgün daxil edin (məs. +994 55 000 00 00).',imageError:'Şəkil yüklənmədi. JPG, PNG, WEBP və ya GIF seçin (hər biri maksimum 5 MB).',loginToAdd:'Elan yerləşdirmək üçün e-poçtla daxil olun.',listingCount:'elan tapıldı',mapTitle:'Xəritədə villalar',mapText:'Novxanı, Mərdəkan, Bilgəh və digər ərazilərdə elanlara baxın.',mapNotice:'Xəritədəki nişanlar rayonun təxmini mərkəzini göstərir. Dəqiq ünvan elan sahibi tərəfindən əlavə edilməlidir.',amenities:'İmkanlar',pool:'Hovuz',bbq:'Manqal',parking:'Parkinq',sea:'Dənizə yaxın',ac:'Kondisioner',villaDetails:'Villa haqqında',availability:'Mövcudluq təqvimi',available:'Mövcuddur',unavailable:'Tutulub',priceNote:'Qiymət elan sahibinin göstərdiyi məbləğdir.',sortNewest:'Ən yenilər',sortPriceAsc:'Qiymət: ucuzdan bahaya',sortPriceDesc:'Qiymət: bahadan ucuza',noPhotos:'Şəkil əlavə edilməyib',showVillas:'Villaları göstər'},
+  az:{navHome:'Ana səhifə',navAdd:'Elan yerləşdir',navAccount:'Şəxsi kabinet',login:'GİRİŞ',logout:'Çıxış',heroBadge:'Azərbaycanda villa kirayəsi',heroTitle:'Xəyalınızdakı istirahətə<br>bir addım daha yaxın.',heroText:'Ailəvi istirahət, hovuzlu villalar və rahat seçim — sizə uyğun evi asanlıqla tapın.',browse:'Villalara bax',district:'Rayon',period:'Kirayə müddəti',rooms:'Otaq sayı',maxPrice:'Maksimum qiymət (₼)',search:'Axtar',allDistricts:'Rayonlar',priceShort:'Qiymət',priceMin:'Min.',priceMax:'Maks.',clearPrice:'Təmizlə',all:'Müddət',anyRooms:'Otaq sayı',chooseDistrict:'Rayon seçin',mapLabel:'Xəritə',curated:'Seçilmiş təkliflər',listingTitle:'Kirayə üçün villalar',addVilla:'Villa əlavə et',noResults:'Axtarışa uyğun villa tapılmadı.',tryFilters:'Filtrləri dəyişib yenidən yoxlayın.',benefit1:'Rahat seçim',benefit1Text:'Əsas məlumatları müqayisə edib sizə uyğun villanı seçin.',benefit2:'Şəkilli elanlar',benefit2Text:'Villanızı şəkillərlə təqdim edin və elanınızı idarə edin.',benefit3:'Birbaşa əlaqə',benefit3Text:'Rezervasiya sorğusunu WhatsApp vasitəsilə göndərin.',yourSpace:'Sizin məkanınız',accountTitle:'Şəxsi kabinet',loginNeeded:'Elanlarınızı görmək üçün daxil olun',myListings:'Mənim elanlarım',accountEmail:'Hesab e-poçtu',accountStatus:'Hesab statusu',demoStatus:'Supabase hesabı',yourAds:'Yerləşdirdiyim elanlar',backHome:'Ana səhifəyə qayıt',publishLabel:'Elan yerləşdir',publishTitle:'Villanızı təqdim edin',publishHelp:'Məlumatları doldurun. Elan Supabase məlumat bazasında saxlanacaq.',villaName:'Elanın adı *',price:'Qiymət (₼) *',daily:'Günlük',monthly:'Aylıq',guests:'Qonaq sayı',phoneOwner:'WhatsApp nömrəsi (sorğular bura gələcək) *',description:'Təsvir',photos:'Şəkillər (minimum 4, maksimum 20; hamısını birlikdə seçin, hər biri 5 MB-dək)',photoNote:'Şəkillər ölçüsü azaldıldıqdan sonra Supabase Storage-a yüklənir.',storageNotice:'Elan yoxlanıldıqdan sonra saytda görünəcək. Bu müddətdə onu yalnız siz kabinetdə görürsünüz.',saveListing:'Elanı yadda saxla',savingListing:'Yüklənir...',cancel:'Ləğv et',footerText:'Azərbaycanda rahat istirahət üçün villa axtarışı.',loginTitle:'Şəxsi kabinetə giriş',loginDesc:'E-poçtunuzu daxil edin.',email:'E-poçt',passwordLabel:'Şifrə',supabaseAuthNotice:'Supabase ilə təhlükəsiz giriş. İlk dəfədirsə, hesab yaradın.',register:'Hesab yarat',continue:'Daxil ol',bookingRequest:'Rezervasiya sorğusu',booking:'Rezervasiya',checkIn:'Giriş tarixi',checkOut:'Çıxış tarixi',yourName:'Adınız',phone:'Telefon',estimatedTotal:'Təxmini məbləğ',bookingNote:'Bu, yalnız sorğudur; rezervasiya təsdiqi və ödəniş avtomatik həyata keçirilmir.',sendRequest:'WhatsApp-da sorğu göndər',dailyRate:'günlük',monthlyRate:'aylıq',perDay:'gün',perMonth:'ay',roomsLabel:'otaq',guestsLabel:'qonaq',details:'Ətraflı',reserve:'Sorğu göndər',delete:'Sil',pending:'Yoxlanılır',emptyMine:'Hələ elan yerləşdirməmisiniz.',saved:'Elan yadda saxlanıldı.',savedPending:'Elan göndərildi. Yoxlanıldıqdan sonra saytda görünəcək.',deleted:'Elan silindi.',needLogin:'Davam etmək üçün əvvəlcə e-poçtla daxil olun.',badDates:'Çıxış tarixi giriş tarixindən sonra olmalıdır.',badPhone:'WhatsApp nömrəsini düzgün daxil edin (məs. +994 55 000 00 00).',imageError:'Şəkil yüklənmədi. JPG, PNG, WEBP və ya GIF seçin (hər biri maksimum 5 MB).',loginToAdd:'Elan yerləşdirmək üçün e-poçtla daxil olun.',listingCount:'elan tapıldı',mapTitle:'Xəritədə villalar',mapText:'Novxanı, Mərdəkan, Bilgəh və digər ərazilərdə elanlara baxın.',mapNotice:'Xəritədəki nişanlar rayonun təxmini mərkəzini göstərir. Dəqiq ünvan elan sahibi tərəfindən əlavə edilməlidir.',amenities:'İmkanlar',pool:'Hovuz',bbq:'Manqal',parking:'Parkinq',sea:'Dənizə yaxın',ac:'Kondisioner',villaDetails:'Villa haqqında',availability:'Mövcudluq təqvimi',available:'Mövcuddur',unavailable:'Tutulub',priceNote:'Qiymət elan sahibinin göstərdiyi məbləğdir.',sortNewest:'Ən yenilər',sortPriceAsc:'Qiymət: ucuzdan bahaya',sortPriceDesc:'Qiymət: bahadan ucuza',noPhotos:'Şəkil əlavə edilməyib',showVillas:'Villaları göstər'},
   ru:{navHome:'Главная',navAdd:'Разместить объявление',navAccount:'Личный кабинет',login:'Войти',logout:'Выйти',heroBadge:'Аренда вилл в Азербайджане',heroTitle:'Ваш идеальный отдых<br>стал ещё ближе.',heroText:'Семейный отдых, виллы с бассейном и удобный поиск — найдите подходящий дом.',browse:'Смотреть виллы',district:'Район',period:'Срок аренды',rooms:'Количество комнат',maxPrice:'Максимальная цена (₼)',search:'Найти',allDistricts:'Районы',priceShort:'Цена',priceMin:'От',priceMax:'До',clearPrice:'Сбросить',all:'Срок',anyRooms:'Комнаты',chooseDistrict:'Выберите район',mapLabel:'Карта',curated:'Подборка предложений',listingTitle:'Виллы в аренду',addVilla:'Добавить виллу',noResults:'Подходящих вилл не найдено.',tryFilters:'Измените фильтры и попробуйте снова.',benefit1:'Удобный выбор',benefit1Text:'Сравните основные данные и выберите подходящую виллу.',benefit2:'Объявления с фото',benefit2Text:'Добавьте фотографии виллы и управляйте объявлением.',benefit3:'Прямая связь',benefit3Text:'Отправьте запрос на бронирование через WhatsApp.',yourSpace:'Ваш профиль',accountTitle:'Личный кабинет',loginNeeded:'Войдите, чтобы увидеть свои объявления',myListings:'Мои объявления',accountEmail:'Электронная почта',accountStatus:'Статус аккаунта',demoStatus:'Аккаунт Supabase',yourAds:'Мои объявления',backHome:'Вернуться на главную',publishLabel:'Размещение объявления',publishTitle:'Расскажите о своей вилле',publishHelp:'Заполните данные. Объявление сохранится в Supabase.',villaName:'Название объявления *',price:'Цена (₼) *',daily:'Посуточно',monthly:'Помесячно',guests:'Количество гостей',phoneOwner:'Номер WhatsApp (сюда придут запросы) *',description:'Описание',photos:'Фотографии (минимум 4, максимум 20; выберите все сразу, каждая до 5 МБ)',photoNote:'Фотографии уменьшаются и загружаются в Supabase Storage.',storageNotice:'Объявление появится на сайте после проверки. Пока вы видите его только в личном кабинете.',saveListing:'Сохранить объявление',savingListing:'Загрузка...',cancel:'Отмена',footerText:'Поиск вилл для комфортного отдыха в Азербайджане.',loginTitle:'Вход в личный кабинет',loginDesc:'Введите адрес электронной почты.',email:'Электронная почта',passwordLabel:'Пароль',supabaseAuthNotice:'Безопасный вход через Supabase. Если вы впервые здесь, создайте аккаунт.',register:'Создать аккаунт',continue:'Войти',bookingRequest:'Запрос на бронирование',booking:'Бронирование',checkIn:'Дата заезда',checkOut:'Дата выезда',yourName:'Ваше имя',phone:'Телефон',estimatedTotal:'Примерная сумма',bookingNote:'Это только запрос; бронирование и оплата автоматически не подтверждаются.',sendRequest:'Отправить запрос в WhatsApp',dailyRate:'в сутки',monthlyRate:'в месяц',perDay:'сут.',perMonth:'мес.',roomsLabel:'комнат',guestsLabel:'гостей',details:'Подробнее',reserve:'Отправить запрос',delete:'Удалить',pending:'На проверке',emptyMine:'Вы ещё не размещали объявления.',saved:'Объявление сохранено.',savedPending:'Объявление отправлено. Оно появится на сайте после проверки.',deleted:'Объявление удалено.',needLogin:'Сначала войдите по электронной почте.',badDates:'Дата выезда должна быть позже даты заезда.',badPhone:'Введите корректный номер WhatsApp (например, +994 55 000 00 00).',imageError:'Не удалось загрузить фото. Выберите JPG, PNG, WEBP или GIF (до 5 МБ каждое).',loginToAdd:'Чтобы разместить объявление, войдите по электронной почте.',listingCount:'объявлений найдено',mapTitle:'Виллы на карте',mapText:'Смотрите объявления в Новханы, Мардакяне, Бильгя и других районах.',mapNotice:'Маркеры показывают примерный центр района. Точный адрес должен добавить владелец объявления.',amenities:'Удобства',pool:'Бассейн',bbq:'Мангал',parking:'Парковка',sea:'Рядом с морем',ac:'Кондиционер',villaDetails:'О вилле',availability:'Календарь доступности',available:'Свободно',unavailable:'Занято',priceNote:'Указана цена, установленная владельцем объявления.',sortNewest:'Сначала новые',sortPriceAsc:'Цена: сначала дешевле',sortPriceDesc:'Цена: сначала дороже',noPhotos:'Фотографии не добавлены',showVillas:'Показать виллы'}
 };
 function t(key){return (translations[language]&&translations[language][key])||translations.az[key]||key}
@@ -283,7 +498,7 @@ function waNumber(raw){
   if(d.startsWith('0'))d=d.slice(1);
   return d.length===9?'994'+d:d;
 }
-function showToast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3600)}
+function showToast(message,ms){const el=$('toast');el.textContent=message;el.classList.add('show');el.onclick=()=>{clearTimeout(toastTimer);el.classList.remove('show')};clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.classList.remove('show');el.textContent=''},ms||3600)}
 function curState(){return history.state||{view:'home'}}
 function hashFor(st){
   if(st.modal==='detailModal'&&st.villa)return '#villa-'+st.villa;
@@ -307,6 +522,7 @@ function openModal(id,mode){
   else history.pushState(st,'',hashFor(st));
 }
 function showSection(name,mode){
+  if(name==='home'&&onlyMine){onlyMine=false;renderListings()}
   ['home','account','add'].forEach(s=>$(s+'Section').classList.toggle('active',s===name));
   document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===name));
   if(name==='account')renderAccount();
@@ -323,7 +539,46 @@ window.addEventListener('popstate',e=>{
   else if(st.modal==='bookingModal'&&st.villa&&villas.some(v=>v.id===String(st.villa)))openBooking(st.villa,'none');
   else if(st.modal==='authModal')openModal('authModal','none');
 });
-function openAuth(){$('authPassword').type='password';$('togglePassword').innerHTML='<i class="fa-regular fa-eye"></i>';openModal('authModal');setTimeout(()=>$('authEmail').focus(),100)}
+let phoneOtpSent=false,authMode='login';
+function resetPhoneStep(){phoneOtpSent=false;$('otpRow').style.display='none';$('loginOtp').value='';const b=$('phoneSubmit');b.dataset.i18n='sendCode';b.innerHTML=t('sendCode')}
+function updateAuthBtn(){const b=$('authSubmit');if(b)b.disabled=!($('authEmail').value.trim().includes('@')&&$('authPassword').value.length>=6)}
+function setAuthMode(m){
+  authMode=m;const reg=m==='register';
+  $('authPhoneRow').style.display=reg?'block':'none';
+  const sb=$('authSubmit');sb.dataset.i18n=reg?'register':'loginBtn';sb.innerHTML=t(reg?'register':'loginBtn');
+  const mb=$('authModeBtn');mb.dataset.i18n=reg?'authHaveAcc':'register';mb.innerHTML=t(reg?'authHaveAcc':'register');
+  $('authPassword').autocomplete=reg?'new-password':'current-password';
+}
+function toggleAuthMode(){setAuthMode(authMode==='login'?'register':'login')}
+function authStep(step){
+  $('authChoice').style.display=step==='choice'?'grid':'none';
+  $('authForm').style.display=step==='email'?'block':'none';
+  $('phoneForm').style.display=step==='phone'?'block':'none';
+  $('forgotForm').style.display=step==='forgot'?'block':'none';
+  const tk=step==='choice'?'loginTitle':step==='forgot'?'forgotTitle':'cabTitle',ti=$('authTitle');ti.dataset.i18n=tk;ti.innerHTML=t(tk);
+  const d=$('authDesc');d.style.display=step==='phone'||step==='choice'||step==='forgot'?'block':'none';d.style.color=step==='forgot'?'#222':'var(--muted)';
+  const k=step==='choice'?'authChoose':step==='forgot'?'forgotDesc':'phoneDesc';d.dataset.i18n=k;d.innerHTML=t(k);
+  $('authEmail').placeholder='Email';$('authPassword').placeholder=t('passwordLabel');
+  if(step==='phone')resetPhoneStep();
+  if(step==='email'){setAuthMode('login');updateAuthBtn()}
+  if(step==='forgot'){$('forgotEmail').value=$('authEmail').value.trim();updateForgotBtn()}
+  setTimeout(()=>{const f=step==='email'?$('authEmail'):step==='phone'?$('loginPhone'):step==='forgot'?$('forgotEmail'):null;if(f)f.focus()},100);
+}
+function updateForgotBtn(){const b=$('forgotSubmit');if(b)b.disabled=!$('forgotEmail').value.trim().includes('@')}
+['input','change','keyup','blur','paste'].forEach(ev=>{$('forgotEmail').addEventListener(ev,()=>setTimeout(updateForgotBtn,0));$('authEmail').addEventListener(ev,()=>setTimeout(updateAuthBtn,0));$('authPassword').addEventListener(ev,()=>setTimeout(updateAuthBtn,0))});
+setInterval(()=>{if($('authModal').classList.contains('show')){updateAuthBtn();updateForgotBtn()}},300);
+$('forgotForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!sbClient){showToast(tr3('Supabase ещё не подключён.','Supabase hələ qoşulmayıb.','Supabase is not connected yet.'));return}
+  const email=$('forgotEmail').value.trim().toLowerCase();
+  if(!email.includes('@'))return;
+  try{
+    const {error}=await sbClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+    if(error)throw error;
+    showToast(t('resetSent'));authStep('email');
+  }catch(err){console.error('Reset failed:',err);showToast(supabaseErrorText(err))}
+});
+function openAuth(){$('authPassword').type='password';$('togglePassword').innerHTML='<i class="fa-regular fa-eye"></i>';authStep('choice');openModal('authModal')}
 function setLanguage(value){
   language=['az','ru','en'].includes(value)?value:'az';document.documentElement.lang=language;renderLangButtons();
   document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(translations[language][key])el.innerHTML=translations[language][key]});
@@ -337,10 +592,137 @@ function renderLangButtons(){
   box.innerHTML=['az','ru','en'].filter(l=>l!==language).map(l=>`<button type="button" class="rounded-lg px-3 py-2 text-sm font-bold bg-white" style="color:var(--green)" onclick="setLanguage('${l}')" aria-label="${l.toUpperCase()}">${l.toUpperCase()}</button>`).join('');
 }
 function updateAuthButton(){
-  const btn=$('authButton');
-  if(currentUserEmail){btn.innerHTML='<i class="fa-regular fa-user mr-1"></i>'+escapeHTML(currentUserEmail.split('@')[0]);btn.title=currentUserEmail;btn.onclick=()=>showSection('account')}
-  else{btn.innerHTML='<i class="fa-regular fa-user mr-1"></i><span>'+escapeHTML(t('login'))+'</span>';btn.title='';btn.onclick=openAuth}
+  const btn=$('authButton'),menu=$('profileMenu');
+  if(currentUserEmail){
+    btn.className='btn text-sm flex items-center gap-2';
+    btn.style.cssText='background:#f3f3f1;color:#17251d;padding:8px 12px';
+    btn.innerHTML='<i class="fa-solid fa-circle-user text-2xl"></i><i class="fa-solid fa-chevron-down text-xs"></i>';
+    btn.title=profilePhone();btn.setAttribute('aria-haspopup','true');btn.setAttribute('aria-expanded','false');
+    btn.onclick=toggleProfileMenu;
+    menu.innerHTML='<div class="flex items-center gap-3 px-3 py-3"><i class="fa-solid fa-circle-user text-3xl" style="color:#17251d"></i><div class="min-w-0"><strong class="text-sm block break-all">'+escapeHTML(profilePhone()||t('addPhone'))+'</strong>'+(profileName()?'<span class="text-xs break-all" style="color:#69756d">'+escapeHTML(profileName())+'</span>':'')+'</div></div>'
+      +'<button type="button" class="menu-item" role="menuitem" onclick="closeProfileMenu();showSection(\'account\')">'+escapeHTML(t('accountTitle'))+'</button>'
+      +'<button type="button" class="menu-item" role="menuitem" onclick="closeProfileMenu();logout()">'+escapeHTML(t('logout'))+'</button>';
+  }else{
+    closeProfileMenu();
+    btn.className='btn btn-gold text-sm';btn.style.cssText='';btn.removeAttribute('aria-haspopup');btn.removeAttribute('aria-expanded');
+    btn.innerHTML='<i class="fa-regular fa-user mr-1"></i><span>'+escapeHTML(t('login'))+'</span>';btn.title='';btn.onclick=openAuth;
+    menu.innerHTML='';
+  }
 }
+function fmtPhone(raw){
+  const d=String(raw||'').replace(/\D/g,'');
+  if(!d)return '';
+  if(d.length===12&&d.startsWith('994'))return `(0${d.slice(3,5)}) ${d.slice(5,8)}-${d.slice(8,10)}-${d.slice(10,12)}`;
+  return '+'+d;
+}
+function profileName(){return (currentUserMeta&&currentUserMeta.full_name)||''}
+function profilePhone(){return fmtPhone(currentUserMeta&&currentUserMeta.phone)}
+async function loadTransactions(){
+  if(!sbClient||!currentUserUid){transactions=[];renderTransactions();return}
+  try{
+    const {data,error}=await sbClient.from('villa_transactions').select('*').eq('owner_id',currentUserUid).order('created_at',{ascending:false}).limit(1000);
+    if(error)throw error;
+    transactions=data||[];
+  }catch(err){console.warn('Transactions not loaded:',err);transactions=[]}
+  renderTransactions();
+}
+function txTable(list){
+  if(!list.length)return `<div class="text-center py-10"><i class="fa-regular fa-file-lines text-4xl mb-4" style="color:#9aa89d"></i><p class="font-semibold">${escapeHTML(t('historyEmpty'))}</p></div>`;
+  const dtf=new Intl.DateTimeFormat(LOC(),{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const nf=new Intl.NumberFormat(LOC(),{minimumFractionDigits:2,maximumFractionDigits:2});
+  const rows=list.map(x=>{
+    const v=villas.find(v=>v.id===String(x.villa_id));
+    const d=new Date(x.created_at);
+    const ad=v?`<a href="javascript:void(0)">${escapeHTML(v.title)}</a>`:'—';
+    const click=v?` onclick="openVillaDetails('${escapeHTML(v.id)}')" style="cursor:pointer"`:'';
+    return `<tr class="tx-row"${click}><td>${ad}</td><td>${escapeHTML(x.service||'')}</td><td>${isNaN(d)?'':escapeHTML(dtf.format(d))}</td><td class="font-semibold">${nf.format(Number(x.amount)||0)} ₼</td><td style="width:36px"><i class="fa-solid fa-chevron-right text-xs"></i></td></tr>`;
+  }).join('');
+  return `<div style="overflow-x:auto"><table class="tx-table"><thead><tr><th>${escapeHTML(t('txAd'))}</th><th>${escapeHTML(t('txService'))}</th><th>${escapeHTML(t('txDate'))}</th><th>${escapeHTML(t('txBalance'))}</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function setTxFilter(f){txFilter=f;renderTransactions()}
+function renderTransactions(){
+  const bal=$('accBalance');
+  if(bal)bal.textContent=new Intl.NumberFormat(LOC(),{maximumFractionDigits:2}).format(transactions.reduce((a,x)=>a+(Number(x.amount)||0),0))+' ₼';
+  const a=$('txRecent'),b=$('txAll');
+  if(a)a.innerHTML=txTable(transactions.slice(0,5));
+  const flt=txFilter==='account'?transactions.filter(x=>Number(x.amount)>0):txFilter==='packages'?transactions.filter(x=>Number(x.amount)<0):transactions;
+  if(b)b.innerHTML=txTable(flt);
+  document.querySelectorAll('.tx-pill').forEach(el=>el.classList.toggle('active',el.dataset.f===txFilter));
+}
+function topUp(){
+  if(TOPUP_URL){window.location.href=TOPUP_URL;return}
+  showToast(t('topUpSoon'),4500);
+}
+function addCard(){
+  if(ADD_CARD_URL){window.location.href=ADD_CARD_URL;return}
+  showToast(t('addCardSoon'),4500);
+}
+async function loadCards(){
+  if(!sbClient||!currentUserUid){cards=[];renderCards();return}
+  try{
+    const {data,error}=await sbClient.from('villa_cards').select('*').eq('owner_id',currentUserUid).order('is_primary',{ascending:false}).order('created_at',{ascending:false});
+    if(error)throw error;
+    cards=data||[];
+  }catch(err){console.warn('Cards not loaded:',err);cards=[]}
+  renderCards();
+}
+function cardLogo(brand){
+  if(brand==='visa')return '<span class="card-logo visa-logo">VISA</span>';
+  if(brand==='mastercard')return '<span class="card-logo mc-logo"><i></i><i></i></span>';
+  return '<span class="card-logo"><i class="fa-regular fa-credit-card" style="font-size:24px;color:#536158"></i></span>';
+}
+function renderCards(){
+  const box=$('cardsList');if(!box)return;
+  if(!cards.length){box.innerHTML=`<div class="sm:col-span-2 text-center py-8"><i class="fa-regular fa-credit-card text-4xl mb-4" style="color:#9aa89d"></i><p class="font-semibold">${escapeHTML(t('cardsEmpty'))}</p></div>`;return}
+  box.innerHTML=cards.map(c=>{
+    const name=c.brand==='visa'?'Visa':c.brand==='mastercard'?'MasterCard':t('cardWord');
+    const sub=[c.bank?escapeHTML(c.bank):'',c.is_primary?`<span style="color:#38b25f;font-weight:600">${escapeHTML(t('primaryCard'))}</span>`:''].filter(Boolean).join(' ');
+    return `<div class="pay-card">${cardLogo(c.brand)}<div class="min-w-0 flex-1"><p class="font-semibold">${name}••${escapeHTML(c.last4)}</p><p class="text-sm" style="color:#6b756e">${sub}</p></div><button type="button" class="pay-dots" onclick="deleteCard('${escapeHTML(String(c.id))}')" aria-label="${escapeHTML(t('delete'))}" title="${escapeHTML(t('delete'))}"><i class="fa-solid fa-ellipsis"></i></button></div>`;
+  }).join('');
+}
+async function deleteCard(id){
+  if(!confirm(t('confirmDeleteCard')))return;
+  try{
+    const dbId=Number.isFinite(Number(id))?Number(id):id;
+    const {error}=await sbClient.from('villa_cards').delete().eq('id',dbId);
+    if(error)throw error;
+    await loadCards();
+  }catch(err){console.error('Card delete failed:',err);showToast(supabaseErrorText(err))}
+}
+function showMine(){showSection('home');onlyMine=true;renderListings();setTimeout(()=>$('listings').scrollIntoView({behavior:'smooth'}),60)}
+function showAllListings(){onlyMine=false;renderListings()}
+function renderProfileView(){
+  $('pvName').textContent=profileName()||'—';$('pvEmail').textContent=currentUserEmail||'—';$('pvPhone').textContent=profilePhone()||'—';
+}
+function editProfile(){
+  $('profName').value=(currentUserMeta&&currentUserMeta.full_name)||'';
+  $('profEmail').value=currentUserEmail||'';
+  $('profPhone').value=(currentUserMeta&&currentUserMeta.phone)||'';
+  $('profCur').value='';$('profPass').value='';$('profPass2').value='';
+  $('profView').classList.add('hidden');$('profEditBtn').classList.add('hidden');
+  $('profEdit').classList.remove('hidden');$('profSaveBtn').classList.remove('hidden');
+}
+function cancelProfileEdit(){
+  $('profView').classList.remove('hidden');$('profEditBtn').classList.remove('hidden');
+  $('profEdit').classList.add('hidden');$('profSaveBtn').classList.add('hidden');
+}
+function accountGo(target){
+  ['top','ads','payment','history','profile'].forEach(v=>$('accView-'+v).classList.toggle('hidden',v!==target));
+  document.querySelectorAll('.acc-link[data-acc]').forEach(b=>b.classList.toggle('active',b.dataset.acc===target));
+  if(target==='profile'){cancelProfileEdit();renderProfileView()}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleProfileMenu(e){
+  if(e)e.stopPropagation();
+  const menu=$('profileMenu'),open=menu.classList.contains('hidden');
+  menu.classList.toggle('hidden',!open);$('authButton').setAttribute('aria-expanded',String(open));
+}
+function closeProfileMenu(){
+  const menu=$('profileMenu');if(!menu)return;
+  menu.classList.add('hidden');const b=$('authButton');if(b)b.setAttribute('aria-expanded','false');
+}
+document.addEventListener('click',e=>{const w=$('profileMenu');if(w&&!w.contains(e.target)&&!$('authButton').contains(e.target))closeProfileMenu()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeProfileMenu()});
 
 /* ===== Карта ===== */
 const DISTRICT_COORDS={'Novxanı':[40.545,49.775],'Bilgəh':[40.566,50.045],'Şüvəlan':[40.477,50.17],'Mərdəkan':[40.493,50.142],'Zağulba':[40.575,49.64],'Buzovna':[40.527,50.103],'Nardaran':[40.585,50.006],'Pirşağı':[40.53,50.02],'Qala':[40.47,50.13],'Govsan':[40.35,49.96],'Əmircan':[40.42,49.96],'Nabran':[41.65,48.59],'Şabran':[41.22,48.99],'Lənkəran':[38.754,48.851],'Astara':[38.457,48.875],'Xudat':[41.62,48.68],'Qusar':[41.427,48.43],'İsmayıllı':[40.787,48.15],'Qəbələ':[40.981,47.845],'Şəki':[41.192,47.171],'Quba':[41.361,48.513],'Şamaxı':[40.631,48.641],'Naftalan':[40.505,46.828],'Göygöl':[40.589,46.32],'Digər':[40.409,49.867]};
@@ -386,12 +768,19 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')togglePricePopover(f
 function renderListings(){
   const district=$('filterDistrict').value,period=$('filterPeriod').value,rooms=Number($('filterRooms').value||0),max=Number($('filterPrice').value||0),min=Number($('filterPriceMin').value||0);
   updatePriceLabel();
-  let list=villas.filter(v=>v.status==='approved'&&(!district||v.district===district)&&(!period||v.period===period)&&(!rooms||Number(v.rooms)>=rooms)&&(!min||Number(v.price)>=min)&&(!max||Number(v.price)<=max));
+  let list=villas.filter(v=>(onlyMine?isOwner(v):v.status==='approved')&&(!district||v.district===district)&&(!period||v.period===period)&&(!rooms||Number(v.rooms)>=rooms)&&(!min||Number(v.price)>=min)&&(!max||Number(v.price)<=max));
   const sort=$('sortListings').value||'newest';
   if(sort==='priceAsc')list.sort((a,b)=>a.price-b.price);else if(sort==='priceDesc')list.sort((a,b)=>b.price-a.price);else list.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
   $('listingCount').textContent=list.length+' '+t('listingCount');
   $('emptyListings').classList.toggle('hidden',list.length>0);
-  $('villaGrid').innerHTML=list.map(v=>villaCard(v,false)).join('');
+  $('mineBanner').classList.toggle('hidden',!onlyMine);
+  const vipList=onlyMine?list:list.filter(v=>v.vip),restList=onlyMine?[]:list.filter(v=>!v.vip);
+  $('villaGrid').innerHTML=vipList.map(v=>villaCard(v,onlyMine)).join('');
+  $('villaGrid').classList.toggle('hidden',!vipList.length);
+  $('vipTitle').classList.toggle('hidden',!vipList.length);$('vipMore').classList.toggle('hidden',!vipList.length);
+  $('vipTitle').textContent=onlyMine?t('navMyAds'):'VIP Elanlar';
+  $('regularGrid').innerHTML=restList.map(v=>villaCard(v,false)).join('');
+  $('regularBlock').classList.toggle('hidden',!restList.length);
   renderMapMarkers(list);
 }
 function amenityLabel(key){return ({pool:t('pool'),wifi:'Wi-Fi',bbq:t('bbq'),parking:t('parking'),sea:t('sea'),ac:t('ac')})[key]||key}
@@ -399,23 +788,58 @@ function villaCard(v,owner){
   const img=(v.photos&&v.photos[0])||'';
   const imgHtml=img?`<img class="villa-img" loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(v.title)}">`:`<div class="villa-img flex items-center justify-center"><i class="fa-solid fa-house text-5xl text-gray-400"></i></div>`;
   const amenities=(v.amenities||[]).slice(0,3).map(a=>`<span class="amenity-chip">${escapeHTML(amenityLabel(a))}</span>`).join('');
-  const pendingPill=owner&&v.status==='pending'?`<span class="pill pill-gold absolute top-3 right-3">${escapeHTML(t('pending'))}</span>`:'';
+  const pendingPill=owner?(v.status==='pending'?`<span class="pill pill-gold absolute top-3 right-3">${escapeHTML(t('pending'))}</span>`:`<span class="pill absolute top-3 right-3" style="background:#38b25f;color:#fff">${escapeHTML(t('liveOnSite'))}</span>`):'';
   return `<article class="card flex flex-col"><button class="relative text-left" onclick="openVillaDetails('${escapeHTML(v.id)}')" aria-label="${escapeHTML(t('details'))}: ${escapeHTML(v.title)}">${imgHtml}<span class="pill pill-green absolute top-3 left-3">${v.period==='monthly'?t('monthly'):t('daily')}</span>${pendingPill}<span class="absolute bottom-3 right-3 rounded-lg px-3 py-2 text-xs font-bold" style="background:#ffffffed;color:#123b2b">${escapeHTML(t('details'))} <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></span></button><div class="p-5 flex flex-col flex-1"><div class="flex items-start justify-between gap-3 mb-2"><h3 class="font-extrabold text-lg leading-6">${escapeHTML(v.title)}</h3><strong class="whitespace-nowrap text-lg" style="color:var(--green2)">${money(v.price)}<span class="block text-right text-xs font-medium" style="color:var(--muted)">/${escapeHTML(perUnit(v.period))}</span></strong></div><p class="text-sm mb-3" style="color:var(--muted)"><i class="fa-solid fa-location-dot mr-1"></i>${escapeHTML(v.district)}</p><div class="flex gap-4 text-xs font-semibold mb-3" style="color:#536158"><span><i class="fa-solid fa-door-open mr-1"></i>${escapeHTML(v.rooms)} ${t('roomsLabel')}</span><span><i class="fa-solid fa-users mr-1"></i>${escapeHTML(v.guests||'—')} ${t('guestsLabel')}</span></div>${amenities?`<div class="flex flex-wrap gap-1 mb-3">${amenities}</div>`:''}<p class="text-sm leading-6 mb-5 flex-1">${escapeHTML(v.description||'')}</p><div class="flex gap-2 mt-auto"><button class="btn btn-primary flex-1" onclick="openBooking('${escapeHTML(v.id)}')"><i class="fa-brands fa-whatsapp mr-1"></i>${t('reserve')}</button>${owner?`<button class="btn btn-outline" onclick="deleteVilla('${escapeHTML(v.id)}')" title="${escapeHTML(t('delete'))}" aria-label="${escapeHTML(t('delete'))}"><i class="fa-solid fa-trash"></i></button>`:''}</div></div></article>`;
 }
 
 /* ===== Подробности и календарь ===== */
 function openVillaDetails(id,keepMonth){
+  const same=detailVilla&&detailVilla.id===String(id);
   detailVilla=villas.find(v=>v.id===String(id));if(!detailVilla)return;
-  $('detailTitle').textContent=detailVilla.title;
-  $('detailLocation').innerHTML=`<i class="fa-solid fa-location-dot mr-1"></i>${escapeHTML(detailVilla.district)} · ${escapeHTML(detailVilla.rooms)} ${escapeHTML(t('roomsLabel'))} · ${escapeHTML(detailVilla.guests||'—')} ${escapeHTML(t('guestsLabel'))}`;
-  $('detailDescription').textContent=detailVilla.description||'';
-  $('detailPrice').textContent=money(detailVilla.price)+' / '+(detailVilla.period==='monthly'?t('monthlyRate'):t('dailyRate'));
-  const photos=(detailVilla.photos||[]).slice(0,20);
-  $('detailGallery').innerHTML=photos.length?photos.map((src,i)=>`<img src="${escapeHTML(src)}" alt="${escapeHTML(detailVilla.title)} — ${i+1}" loading="lazy">`).join(''):`<div class="flex items-center justify-center rounded-xl" style="grid-column:1/-1;grid-row:1/-1;background:#edf1ec;min-height:180px">${escapeHTML(t('noPhotos'))}</div>`;
-  $('detailAmenities').innerHTML=(detailVilla.amenities||[]).length?detailVilla.amenities.map(a=>`<span class="amenity-chip"><i class="fa-solid fa-check mr-1"></i>${escapeHTML(amenityLabel(a))}</span>`).join(''):`<span class="text-sm" style="color:var(--muted)">—</span>`;
+  const v=detailVilla;
+  $('detailTitle').innerHTML=`${escapeHTML(v.title)}, <span style="text-decoration:underline;text-underline-offset:4px">${escapeHTML(v.district)}</span>`;
+  $('detailDescription').textContent=v.description||'';
+  $('detailPrice').textContent=money(v.price)+' / '+perUnit(v.period);
+  dtPhotos=(v.photos||[]).slice(0,20);if(!same||!keepMonth)dtIdx=0;if(dtIdx>=dtPhotos.length)dtIdx=0;
+  dtRender();
+  $('dtStats').innerHTML=[[`${v.rooms} ${t('roomsLabel')}`,'villa'],[String(v.guests||'—'),t('guestsLabel')],[v.period==='monthly'?t('monthly'):t('daily'),t('period')]].map(x=>`<div><p class="text-lg">${escapeHTML(x[0])}</p><p class="text-sm" style="color:#9a9ea3">${escapeHTML(x[1])}</p></div>`).join('');
+  $('dtOwner').textContent=tr3('Владелец','Elan sahibi','Listing owner');
+  $('dtOwnerSub').textContent=tr3('Объявление','Elan','Listing')+' #'+v.id;
+  phoneShown=false;updatePhoneBtn();
+  $('detailLocation').innerHTML=`<i class="fa-solid fa-location-dot"></i><span style="text-decoration:underline;text-underline-offset:4px">${escapeHTML(v.district)}</span>`;
+  const n=villas.filter(x=>x.status==='approved'&&x.district===v.district).length;
+  $('dtMoreBtn').textContent=tr3(`Все предложения (${n})`,`Bütün ${n} təklifə baxmaq`,`View all ${n} listings`);
+  $('detailAmenities').innerHTML=(v.amenities||[]).length?v.amenities.map(a=>`<span class="amenity-chip"><i class="fa-solid fa-check mr-1"></i>${escapeHTML(amenityLabel(a))}</span>`).join(''):`<span class="text-sm" style="color:var(--muted)">—</span>`;
   if(!keepMonth)calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
   renderAvailabilityCalendar();openModal('detailModal',keepMonth?'none':'push');
 }
+let dtPhotos=[],dtIdx=0,phoneShown=false;
+function dtRender(){
+  const main=$('dtMain'),th=$('dtThumbs'),all=$('dtAll'),n=dtPhotos.length;
+  if(!n){main.innerHTML=`<div class="flex items-center justify-center h-full" style="color:var(--muted)">${escapeHTML(t('noPhotos'))}</div>`;th.innerHTML='';all.innerHTML='';return}
+  const src=escapeHTML(dtPhotos[dtIdx]);
+  main.innerHTML=`<div class="dt-bg" style="background-image:url('${src}')"></div><img src="${src}" alt="${escapeHTML(detailVilla.title)} — ${dtIdx+1}">`
+    +(n>1?`<button type="button" class="dt-arrow" style="left:12px" onclick="dtStep(-1)" aria-label="‹"><i class="fa-solid fa-chevron-left"></i></button><button type="button" class="dt-arrow" style="right:12px" onclick="dtStep(1)" aria-label="›"><i class="fa-solid fa-chevron-right"></i></button>`:'')
+    +`<span class="dt-count">${dtIdx+1}/${n}</span><button type="button" class="dt-all" onclick="dtToggleAll()">${escapeHTML(tr3('Все фото','Bütün şəkillər','All photos'))}</button>`;
+  const shown=dtPhotos.slice(0,8);
+  th.innerHTML=shown.map((p,i)=>`<button type="button" class="dt-thumb ${i===dtIdx?'on':''}" onclick="${i===7&&n>8?'dtToggleAll()':`dtGo(${i})`}"><img src="${escapeHTML(p)}" alt="" loading="lazy">${i===7&&n>8?`<span class="dt-more">+${n-8} ${escapeHTML(tr3('фото','şəkil','photos'))}</span>`:''}</button>`).join('');
+  all.innerHTML=dtPhotos.map((p,i)=>`<img src="${escapeHTML(p)}" alt="" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;cursor:pointer" onclick="dtGo(${i});$('dtMain').scrollIntoView({behavior:'smooth',block:'nearest'})">`).join('');
+}
+function dtGo(i){dtIdx=i;dtRender()}
+function dtStep(d){const n=dtPhotos.length;if(n){dtIdx=(dtIdx+d+n)%n;dtRender()}}
+function dtToggleAll(){$('dtAll').classList.toggle('hidden')}
+function phoneTarget(){return waNumber(detailVilla&&detailVilla.phone)||ADMIN_WHATSAPP}
+function updatePhoneBtn(){
+  const b=$('dtPhoneBtn'),num='+'+phoneTarget();
+  b.innerHTML=phoneShown?`<span class="block text-sm">${escapeHTML(tr3('Позвонить','Zəng et','Call'))}</span><span class="block text-lg mt-1"><i class="fa-solid fa-phone mr-2"></i>${escapeHTML(num)}</span>`
+    :`<span class="block text-sm">${escapeHTML(tr3('Показать номер','Nömrəni göstər','Show number'))}</span><span class="block text-lg mt-1"><i class="fa-solid fa-phone mr-2"></i>+994 •••</span>`;
+}
+function revealPhone(){if(phoneShown){window.location.href='tel:+'+phoneTarget();return}phoneShown=true;updatePhoneBtn()}
+function showDistrictOffers(){
+  const d=detailVilla&&detailVilla.district;closeModal('detailModal');
+  setTimeout(()=>{showSection('home');$('filterDistrict').value=d||'';renderListings();$('listings').scrollIntoView({behavior:'smooth'})},80);
+}
+document.addEventListener('keydown',e=>{if($('detailModal').classList.contains('show')){if(e.key==='ArrowLeft')dtStep(-1);if(e.key==='ArrowRight')dtStep(1)}});
 function changeCalendarMonth(delta){calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+delta,1);renderAvailabilityCalendar()}
 function isOwner(v){return !!v&&!!currentUserUid&&v.ownerUid===currentUserUid}
 function renderAvailabilityCalendar(){
@@ -429,7 +853,7 @@ function renderAvailabilityCalendar(){
   for(let i=0;i<offset;i++)html+='<div></div>';
   for(let d=1;d<=days;d++){
     const date=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,past=new Date(y,m,d)<today,unavailable=blocked.has(date),canEdit=isOwner(detailVilla)&&!past;
-    const title=canEdit?(L('Нажмите, чтобы изменить доступность','Mövcudluğu dəyişmək üçün klikləyin','Click to change availability')):(unavailable?t('unavailable'):past?'':t('available'));
+    const title=canEdit?(tr3('Нажмите, чтобы изменить доступность','Mövcudluğu dəyişmək üçün klikləyin','Click to change availability')):(unavailable?t('unavailable'):past?'':t('available'));
     html+=`<div class="calendar-day ${unavailable?'unavailable':past?'past':''}" title="${escapeHTML(title)}" ${canEdit?`role="button" tabindex="0" style="cursor:pointer" onclick="toggleUnavailableDate('${date}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleUnavailableDate('${date}')}"`:''}>${d}</div>`;
   }
   $('availabilityCalendar').innerHTML=`<div class="calendar-grid">${html}</div>`;
@@ -491,14 +915,17 @@ function renderAccount(){
   const logged=!!currentUserEmail;
   $('accountLoggedOut').classList.toggle('hidden',logged);$('accountContent').classList.toggle('hidden',!logged);
   if(!logged){$('accountSubtitle').textContent='';return}
-  $('accountSubtitle').textContent=currentUserEmail;$('accountEmail').textContent=currentUserEmail;
+  $('accountSubtitle').textContent=currentUserEmail;const nm=profileName(),ph=profilePhone();
+  $('accName').textContent=nm;$('accName').classList.toggle('hidden',!nm);
+  $('accSub').textContent=ph||t('addPhone');
+  $('accSub').style.color=ph?'#4b5550':'#4262f5';$('accSub').style.cursor=ph?'default':'pointer';
   const mine=villas.filter(isOwner);
-  $('myListingCount').textContent=mine.length;
-  $('myListingsGrid').innerHTML=mine.length?mine.map(v=>villaCard(v,true)).join(''):`<div class="card p-8 text-center sm:col-span-2 xl:col-span-3"><p class="font-bold">${escapeHTML(t('emptyMine'))}</p><button class="btn btn-primary mt-4" onclick="openAddListing()">${escapeHTML(t('addVilla'))}</button></div>`;
+  $('myListingCount').textContent=mine.length;$('myLiveCount').textContent=mine.filter(v=>v.status==='approved').length;$('myPendingCount').textContent=mine.filter(v=>v.status==='pending').length;renderTransactions();renderCards();renderProfileView();
+  renderMyAds();
 }
 
 /* ===== Форма и фото ===== */
-function resetListingForm(){$('listingForm').reset();pendingPhotos=[];$('photoPreview').innerHTML='';$('villaGuests').value=8}
+function resetListingForm(){$('listingForm').reset();pendingPhotos=[];$('photoPreview').innerHTML='';$('villaGuests').value=8;if(currentUserMeta&&currentUserMeta.phone)$('villaPhone').value=currentUserMeta.phone}
 function compressImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=reject;reader.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',.78))};img.src=reader.result};reader.readAsDataURL(file)})}
 $('villaPhotos').addEventListener('change',async e=>{
   const files=Array.from(e.target.files||[]);
@@ -513,22 +940,22 @@ $('villaPhotos').addEventListener('change',async e=>{
 /* ===== Supabase ===== */
 function supabaseErrorText(err){
   const msg=String(err&&(err.message||err.details||err.hint)||err||'');
-  if(/row-level security|permission denied|not allowed/i.test(msg))return L('Доступ ограничен правилами Supabase. Выполните файл supabase_setup.sql в SQL Editor.','Supabase giriş qaydaları məhdudlaşdırdı. supabase_setup.sql faylını SQL Editor-da icra edin.','Access is restricted by Supabase rules. Run supabase_setup.sql in the SQL Editor.');
-  if(/column .* does not exist|schema cache|relation .* does not exist/i.test(msg))return L('Сначала выполните файл supabase_setup.sql в SQL Editor.','Əvvəlcə supabase_setup.sql faylını SQL Editor-da icra edin.','First run supabase_setup.sql in the SQL Editor.');
-  return (L('Ошибка Supabase: ','Supabase xətası: ','Supabase error: '))+msg;
+  if(/row-level security|permission denied|not allowed/i.test(msg))return tr3('Доступ ограничен правилами Supabase. Выполните файл supabase_setup.sql в SQL Editor.','Supabase giriş qaydaları məhdudlaşdırdı. supabase_setup.sql faylını SQL Editor-da icra edin.','Access is restricted by Supabase rules. Run supabase_setup.sql in the SQL Editor.');
+  if(/column .* does not exist|schema cache|relation .* does not exist/i.test(msg))return tr3('Сначала выполните файл supabase_setup.sql в SQL Editor.','Əvvəlcə supabase_setup.sql faylını SQL Editor-da icra edin.','First run supabase_setup.sql in the SQL Editor.');
+  return (tr3('Ошибка Supabase: ','Supabase xətası: ','Supabase error: '))+msg;
 }
 function dateFromDb(v){return String(v||'').slice(0,10)}
 function normalizeRentType(v){const s=String(v||'').toLowerCase();return (s.includes('month')||s.includes('aylıq')||s.includes('ayliq')||s.includes('месяц'))?'monthly':'daily'}
 function mapVillaRow(row){
   const ownerUid=row.owner_id?String(row.owner_id):'';
   return {
-    id:String(row.id),title:String(row.title||row.location||(L('Вилла','Villa','Villa'))),district:String(row.district||row.location||'Digər'),
+    id:String(row.id),title:String(row.title||row.location||(tr3('Вилла','Villa','Villa'))),district:String(row.district||row.location||'Digər'),
     price:Number(row.price||0),period:normalizeRentType(row.rent_type),rooms:Number(row.rooms||1),guests:Number(row.guests||1),
     description:String(row.description||''),phone:String(row.phone||''),
     photos:Array.isArray(row.photos)?row.photos.filter(x=>typeof x==='string'&&x):[],
     amenities:Array.isArray(row.amenities)?row.amenities:[],unavailableDates:[],
     ownerEmail:ownerUid&&ownerUid===currentUserUid?currentUserEmail:'',ownerUid,
-    status:row.is_published===false?'pending':'approved',createdAt:row.created_at||new Date().toISOString()
+    vip:row.is_vip===true,status:row.is_published===false?'pending':'approved',createdAt:row.created_at||new Date().toISOString()
   };
 }
 async function refreshSupabaseVillas(){
@@ -550,7 +977,7 @@ async function refreshSupabaseVillas(){
   if(detailVilla)detailVilla=villas.find(v=>v.id===String(detailVilla.id))||detailVilla;
   renderListings();renderAccount();
   if(detailVilla)renderAvailabilityCalendar();
-  supabaseStatus(true);
+  supabaseStatus(true);loadTransactions();loadCards();
 }
 async function initSupabaseApp(){
   try{
@@ -559,14 +986,15 @@ async function initSupabaseApp(){
     const {data,error}=await sbClient.auth.getSession();
     if(error)throw error;
     const user=data&&data.session?data.session.user:null;
-    currentUserUid=user?user.id:'';currentUserEmail=user?(user.email||''):'';
+    currentUserUid=user?user.id:'';currentUserEmail=user?(user.email||''):'';currentUserMeta=user?(user.user_metadata||{}):{};
     cloudEnabled=true;updateAuthButton();
     try{await refreshSupabaseVillas()}catch(loadErr){console.error(loadErr);supabaseStatus(false,supabaseErrorText(loadErr));showToast(supabaseErrorText(loadErr))}
     if(!sbAuthListenerRegistered){
       sbAuthListenerRegistered=true;
       sbClient.auth.onAuthStateChange((_event,session)=>{
+        if(_event==='PASSWORD_RECOVERY'){setTimeout(()=>{const np=prompt(t('newPass')+' (min. 6)');if(np&&np.length>=6)sbClient.auth.updateUser({password:np}).then(({error})=>showToast(error?supabaseErrorText(error):t('passSet')))},400)}
         const u=session?session.user:null;
-        currentUserUid=u?u.id:'';currentUserEmail=u?(u.email||''):'';
+        currentUserUid=u?u.id:'';currentUserEmail=u?(u.email||''):'';currentUserMeta=u?(u.user_metadata||{}):{};
         updateAuthButton();renderAccount();
         if(detailVilla)renderAvailabilityCalendar();
         setTimeout(()=>refreshSupabaseVillas().catch(err=>{console.error(err);supabaseStatus(false,supabaseErrorText(err))}),0);
@@ -574,44 +1002,75 @@ async function initSupabaseApp(){
     }
   }catch(err){
     console.error('Supabase initialization failed:',err);
-    supabaseStatus(false,L('Не удалось подключиться. Проверьте интернет и настройки Supabase.','Qoşulmaq alınmadı. İnterneti və Supabase sazlamalarını yoxlayın.','Could not connect. Check your internet and Supabase settings.'));
+    supabaseStatus(false,tr3('Не удалось подключиться. Проверьте интернет и настройки Supabase.','Qoşulmaq alınmadı. İnterneti və Supabase sazlamalarını yoxlayın.','Could not connect. Check your internet and Supabase settings.'));
     showToast(supabaseErrorText(err));
   }
 }
 
 $('authForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  if(!sbClient){showToast(L('Supabase ещё не подключён.','Supabase hələ qoşulmayıb.','Supabase is not connected yet.'));return}
+  if(authMode==='register'){registerAccount();return}
+  if(!sbClient){showToast(tr3('Supabase ещё не подключён.','Supabase hələ qoşulmayıb.','Supabase is not connected yet.'));return}
   const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;
   try{
     const {error}=await sbClient.auth.signInWithPassword({email,password});
     if(error)throw error;
     closeModal('authModal');
-    showToast(L('Вход выполнен.','Uğurla daxil oldunuz.','Signed in.'));
+    showToast(tr3('Вход выполнен.','Uğurla daxil oldunuz.','Signed in.'));
   }catch(err){
     console.error('Sign in failed:',err);
-    showToast(L('Не удалось войти. Проверьте email и пароль (и подтверждение почты).','Giriş alınmadı. E-poçt və şifrəni (və e-poçt təsdiqini) yoxlayın.','Could not sign in. Check your email and password (and email confirmation).'));
+    showToast(tr3('Не удалось войти. Проверьте email и пароль (и подтверждение почты).','Giriş alınmadı. E-poçt və şifrəni (və e-poçt təsdiqini) yoxlayın.','Could not sign in. Check your email and password (and email confirmation).'));
   }
 });
-async function registerAccount(){
-  if(!sbClient){showToast(L('Supabase ещё не подключён.','Supabase hələ qoşulmayıb.','Supabase is not connected yet.'));return}
-  const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;
-  if(!email||password.length<6){showToast(L('Введите email и пароль не короче 6 символов.','E-poçt və ən azı 6 simvolluq şifrə daxil edin.','Enter an email and a password of at least 6 characters.'));return}
+
+$('phoneForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!sbClient){showToast(tr3('Supabase ещё не подключён.','Supabase hələ qoşulmayıb.','Supabase is not connected yet.'));return}
+  const dg=waNumber($('loginPhone').value.trim());
+  if(!/^\d{11,15}$/.test(dg)){showToast(t('needPhone2'));return}
+  const phone='+'+dg;
   try{
-    const {data,error}=await sbClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
+    if(!phoneOtpSent){
+      const {error}=await sbClient.auth.signInWithOtp({phone});
+      if(error)throw error;
+      phoneOtpSent=true;$('otpRow').style.display='block';
+      const b=$('phoneSubmit');b.dataset.i18n='verifyCode';b.innerHTML=t('verifyCode');
+      showToast(t('codeSent'));setTimeout(()=>$('loginOtp').focus(),100);
+    }else{
+      const token=$('loginOtp').value.trim();
+      if(!token){showToast(t('otpLabel'));return}
+      const {error}=await sbClient.auth.verifyOtp({phone,token,type:'sms'});
+      if(error)throw error;
+      closeModal('authModal');
+      showToast(tr3('Вход выполнен.','Uğurla daxil oldunuz.','Signed in.'));
+    }
+  }catch(err){
+    console.error('Phone sign in failed:',err);
+    showToast(tr3('Не удалось войти по телефону: ','Telefonla giriş alınmadı: ','Phone sign-in failed: ')+(err.message||''));
+  }
+});
+['authEmail','authPassword'].forEach(id=>$(id).addEventListener('input',updateAuthBtn));
+async function registerAccount(){
+  if(!sbClient){showToast(tr3('Supabase ещё не подключён.','Supabase hələ qoşulmayıb.','Supabase is not connected yet.'));return}
+  const email=$('authEmail').value.trim().toLowerCase(),password=$('authPassword').value;
+  if(!email||password.length<6){showToast(tr3('Введите email и пароль не короче 6 символов.','E-poçt və ən azı 6 simvolluq şifrə daxil edin.','Enter an email and a password of at least 6 characters.'));return}
+  try{
+    const dg=waNumber($('authPhone').value.trim());
+    if(!/^\d{11,15}$/.test(dg)){showToast(t('needPhone'));return}
+    const {data,error}=await sbClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname,data:{phone:'+'+dg}}});
     if(error)throw error;
-    if(data.session){closeModal('authModal');showToast(L('Аккаунт создан, вы вошли.','Hesab yaradıldı və giriş edildi.','Account created, you are signed in.'))}
-    else showToast(L('Аккаунт создан. Проверьте почту и подтвердите адрес, затем войдите.','Hesab yaradıldı. E-poçtunuzu təsdiqləyin, sonra daxil olun.','Account created. Check your email and confirm your address, then sign in.'));
+    if(data.session){closeModal('authModal');showToast(tr3('Аккаунт создан, вы вошли.','Hesab yaradıldı və giriş edildi.','Account created, you are signed in.'))}
+    else showToast(tr3('Аккаунт создан. Проверьте почту и подтвердите адрес, затем войдите.','Hesab yaradıldı. E-poçtunuzu təsdiqləyin, sonra daxil olun.','Account created. Check your email and confirm your address, then sign in.'));
   }catch(err){
     console.error('Sign up failed:',err);
-    showToast((L('Не удалось создать аккаунт: ','Hesab yaratmaq olmadı: ','Could not create account: '))+(err.message||''));
+    showToast((tr3('Не удалось создать аккаунт: ','Hesab yaratmaq olmadı: ','Could not create account: '))+(err.message||''));
   }
 }
 async function logout(){
   if(!sbClient)return;
   const {error}=await sbClient.auth.signOut();
   if(error){showToast(supabaseErrorText(error));return}
-  currentUserEmail='';currentUserUid='';
+  currentUserEmail='';currentUserUid='';currentUserMeta={};onlyMine=false;
   updateAuthButton();renderAccount();showSection('home');
   await refreshSupabaseVillas().catch(err=>{console.error(err);supabaseStatus(false,supabaseErrorText(err))});
   showToast(t('logout'));
@@ -634,7 +1093,7 @@ $('listingForm').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!sbClient||!currentUserUid){showToast(t('needLogin'));openAuth();return}
   const title=$('villaTitle').value.trim(),district=$('villaDistrict').value,price=Number($('villaPrice').value),rooms=Number($('villaRooms').value),phone=waNumber($('villaPhone').value);
-  if(!title||!district||!Number.isFinite(price)||price<=0||!rooms){showToast(L('Проверьте заполненные данные.','Məlumatları yoxlayın.','Please check the entered data.'));return}
+  if(!title||!district||!Number.isFinite(price)||price<=0||!rooms){showToast(tr3('Проверьте заполненные данные.','Məlumatları yoxlayın.','Please check the entered data.'));return}
   if(!/^\d{11,15}$/.test(phone)){showToast(t('badPhone'));return}
   if(pendingPhotos.length<4||pendingPhotos.length>20){showToast(t('photoCount'));return}
   const amenities=Array.from(document.querySelectorAll('input[name=amenity]:checked')).map(x=>x.value);
@@ -658,13 +1117,13 @@ $('listingForm').addEventListener('submit',async e=>{
 });
 async function deleteVilla(id){
   const v=villas.find(x=>x.id===String(id));
-  if(!isOwner(v)){showToast(L('Можно удалять только свои объявления.','Yalnız öz elanınızı silə bilərsiniz.','You can only delete your own listings.'));return}
+  if(!isOwner(v)){showToast(tr3('Можно удалять только свои объявления.','Yalnız öz elanınızı silə bilərsiniz.','You can only delete your own listings.'));return}
   if(!confirm(t('confirmDelete')||'?'))return;
   try{
     const dbId=Number.isFinite(Number(id))?Number(id):id;
     const {data,error}=await sbClient.from('villas').delete().eq('id',dbId).select('id').maybeSingle();
     if(error)throw error;
-    if(!data)throw new Error(L('Объявление не найдено или удаление запрещено.','Elan tapılmadı və ya silməyə icazə yoxdur.','Listing not found or deletion is not allowed.'));
+    if(!data)throw new Error(tr3('Объявление не найдено или удаление запрещено.','Elan tapılmadı və ya silməyə icazə yoxdur.','Listing not found or deletion is not allowed.'));
     await refreshSupabaseVillas();showToast(t('deleted'));
   }catch(err){console.error('Delete failed:',err);showToast(supabaseErrorText(err))}
 }
@@ -683,9 +1142,33 @@ async function toggleUnavailableDate(date){
     detailVilla.unavailableDates=Array.from(blocked).sort();
     const stored=villas.find(v=>v.id===String(detailVilla.id));if(stored)stored.unavailableDates=[...detailVilla.unavailableDates];
     renderAvailabilityCalendar();
-    showToast(L('Календарь обновлён.','Təqvim yeniləndi.','Calendar updated.'));
+    showToast(tr3('Календарь обновлён.','Təqvim yeniləndi.','Calendar updated.'));
   }catch(err){console.error('Calendar update failed:',err);showToast(supabaseErrorText(err))}
 }
+
+$('profileForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!sbClient||!currentUserUid){showToast(t('needLogin'));return}
+  const name=$('profName').value.trim(),raw=$('profPhone').value.trim(),digits=waNumber(raw);
+  if(raw&&!/^\d{11,15}$/.test(digits)){showToast(t('badPhone'));return}
+  const pw=$('profPass').value;
+  if(pw){
+    if(pw.length<6){showToast(t('passMin'));return}
+    if(pw!==$('profPass2').value){showToast(t('passMismatch'));return}
+    const cur=$('profCur').value;
+    if(!cur){showToast(t('needCurrent'));return}
+    const {error:ce}=await sbClient.auth.signInWithPassword({email:currentUserEmail,password:cur});
+    if(ce){showToast(t('wrongCurrent'));return}
+  }
+  const phone=raw?'+'+digits:'';
+  try{
+    const payload={data:{full_name:name,phone}};if(pw)payload.password=pw;
+    const {data,error}=await sbClient.auth.updateUser(payload);
+    if(error)throw error;
+    currentUserMeta=(data&&data.user&&data.user.user_metadata)||{full_name:name,phone};
+    $('profPass').value='';$('profCur').value='';$('profPass2').value='';updateAuthButton();renderAccount();cancelProfileEdit();showToast(t('profileSaved'),2200);
+  }catch(err){console.error('Profile save failed:',err);showToast(supabaseErrorText(err))}
+});
 
 /* ===== Старт ===== */
 translations.en={navHome:'Home',navAdd:'Post a listing',navAccount:'My account',login:'Sign in',logout:'Sign out',heroBadge:'Villa rentals in Azerbaijan',heroTitle:'Your dream getaway<br>is one step closer.',heroText:'Family holidays, villas with pools and an easy search — find the home that suits you.',browse:'Browse villas',district:'District',period:'Rental period',rooms:'Rooms',maxPrice:'Maximum price (₼)',search:'Search',allDistricts:'Districts',priceShort:'Price',priceMin:'Min.',priceMax:'Max.',clearPrice:'Clear',all:'Period',anyRooms:'Rooms',chooseDistrict:'Choose a district',mapLabel:'Map',curated:'Selected offers',listingTitle:'Villas for rent',addVilla:'Add a villa',noResults:'No villas match your search.',tryFilters:'Change the filters and try again.',benefit1:'Easy choice',benefit1Text:'Compare the key details and pick the villa that suits you.',benefit2:'Listings with photos',benefit2Text:'Present your villa with photos and manage your listing.',benefit3:'Direct contact',benefit3Text:'Send a booking request via WhatsApp.',yourSpace:'Your space',accountTitle:'My account',loginNeeded:'Sign in to see your listings',myListings:'My listings',accountEmail:'Account email',accountStatus:'Account status',demoStatus:'Supabase account',yourAds:'My listings',backHome:'Back to home',publishLabel:'Post a listing',publishTitle:'Present your villa',publishHelp:'Fill in the details. The listing will be saved in the Supabase database.',villaName:'Listing title *',price:'Price (₼) *',daily:'Daily',monthly:'Monthly',guests:'Guests',phoneOwner:'WhatsApp number (requests will be sent here) *',description:'Description',photos:'Photos (minimum 4, maximum 20; select all at once, up to 5 MB each)',photoNote:'Photos are resized and uploaded to Supabase Storage.',storageNotice:'The listing will appear on the site after review. Until then only you can see it in your account.',saveListing:'Save listing',savingListing:'Uploading...',cancel:'Cancel',footerText:'Find a villa for a comfortable holiday in Azerbaijan.',loginTitle:'Sign in to your account',loginDesc:'Enter your email address.',email:'Email',passwordLabel:'Password',supabaseAuthNotice:'Secure sign-in with Supabase. If this is your first time, create an account.',register:'Create account',continue:'Sign in',bookingRequest:'Booking request',booking:'Booking',checkIn:'Check-in',checkOut:'Check-out',yourName:'Your name',phone:'Phone',estimatedTotal:'Estimated total',bookingNote:'This is only a request; booking confirmation and payment are not processed automatically.',sendRequest:'Send request on WhatsApp',dailyRate:'per day',monthlyRate:'per month',perDay:'day',perMonth:'month',roomsLabel:'rooms',guestsLabel:'guests',details:'Details',reserve:'Send request',delete:'Delete',pending:'Under review',emptyMine:'You have not posted any listings yet.',saved:'Listing saved.',savedPending:'Listing submitted. It will appear on the site after review.',deleted:'Listing deleted.',needLogin:'Please sign in with your email first.',badDates:'Check-out must be after check-in.',badPhone:'Enter a valid WhatsApp number (e.g. +994 55 000 00 00).',imageError:'Photo upload failed. Choose JPG, PNG, WEBP or GIF (max 5 MB each).',loginToAdd:'Sign in with your email to post a listing.',listingCount:'listings found',mapTitle:'Villas on the map',mapText:'Browse listings in Novkhani, Mardakan, Bilgah and other areas.',mapNotice:'Markers show the approximate centre of the district. The exact address must be added by the listing owner.',amenities:'Amenities',pool:'Pool',bbq:'BBQ',parking:'Parking',sea:'Near the sea',ac:'Air conditioning',villaDetails:'About the villa',availability:'Availability calendar',available:'Available',unavailable:'Booked',priceNote:'The price is set by the listing owner.',sortNewest:'Newest first',sortPriceAsc:'Price: low to high',sortPriceDesc:'Price: high to low',noPhotos:'No photos added',showVillas:'Show villas',confirmDelete:'Delete this listing?',photoCount:'Select between 4 and 20 photos.'};
@@ -693,6 +1176,77 @@ translations.az.confirmDelete='Bu elanı silmək istəyirsiniz?';
 translations.ru.confirmDelete='Удалить это объявление?';
 translations.az.photoCount='Ən azı 4, ən çox 20 şəkil seçin.';
 translations.ru.photoCount='Выберите от 4 до 20 фотографий.';
+translations.az.authChoose='Giriş üsulunu seçin.';translations.ru.authChoose='Выберите способ входа.';translations.en.authChoose='Choose how to sign in.';
+translations.az.authByPhone='Telefon nömrəsi ilə giriş';translations.ru.authByPhone='Войти по номеру телефона';translations.en.authByPhone='Sign in with phone number';
+translations.az.authByEmail='E-mail ilə giriş';translations.ru.authByEmail='Войти по e-mail';translations.en.authByEmail='Sign in with e-mail';
+translations.az.authBack='← Geri';translations.ru.authBack='← Назад';translations.en.authBack='← Back';
+translations.az.phoneLabel='Telefon nömrəsi';translations.ru.phoneLabel='Номер телефона';translations.en.phoneLabel='Phone number';
+translations.az.phoneDesc='Nömrənizi daxil edin, SMS ilə kod göndərəcəyik.';translations.ru.phoneDesc='Введите номер, мы отправим код по SMS.';translations.en.phoneDesc='Enter your number and we will text you a code.';
+translations.az.otpLabel='SMS kodu';translations.ru.otpLabel='Код из SMS';translations.en.otpLabel='SMS code';
+translations.az.sendCode='Kod göndər';translations.ru.sendCode='Отправить код';translations.en.sendCode='Send code';
+translations.az.verifyCode='Təsdiq et və daxil ol';translations.ru.verifyCode='Подтвердить и войти';translations.en.verifyCode='Verify and sign in';
+translations.az.codeSent='Kod SMS ilə göndərildi.';translations.ru.codeSent='Код отправлен по SMS.';translations.en.codeSent='Code sent by SMS.';
+translations.az.needPhone2='Düzgün telefon nömrəsi daxil edin.';translations.ru.needPhone2='Введите корректный номер телефона.';translations.en.needPhone2='Enter a valid phone number.';
+translations.az.cabTitle='Kabinetə giriş';translations.ru.cabTitle='Вход в кабинет';translations.en.cabTitle='Sign in to your account';
+translations.az.forgotPass='Şifrəni unutdum';translations.ru.forgotPass='Забыли пароль';translations.en.forgotPass='Forgot password';
+translations.az.loginBtn='Giriş';translations.ru.loginBtn='Войти';translations.en.loginBtn='Sign in';
+translations.az.authHaveAcc='Hesabınız var? Daxil olun';translations.ru.authHaveAcc='Уже есть аккаунт? Войти';translations.en.authHaveAcc='Have an account? Sign in';
+translations.az.needEmailReset='Əvvəlcə e-poçtunuzu daxil edin.';translations.ru.needEmailReset='Сначала введите e-mail.';translations.en.needEmailReset='Enter your e-mail first.';
+translations.az.resetSent='Şifrənin bərpası üçün link e-poçtunuza göndərildi.';translations.ru.resetSent='Ссылка для восстановления пароля отправлена на почту.';translations.en.resetSent='A password reset link was sent to your e-mail.';
+translations.az.passSet='Şifrə yeniləndi.';translations.ru.passSet='Пароль обновлён.';translations.en.passSet='Password updated.';
+translations.az.forgotTitle='Şifrəni unutdum';translations.ru.forgotTitle='Забыли пароль';translations.en.forgotTitle='Forgot password';
+translations.az.forgotDesc='Sizin email ünvanınıza şifrənizin bərpası üçün təlimat göndəriləcək.';translations.ru.forgotDesc='На ваш e-mail будет отправлена инструкция по восстановлению пароля.';translations.en.forgotDesc='Password reset instructions will be sent to your e-mail.';
+translations.az.sendReset='Göndərmək';translations.ru.sendReset='Отправить';translations.en.sendReset='Send';
+translations.az.backLogin='Geriyə qayıt';translations.ru.backLogin='Назад';translations.en.backLogin='Back';
+translations.az.newListing='Yeni elan';translations.ru.newListing='Новое объявление';translations.en.newListing='New listing';
+translations.az.liveOnSite='Hazırda saytda';translations.ru.liveOnSite='Сейчас на сайте';translations.en.liveOnSite='Live on site';
+translations.az.viewAll='Bütün elanlara bax';translations.ru.viewAll='Смотреть все объявления';translations.en.viewAll='View all listings';
+translations.az.statsTitle='Statistika';translations.ru.statsTitle='Статистика';translations.en.statsTitle='Statistics';
+translations.az.statLive='Saytda';translations.ru.statLive='На сайте';translations.en.statLive='On site';
+translations.az.addPhone='Telefon əlavə edin';translations.ru.addPhone='Добавьте телефон';translations.en.addPhone='Add a phone number';
+translations.az.authPhone='Telefon (hesab yaradanda)';translations.ru.authPhone='Телефон (при создании аккаунта)';translations.en.authPhone='Phone (when creating an account)';
+translations.az.needPhone='Hesab yaratmaq üçün düzgün telefon nömrəsi daxil edin.';translations.ru.needPhone='Для создания аккаунта введите корректный номер телефона.';translations.en.needPhone='Enter a valid phone number to create an account.';
+translations.az.mineOnly='Yalnız sizin elanlarınız göstərilir.';translations.ru.mineOnly='Показаны только ваши объявления.';translations.en.mineOnly='Showing only your listings.';
+translations.az.allListingsBtn='Bütün elanlar';translations.ru.allListingsBtn='Все объявления';translations.en.allListingsBtn='All listings';
+translations.az.recentTx='Son əməliyyatlar';translations.ru.recentTx='Последние операции';translations.en.recentTx='Recent transactions';
+translations.az.showAllTx='Bütün əməliyyatları göstər';translations.ru.showAllTx='Показать все операции';translations.en.showAllTx='Show all transactions';
+translations.az.txAd='Elan';translations.ru.txAd='Объявление';translations.en.txAd='Listing';
+translations.az.txService='Xidmət';translations.ru.txService='Услуга';translations.en.txService='Service';
+translations.az.txDate='Tarix';translations.ru.txDate='Дата';translations.en.txDate='Date';
+translations.az.txBalance='Balans';translations.ru.txBalance='Баланс';translations.en.txBalance='Balance';
+translations.az.topUp='Hesabı artır';translations.ru.topUp='Пополнить счёт';translations.en.topUp='Top up account';
+translations.az.topUpSoon='Hesabı artırmaq hələ aktiv deyil: ödəniş xidməti qoşulmayıb.';translations.ru.topUpSoon='Пополнение счёта пока недоступно: платёжный сервис не подключён.';translations.en.topUpSoon='Top-up is not available yet: no payment service is connected.';
+translations.az.addCard='Yeni kart əlavə et';translations.ru.addCard='Добавить новую карту';translations.en.addCard='Add new card';
+translations.az.addCardSoon='Kart əlavə etmə hələ aktiv deyil: ödəniş xidməti qoşulmayıb.';translations.ru.addCardSoon='Добавление карты пока недоступно: платёжный сервис не подключён.';translations.en.addCardSoon='Adding a card is not available yet: no payment service is connected.';
+translations.az.myCards='Kartlarım';translations.ru.myCards='Мои карты';translations.en.myCards='My cards';
+translations.az.cardsNote='Kartlar ödəniş zamanı avtomatik burada görünəcək. Kartın tam nömrəsi saxlanılmır.';translations.ru.cardsNote='Карты появятся здесь автоматически после оплаты. Полный номер карты не хранится.';translations.en.cardsNote='Cards will appear here automatically after payment. The full card number is never stored.';
+translations.az.cardsEmpty='Hələ kart əlavə edilməyib.';translations.ru.cardsEmpty='Карт пока нет.';translations.en.cardsEmpty='No cards yet.';
+translations.az.personalAccount='Şəxsi hesab';translations.ru.personalAccount='Личный счёт';translations.en.personalAccount='Personal account';
+translations.az.primaryCard='Əsas kart';translations.ru.primaryCard='Основная карта';translations.en.primaryCard='Primary card';
+translations.az.cardWord='Kart';translations.ru.cardWord='Карта';translations.en.cardWord='Card';
+translations.az.confirmDeleteCard='Kartı siyahıdan silmək istəyirsiniz?';translations.ru.confirmDeleteCard='Убрать карту из списка?';translations.en.confirmDeleteCard='Remove this card from the list?';
+translations.az.txAllOps='Bütün əməliyyatlar';translations.ru.txAllOps='Все операции';translations.en.txAllOps='All transactions';
+translations.az.txPackages='Paketlər və yerləşdirmələr';translations.ru.txPackages='Пакеты и размещения';translations.en.txPackages='Packages and placements';
+translations.az.profAd='Ad';translations.ru.profAd='Имя';translations.en.profAd='Name';
+translations.az.editBtn='Redaktə et';translations.ru.editBtn='Редактировать';translations.en.editBtn='Edit';
+translations.az.newPass='Yeni şifrə';translations.ru.newPass='Новый пароль';translations.en.newPass='New password';
+translations.az.profCur='Mövcud şifrə';translations.ru.profCur='Текущий пароль';translations.en.profCur='Current password';
+translations.az.profPass2='Şifrənin təsdiqi';translations.ru.profPass2='Подтверждение пароля';translations.en.profPass2='Confirm password';
+translations.az.passMismatch='Şifrələr uyğun gəlmir.';translations.ru.passMismatch='Пароли не совпадают.';translations.en.passMismatch='The passwords do not match.';
+translations.az.needCurrent='Mövcud şifrəni daxil edin.';translations.ru.needCurrent='Введите текущий пароль.';translations.en.needCurrent='Enter your current password.';
+translations.az.wrongCurrent='Mövcud şifrə yanlışdır.';translations.ru.wrongCurrent='Текущий пароль неверный.';translations.en.wrongCurrent='The current password is incorrect.';
+translations.az.passMin='Şifrə ən azı 6 simvol olmalıdır.';translations.ru.passMin='Пароль должен быть не короче 6 символов.';translations.en.passMin='The password must be at least 6 characters.';
+translations.az.cabinet='Kabinet';translations.ru.cabinet='Кабинет';translations.en.cabinet='Account';
+translations.az.sectionMain='Əsas';translations.ru.sectionMain='Основное';translations.en.sectionMain='Main';
+translations.az.navPayment='Ödəniş üsulu';translations.ru.navPayment='Способ оплаты';translations.en.navPayment='Payment method';
+translations.az.navHistory='Əməliyyat tarixçəsi';translations.ru.navHistory='История операций';translations.en.navHistory='Transaction history';
+translations.az.navProfile='Profil';translations.ru.navProfile='Профиль';translations.en.navProfile='Profile';
+translations.az.paymentEmpty='Ödəniş üsulları hələlik mövcud deyil.';translations.ru.paymentEmpty='Способы оплаты пока недоступны.';translations.en.paymentEmpty='Payment methods are not available yet.';
+translations.az.historyEmpty='Əməliyyatlar hələ yoxdur.';translations.ru.historyEmpty='Операций пока нет.';translations.en.historyEmpty='No transactions yet.';
+translations.az.fullName='Ad, soyad';translations.ru.fullName='Имя и фамилия';translations.en.fullName='Full name';
+translations.az.profileSave='Yadda saxla';translations.ru.profileSave='Сохранить';translations.en.profileSave='Save';
+translations.az.profileSaved='Yadda saxlanıldı.';translations.ru.profileSaved='Сохранено.';translations.en.profileSaved='Saved.';
+translations.az.navMyAds='Elanlarım';translations.ru.navMyAds='Мои объявления';translations.en.navMyAds='My listings';
 $('year').textContent=new Date().getFullYear();
 history.replaceState({view:'home'},'');
 setLanguage('az');
@@ -762,6 +1316,76 @@ initSupabaseApp();
     if(ticking)return;ticking=true;
     requestAnimationFrame(()=>{header.classList.toggle('scrolled',window.scrollY>8);ticking=false});
   },{passive:true});
+
+  /* Новая VIP-карточка */
+  window.villaCard=function(v,owner){
+    const img=(v.photos&&v.photos[0])||'';
+    const imgHtml=img?`<img class="villa-img" loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(v.title)}">`:`<div class="villa-img flex items-center justify-center"><i class="fa-solid fa-house text-5xl text-gray-400"></i></div>`;
+    const d=new Date(v.createdAt),now=new Date();
+    const hm=d.toLocaleTimeString(LOC(),{hour:'2-digit',minute:'2-digit'});
+    const when=d.toDateString()===now.toDateString()?tr3('сегодня','bugün','today')+' '+hm:d.toLocaleDateString(LOC());
+    const status=owner?(v.status==='pending'?`<span class="pill pill-gold">${escapeHTML(t('pending'))}</span>`:`<span class="pill pill-green">${escapeHTML(t('liveOnSite'))}</span>`)+`<button class="btn btn-outline" style="padding:6px 10px;margin-left:6px" onclick="deleteVilla('${escapeHTML(v.id)}')" aria-label="${escapeHTML(t('delete'))}"><i class="fa-solid fa-trash"></i></button>`:'';
+    return `<article class="vip-card" tabindex="0" role="link" onclick="openVillaDetails('${escapeHTML(v.id)}')" onkeydown="if(event.key==='Enter')openVillaDetails('${escapeHTML(v.id)}')">
+      <div class="vip-img">${imgHtml}
+        <button type="button" class="vip-heart" aria-label="Favorit" onclick="event.stopPropagation();this.classList.toggle('on')"><i class="fa-solid fa-heart"></i></button>
+        <span class="vip-badge">${v.period==='monthly'?t('monthly'):t('daily')}</span></div>
+      <p class="vip-price">${money(v.price)}</p>
+      <p class="vip-title">${escapeHTML(v.district)}</p>
+      <p class="vip-sub">${escapeHTML(v.rooms)} ${t('roomsLabel')} • ${escapeHTML(v.guests||'—')} ${t('guestsLabel')}</p>
+      <div class="vip-meta"><span>${escapeHTML(when)}</span><i class="fa-solid fa-crown"></i></div>
+      ${status?`<div class="mt-2 flex items-center" onclick="event.stopPropagation()">${status}</div>`:''}
+    </article>`;
+  };
+
+  /* ===== Elanlarım ===== */
+  let myAdsFilter='all';
+  window.setMyAdsFilter=function(f){myAdsFilter=f;renderMyAds()};
+  window.toggleAdMenu=function(e,id){
+    e.stopPropagation();
+    document.querySelectorAll('.ad-menu').forEach(m=>{if(m.id!=='adMenu-'+id)m.classList.add('hidden')});
+    const m=document.getElementById('adMenu-'+id);if(m)m.classList.toggle('hidden');
+  };
+  document.addEventListener('click',()=>document.querySelectorAll('.ad-menu').forEach(m=>m.classList.add('hidden')));
+  window.promoteAd=function(){showToast(tr3('Рекламирование пока недоступно: платёжный сервис не подключён.','Reklam etmək hələ aktiv deyil: ödəniş xidməti qoşulmayıb.','Promotion is not available yet: no payment service is connected.'),4500)};
+  function ownerAdCard(v){
+    const img=(v.photos&&v.photos[0])||'';
+    const imgHtml=img?`<img class="villa-img" loading="lazy" src="${escapeHTML(img)}" alt="${escapeHTML(v.title)}">`:`<div class="villa-img flex items-center justify-center"><i class="fa-solid fa-house text-5xl text-gray-400"></i></div>`;
+    const d=new Date(v.createdAt),now=new Date();
+    const hm=d.toLocaleTimeString(LOC(),{hour:'2-digit',minute:'2-digit'});
+    const when=d.toDateString()===now.toDateString()?tr3('сегодня','bugün','today')+' '+hm:d.toLocaleDateString(LOC());
+    const live=v.status==='approved';
+    const id=escapeHTML(v.id);
+    return `<article class="vip-card">
+      <div class="vip-img" onclick="openVillaDetails('${id}')" style="cursor:pointer">${imgHtml}
+        <button type="button" class="vip-heart" aria-label="Favorit" onclick="event.stopPropagation();this.classList.toggle('on')"><i class="fa-solid fa-heart"></i></button>
+        <span class="ad-status ${live?'':'gold'}">${escapeHTML(live?tr3('Сейчас на сайте','Hazırda saytda','Live on site'):tr3('На проверке','Yoxlanışda','Under review'))}</span></div>
+      <p class="vip-price">${money(v.price)}/${escapeHTML(perUnit(v.period))}</p>
+      <p class="vip-title">${escapeHTML(v.district)}</p>
+      <p class="vip-sub">${escapeHTML(v.rooms)} ${t('roomsLabel')} • ${escapeHTML(v.guests||'—')} ${t('guestsLabel')}</p>
+      <div class="vip-meta"><span>${escapeHTML(when)}</span>${v.vip?'<i class="fa-solid fa-crown"></i>':''}</div>
+      <div class="ad-actions">
+        <button type="button" class="ad-promote" onclick="promoteAd()">${escapeHTML(tr3('Рекламировать','Reklam et','Promote'))}</button>
+        <button type="button" class="ad-dots" aria-label="Menu" onclick="toggleAdMenu(event,'${id}')"><i class="fa-solid fa-ellipsis"></i></button>
+        <div id="adMenu-${id}" class="ad-menu hidden" onclick="event.stopPropagation()">
+          <button type="button" class="menu-item" onclick="openVillaDetails('${id}')">${escapeHTML(tr3('Открыть','Bax','View'))}</button>
+          <button type="button" class="menu-item" style="color:#a52b26" onclick="deleteVilla('${id}')">${escapeHTML(t('delete'))}</button>
+        </div>
+      </div>
+    </article>`;
+  }
+  window.renderMyAds=function(){
+    const grid=document.getElementById('myListingsGrid'),bar=document.getElementById('adsFilters');
+    if(!grid||!bar)return;
+    const mine=villas.filter(isOwner);
+    const live=mine.filter(v=>v.status==='approved'),pend=mine.filter(v=>v.status==='pending');
+    const cnt={all:mine.length,live:live.length,pending:pend.length};
+    const labels={all:tr3('Все объявления','Bütün elanlar','All listings'),payment:tr3('Ожидают оплаты','Ödəniş gözləyir','Awaiting payment'),live:tr3('Сейчас на сайте','Hazırda saytda','Live on site'),expired:tr3('Истёкшие','Vaxtı bitmiş','Expired'),pending:tr3('На проверке','Yoxlanışda','Under review'),rejected:tr3('Отклонённые','Qəbul olunmayan','Rejected')};
+    bar.innerHTML=Object.keys(labels).map(k=>`<button type="button" class="ad-pill ${myAdsFilter===k?'active':''}" onclick="setMyAdsFilter('${k}')">${escapeHTML(labels[k])}${cnt[k]?' ('+cnt[k]+')':''}</button>`).join('');
+    const list=myAdsFilter==='all'?mine:myAdsFilter==='live'?live:myAdsFilter==='pending'?pend:[];
+    if(list.length)grid.innerHTML=list.map(ownerAdCard).join('');
+    else if(!mine.length)grid.innerHTML=`<div class="sm:col-span-2" style="grid-column:1/-1"><p class="font-bold">${escapeHTML(t('emptyMine'))}</p></div>`;
+    else grid.innerHTML=`<p style="grid-column:1/-1;color:#8a938d">${escapeHTML(tr3('В этом разделе пока нет объявлений.','Bu bölmədə hələ elan yoxdur.','No listings in this section yet.'))}</p>`;
+  };
 })();
 </script>
 </body>
