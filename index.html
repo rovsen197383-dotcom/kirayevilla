@@ -1438,19 +1438,26 @@ function remember(v){
   return v;
 }
 let colLevel = 0; // 0 — все поля, 1 — без новых полей, 2 — старая база
-const sel = () => colLevel === 0 ? COLS_EXT : colLevel === 1 ? COLS : '*';
-function downgradeCols(){if (colLevel >= 2) return false; colLevel++; legacyCols = colLevel === 2; return true}
+const selFor = l => l === 0 ? COLS_EXT : l === 1 ? COLS : '*';
+const sel = () => selFor(colLevel);
+/* Понижаем набор полей только с того уровня, на котором упал запрос.
+   Несколько запросов идут одновременно — без этого они «проскакивали» рабочий уровень. */
+function downgradeFrom(l){
+  if (colLevel > l) return true;          // другой запрос уже понизил — просто повторяем
+  if (l >= 2) return false;
+  colLevel = l + 1; legacyCols = colLevel === 2; return true;
+}
 /* Выполняет запрос; если база ещё не знает новые поля — повторяет со старым набором полей */
 async function withCols(make){
   for (;;) {
-    const res = await make(sel());
-    if (res.error && isMissingCol(res.error) && downgradeCols()) continue;
+    const l = colLevel, res = await make(selFor(l));
+    if (res.error && isMissingCol(res.error, l) && downgradeFrom(l)) continue;
     return res;
   }
 }
 // Нет колонки или нет права читать новую колонку (SQL ещё не запущен) — откатываемся на старый набор полей
-const isMissingCol = err => err && (err.code === '42703' || /column .* does not exist/i.test(err.message || '')
-  || (colLevel === 0 && (err.code === '42501' || /permission denied/i.test(err.message || ''))));
+const isMissingCol = (err, l) => !!err && (err.code === '42703' || /column .* does not exist/i.test(err.message || '')
+  || (l === 0 && (err.code === '42501' || /permission denied/i.test(err.message || ''))));
 function filters(){
   return {district:$('filterDistrict').value, period:$('filterPeriod').value, rooms:Number($('filterRooms').value)||0,
     min:Number($('filterPriceMin').value)||0, max:Number($('filterPrice').value)||0, sort:$('sortListings').value || 'newest'};
@@ -1470,18 +1477,20 @@ async function loadListings(append){
   const token = ++loadToken, f = filters(), from = append ? pub.length : 0;
   if (!append) {listLoading = true; renderListings()}
   else $('moreBtn').disabled = true;
+  let lvl = colLevel;
   const run = async () => {
-    let main = sb.from('villas').select(sel(), {count:'exact'}).eq('is_published', true);
-    if (!legacyCols) main = main.not('is_vip', 'is', true);
+    lvl = colLevel; const c = selFor(lvl);
+    let main = sb.from('villas').select(c, {count:'exact'}).eq('is_published', true);
+    if (lvl < 2) main = main.not('is_vip', 'is', true);
     main = applyFilters(main, f).range(from, from + PAGE_SIZE - 1);
-    const vipQ = (!append && !legacyCols) ? applyFilters(sb.from('villas').select(sel()).eq('is_published', true).eq('is_vip', true), f).limit(VIP_LIMIT) : null;
+    const vipQ = (!append && lvl < 2) ? applyFilters(sb.from('villas').select(c).eq('is_published', true).eq('is_vip', true), f).limit(VIP_LIMIT) : null;
     const [m, v] = await Promise.all([main, vipQ || Promise.resolve({data:null})]);
     if (m.error) throw m.error; if (v.error) throw v.error;
     return [m, v];
   };
   try {
     let r;
-    for (;;) {try {r = await run(); break} catch(err) {if (isMissingCol(err) && downgradeCols()) continue; throw err}}
+    for (;;) {try {r = await run(); break} catch(err) {if (isMissingCol(err, lvl) && downgradeFrom(lvl)) continue; throw err}}
     if (token !== loadToken) return;
     const rows = (r[0].data || []).map(mapRow).map(remember);
     pub = append ? pub.concat(rows) : rows;
@@ -1500,8 +1509,7 @@ async function loadMine(){
   if (!sb || !user) {mine = []; renderAccount(); return}
   const uid = user.uid;
   try {
-    let res;
-    do {res = await sb.from('villas').select(sel()).eq('owner_id', uid).order('created_at', {ascending:false})} while (res.error && isMissingCol(res.error) && downgradeCols());
+    const res = await withCols(c => sb.from('villas').select(c).eq('owner_id', uid).order('created_at', {ascending:false}));
     if (res.error) throw res.error;
     if (!user || user.uid !== uid) return;
     mine = (res.data || []).map(mapRow).map(remember);
