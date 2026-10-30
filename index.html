@@ -110,7 +110,8 @@
     .field-hint{color:var(--muted);font-size:13px;margin:6px 4px 0}
     .field-hint i{color:#b9c2bc}.field-hint.ok{color:var(--ok)}.field-hint.ok i{color:var(--ok)}
     .consent{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45;cursor:pointer}
-    .consent input{width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:var(--green)}
+    .consent{padding:6px 0}
+    .consent input{width:22px;height:22px;margin-top:0;flex-shrink:0;accent-color:var(--green)}
     .inline-link{font-size:14px;padding:0;text-decoration:underline;display:inline}
     .sent-icon{width:64px;height:64px;border-radius:50%;background:var(--soft2);color:var(--green2);font-size:28px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
     .terms{font-size:15px;line-height:1.65;color:#2b3a31}
@@ -511,7 +512,7 @@
         <p class="field-err" id="err-authConsent" hidden></p>
       </div>
       <div id="forgotRow" style="text-align:right;margin:-4px 0 14px"><button type="button" class="link-btn" style="color:var(--ink);font-weight:500;text-decoration:underline" data-auth="forgot" data-i18n="forgotPass">Şifrəni unutdum</button></div>
-      <button type="submit" id="authSubmit" class="auth-btn" disabled data-i18n="loginBtn">Giriş</button>
+      <button type="submit" id="authSubmit" class="auth-btn" data-i18n="loginBtn">Giriş</button>
       <div class="auth-links phone-login"><button type="button" class="link-btn" data-auth="phone" data-i18n="authByPhone">Telefon nömrəsi ilə giriş</button></div>
       <div class="auth-links" style="margin-top:10px"><button type="button" id="authModeBtn" class="link-btn muted" data-act="auth-mode" data-i18n="register">Hesab yarat</button></div>
     </form>
@@ -1252,8 +1253,9 @@ function resetPhoneStep(){otpSent = false; $('otpRow').hidden = true; $('loginOt
 function updateAuthBtn(){
   const reg = authMode === 'register', passOk = $('authPassword').value.length >= 6;
   $('passHint').classList.toggle('ok', passOk);
-  $('authSubmit').disabled = !($('authEmail').value.trim().includes('@') && passOk
-    && (!reg || ($('authName').value.trim() && $('authConsent').checked)));
+  // Кнопка всегда нажимается: на телефонах автозаполнение не всегда сообщает сайту о вводе.
+  // Что не заполнено — показываем красным под полем после нажатия.
+  $('authSubmit').disabled = false;
 }
 /* Ошибки показываются под нужным полем, а не всплывающим сообщением */
 function setFieldErr(id, msg){
@@ -1332,6 +1334,8 @@ $('authForm').addEventListener('submit', e => {
         if (data.session) {closeModal('authModal'); showToast(t('accountCreated'))}
         else showSent(email);
       } else {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setFieldErr('authEmail', t('needEmail'));
+        if (!password) return setFieldErr('authPassword', t('passwordLabel'));
         const {error} = await sb.auth.signInWithPassword({email, password});
         if (error) throw error;
         closeModal('authModal'); showToast(t('signedIn'));
