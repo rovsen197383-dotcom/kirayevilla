@@ -261,8 +261,8 @@
     <form id="filterForm" class="card p-4 md:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3" style="overflow:visible" role="search">
       <div class="sm:col-span-2 lg:col-span-5 deal-tabs" role="tablist" data-i18n-aria="dealType" aria-label="Elan növü">
         <button type="button" role="tab" class="deal-tab" data-act="deal" data-deal="rent"><i class="fa-solid fa-key"></i><span data-i18n="dealRent">Kirayə</span></button>
-        <button type="button" role="tab" class="deal-tab" data-act="deal" data-deal="sale"><i class="fa-solid fa-house"></i><span data-i18n="dealSale">Ev satışı</span></button>
-        <button type="button" role="tab" class="deal-tab" data-act="deal" data-deal="land"><i class="fa-solid fa-mountain-sun"></i><span data-i18n="dealLand">Torpaq satışı</span></button>
+        <button type="button" role="tab" class="deal-tab" data-act="deal" data-deal="sale"><i class="fa-solid fa-house"></i><span data-i18n="dealSale">Bağ evlərinin alqı-satqısı</span></button>
+        <button type="button" role="tab" class="deal-tab" data-act="deal" data-deal="land"><i class="fa-solid fa-mountain-sun"></i><span data-i18n="dealLand">Torpaq alqı-satqısı</span></button>
       </div>
       <div><label class="sr-only" for="filterDistrict" data-i18n="district">Rayon</label>
         <select id="filterDistrict" class="field">
@@ -431,8 +431,8 @@
       <fieldset class="md:col-span-2"><legend class="block text-sm font-bold mb-2"><span data-i18n="dealType">Elan növü</span> *</legend>
         <div class="seg seg3" role="radiogroup">
           <label><input type="radio" name="dealType" value="rent" checked><i class="fa-solid fa-key"></i><span data-i18n="dealRent">Kirayə</span></label>
-          <label><input type="radio" name="dealType" value="sale"><i class="fa-solid fa-house"></i><span data-i18n="dealSale">Ev satışı</span></label>
-          <label><input type="radio" name="dealType" value="land"><i class="fa-solid fa-mountain-sun"></i><span data-i18n="dealLand">Torpaq satışı</span></label>
+          <label><input type="radio" name="dealType" value="sale"><i class="fa-solid fa-house"></i><span data-i18n="dealSale">Bağ evlərinin alqı-satqısı</span></label>
+          <label><input type="radio" name="dealType" value="land"><i class="fa-solid fa-mountain-sun"></i><span data-i18n="dealLand">Torpaq alqı-satqısı</span></label>
         </div></fieldset>
       <div><label class="block text-sm font-bold mb-2" for="villaTitle" data-i18n="villaName">Elanın adı *</label><input id="villaTitle" class="field" required maxlength="90" data-i18n-ph="villaNamePh" placeholder="Hovuzlu ailəvi villa"></div>
       <div><label class="block text-sm font-bold mb-2" for="villaDistrict"><span data-i18n="district">Rayon</span> *</label>
@@ -650,7 +650,7 @@ const T = {
   login:['Daxil ol','Войти','Sign in'],
   logout:['Çıxış','Выйти','Sign out'],
   heroTitle:['Xəyalınızdakı istirahətə<br>bir addım daha yaxın.','Ваш идеальный отдых<br>стал ещё ближе.','Your dream getaway<br>is one step closer.'],
-  heroText:['Kirayə villalar, satılan evlər və torpaq sahələri — sizə uyğun olanı asanlıqla tapın.','Аренда вилл, продажа домов и земельных участков — легко найдите то, что вам подходит.','Villas to rent, houses and land for sale — find what suits you with ease.'],
+  heroText:['Kirayəlik və satılıq villalar, həyət və bağ evləri, eləcə də torpaq sahələri — sizə uyğun olanı asanlıqla tapın!','Виллы, частные и дачные дома в аренду и на продажу, а также земельные участки — легко найдите то, что вам подходит!','Villas, family and country houses to rent or buy, as well as land plots — find what suits you with ease!'],
   browse:['Elanlara bax','Смотреть объявления','Browse listings'],
   district:['Rayon','Район','District'],
   allDistricts:['Bütün rayonlar','Все районы','All districts'],
@@ -659,7 +659,7 @@ const T = {
   grpMountain:['Dağ və şimal','Горы и север','Mountains & north'],
   other:['Digər','Другое','Other'],
   period:['Kirayə müddəti','Срок аренды','Rental period'],
-  periodAny:['İstənilən müddət','Любой срок','Any period'],
+  periodAny:['Müddət','Срок','Period'],
   daily:['Günlük','Посуточно','Daily'],
   monthly:['Aylıq','Помесячно','Monthly'],
   rooms:['Otaq sayı','Комнаты','Rooms'],
@@ -915,8 +915,8 @@ const T = {
   termsAccept:['Oxudum, razıyam','Прочитал(а), согласен(на)','I have read and agree'],
   dealType:['Elan növü','Тип объявления','Listing type'],
   dealRent:['Kirayə','Аренда','Rent'],
-  dealSale:['Ev satışı','Продажа домов','Houses for sale'],
-  dealLand:['Torpaq satışı','Продажа участков','Land for sale'],
+  dealSale:['Bağ evlərinin alqı-satqısı','Купля-продажа дач и домов','Country houses for sale'],
+  dealLand:['Torpaq alqı-satqısı','Купля-продажа участков','Land for sale'],
   forSale:['Satılır','Продаётся','For sale'],
   landBadge:['Torpaq','Участок','Land'],
   salePrice:['Satış qiyməti (₼) *','Цена продажи (₼) *','Sale price (₼) *'],
